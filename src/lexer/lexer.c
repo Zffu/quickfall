@@ -10,15 +10,9 @@
  * A token that was parsed by the Lexer.
  */
 struct Token {
-  struct Token next;
+  struct Token* next;
   int type;
   char* value;  
-};
-
-// todo: investigate if this is good for performance
-struct CharStack {
-    struct CharStack next;
-    char value;
 };
 
 struct Token runLexer(char text[]) {
@@ -36,16 +30,16 @@ struct Token runLexer(char text[]) {
 
         if(c == ' ') {
             struct Token newToken;
-            newToken.type = tokenHash(stack);
+            newToken.type = types[tokenHash(stack)];
             newToken.value = stack;
             stackIndex = 0;
 
             if(branchCount == 0) {
-                token.next = newToken;
+                token.next = &newToken;
                 branch = newToken;
             }
             else {
-                branch.next = newToken;
+                branch.next = &newToken;
                 branch = newToken;
             }
 
@@ -57,15 +51,15 @@ struct Token runLexer(char text[]) {
 
             if(stackIndex == highestTokenLength) {
                 struct Token newToken;
-                newToken.type = tokenHash(stack);
+                newToken.type = types[tokenHash(stack)];
                 newToken.value = stack;
 
                 if(branchCount == 0) {
-                    token.next = newToken;
+                    token.next = &newToken;
                     branch = newToken;
                 }
                 else {
-                    branch.next = newToken;
+                    branch.next = &newToken;
                     branch = newToken;
                 }
 
