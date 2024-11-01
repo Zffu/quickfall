@@ -24,6 +24,8 @@ struct Token runLexer(char text[]) {
     struct Token token;
     struct Token branch;
 
+    int branchCount = 0;
+
     // Put the max token size here
     char stack[highestTokenLength];
     int stackIndex;
@@ -35,10 +37,41 @@ struct Token runLexer(char text[]) {
             struct Token newToken;
             newToken.type = 0;
             newToken.value = stack;
+            stackIndex = 0;
+
+            if(branchCount == 0) {
+                token.next = newToken;
+                branch = newToken;
+            }
+            else {
+                branch.next = newToken;
+                branch = newToken;
+            }
+
+            branchCount++;
         }
         else {
             stack[stackIndex] = c;
             stackIndex++;
+
+            if(stackIndex == highestTokenLength) {
+                struct Token newToken;
+                newToken.type = 0;
+                newToken.value = stack;
+
+                if(branchCount == 0) {
+                    token.next = newToken;
+                    branch = newToken;
+                }
+                else {
+                    branch.next = newToken;
+                    branch = newToken;
+                }
+
+                branchCount++;
+            }
         }
     } 
+
+    return token;
 }
