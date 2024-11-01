@@ -8,4 +8,5 @@
 typedef struct Token {
     struct Token next;
     int type;
+    char value[];
 } Token;
