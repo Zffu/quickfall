@@ -2,6 +2,10 @@
  * The token hash -> token type table.
  */
 
+const int highestTokenHash = 10;
+const int highestTokenLength = 8;
+
+
 /**
  * The token types.
  */
@@ -11,7 +15,7 @@ enum TokenType {
     VAR = 3
 };
 
-int types[10] = {};
+int types[highestTokenHash] = {};
 
 /**
  * Inits the tables of tokens
