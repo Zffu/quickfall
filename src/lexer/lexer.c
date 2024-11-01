@@ -4,6 +4,7 @@
 
 #include <string.h>
 #include "./tokens.c"
+#include "../utils/hashes.c"
 
 /**
  * A token that was parsed by the Lexer.
@@ -35,7 +36,7 @@ struct Token runLexer(char text[]) {
 
         if(c == ' ') {
             struct Token newToken;
-            newToken.type = 0;
+            newToken.type = tokenHash(stack);
             newToken.value = stack;
             stackIndex = 0;
 
@@ -56,7 +57,7 @@ struct Token runLexer(char text[]) {
 
             if(stackIndex == highestTokenLength) {
                 struct Token newToken;
-                newToken.type = 0;
+                newToken.type = tokenHash(stack);
                 newToken.value = stack;
 
                 if(branchCount == 0) {
