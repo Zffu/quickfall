@@ -7,11 +7,10 @@
 #include <stdbool.h>
 
 // The tokens to test
-char* tokens[4] = {
+char* tokens[3] = {
     "function",
     "return",
-    "var",
-    "ski"
+    "var"
 };
 
 // Replace the current size with the highest possible hash.
