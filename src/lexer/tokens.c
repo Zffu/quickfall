@@ -2,9 +2,8 @@
  * The token hash -> token type table.
  */
 
-const int highestTokenHash = 10;
-const int highestTokenLength = 8;
-
+#define highestTokenHash 10
+#define highestTokenLength 8
 
 /**
  * The token types.
