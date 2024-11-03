@@ -31,10 +31,12 @@ struct LexerResult runLexer(char string[]) {
     for(int ii = 0; ii < strlen(string); ++ii) {
         char c = string[ii];
 
-        if(c == ' ' && i != 0) {
-            i = 0;
-            result.tokens[result.size].type = types[tokenHash(result.tokens[result.size].value)];
-            result.size++;
+        if(c == ' ') {
+            if(i != 0) {
+                i = 0;
+                result.tokens[result.size].type = types[tokenHash(result.tokens[result.size].value)];
+                result.size++;
+            }
         }
         else {
             result.tokens[result.size].value[i] = c;
@@ -46,6 +48,11 @@ struct LexerResult runLexer(char string[]) {
                 result.size++;
             }
         }
+    }
+
+    // Handle EOF token
+    if(strlen(result.tokens[result.size].value) == 0) {
+        result.size--;
     }
 
     return result;
