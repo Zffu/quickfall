@@ -31,7 +31,7 @@ struct LexerResult runLexer(char string[]) {
     for(int ii = 0; ii < strlen(string); ++ii) {
         char c = string[ii];
 
-        if(c == ' ') {
+        if(c == ' ' && i != 0) {
             i = 0;
             result.tokens[result.size].type = types[tokenHash(result.tokens[result.size].value)];
             result.size++;
