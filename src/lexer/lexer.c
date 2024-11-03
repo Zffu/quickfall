@@ -12,7 +12,7 @@
  */
 struct Token {
   int type;
-  char* value;  
+  char value[highestTokenLength];  
 };
 
 struct LexerResult {
@@ -26,41 +26,30 @@ struct LexerResult {
 struct LexerResult runLexer(char string[]) {
     struct LexerResult result;
 
-    char stack[highestTokenLength];
-    int i;
+    int i = 0;
 
     for(int ii = 0; ii < strlen(string); ++ii) {
         char c = string[ii];
 
         if(c == ' ') {
+            printf("Spaced i: %d raw: %s\n", i, result.tokens[result.size].value);
             i = 0;
-            struct Token newToken;
-            newToken.type = types[tokenHash(stack)];
-            newToken.value = stack;
-            result.tokens[result.size] = newToken;
+            result.tokens[result.size].type = types[tokenHash(result.tokens[result.size].value)];
             result.size++;
+
+            //memset(stack, 0, sizeof(stack));
         }
         else {
-            stack[i] = c;
-            ++i;
+            result.tokens[result.size].value[i] = c;
+            i++;
 
             if(i == highestTokenLength) {
+                printf("Excess i: %d raw: %s\n", i, result.tokens[result.size].value);
                 i = 0;
-                struct Token newToken;
-                newToken.type = types[tokenHash(stack)];
-                newToken.value = stack;
-                result.tokens[result.size] = newToken;
+                result.tokens[result.size].type = types[tokenHash(result.tokens[result.size].value)];
                 result.size++;
             }
         }
-    }
-
-    if(i > 0) {
-        struct Token newToken;
-        newToken.type = types[tokenHash(stack)];
-        newToken.value = stack;
-        result.tokens[result.size] = newToken;
-        result.size++;
     }
 
     return result;
