@@ -32,19 +32,15 @@ struct LexerResult runLexer(char string[]) {
         char c = string[ii];
 
         if(c == ' ') {
-            printf("Spaced i: %d raw: %s\n", i, result.tokens[result.size].value);
             i = 0;
             result.tokens[result.size].type = types[tokenHash(result.tokens[result.size].value)];
             result.size++;
-
-            //memset(stack, 0, sizeof(stack));
         }
         else {
             result.tokens[result.size].value[i] = c;
             i++;
 
             if(i == highestTokenLength) {
-                printf("Excess i: %d raw: %s\n", i, result.tokens[result.size].value);
                 i = 0;
                 result.tokens[result.size].type = types[tokenHash(result.tokens[result.size].value)];
                 result.size++;
