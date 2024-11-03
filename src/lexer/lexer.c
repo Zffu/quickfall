@@ -2,6 +2,7 @@
  * The lexer of Quickfall
  */
 
+#include <stdio.h>
 #include <string.h>
 #include "./tokens.c"
 #include "../utils/hashes.c"
@@ -10,63 +11,57 @@
  * A token that was parsed by the Lexer.
  */
 struct Token {
-  struct Token* next;
   int type;
   char* value;  
 };
 
-struct Token runLexer(char text[]) {
-    struct Token token;
-    struct Token branch;
+struct LexerResult {
+    int size;
+    struct Token tokens[1024];
+};
 
-    int branchCount = 0;
+/**
+ * Runs the lexer logic.
+ */
+struct LexerResult runLexer(char string[]) {
+    struct LexerResult result;
 
-    // Put the max token size here
     char stack[highestTokenLength];
-    int stackIndex;
+    int i;
 
-    for(int i = 0; i < strlen(text); ++i) {
-        char c = text[i];
+    for(int ii = 0; ii < strlen(string); ++ii) {
+        char c = string[ii];
 
         if(c == ' ') {
+            i = 0;
             struct Token newToken;
             newToken.type = types[tokenHash(stack)];
             newToken.value = stack;
-            stackIndex = 0;
-
-            if(branchCount == 0) {
-                token.next = &newToken;
-                branch = newToken;
-            }
-            else {
-                branch.next = &newToken;
-                branch = newToken;
-            }
-
-            branchCount++;
+            result.tokens[result.size] = newToken;
+            result.size++;
         }
         else {
-            stack[stackIndex] = c;
-            stackIndex++;
+            stack[i] = c;
+            ++i;
 
-            if(stackIndex == highestTokenLength) {
+            if(i == highestTokenLength) {
+                i = 0;
                 struct Token newToken;
                 newToken.type = types[tokenHash(stack)];
                 newToken.value = stack;
-
-                if(branchCount == 0) {
-                    token.next = &newToken;
-                    branch = newToken;
-                }
-                else {
-                    branch.next = &newToken;
-                    branch = newToken;
-                }
-
-                branchCount++;
+                result.tokens[result.size] = newToken;
+                result.size++;
             }
         }
-    } 
+    }
 
-    return token;
+    if(i > 0) {
+        struct Token newToken;
+        newToken.type = types[tokenHash(stack)];
+        newToken.value = stack;
+        result.tokens[result.size] = newToken;
+        result.size++;
+    }
+
+    return result;
 }
