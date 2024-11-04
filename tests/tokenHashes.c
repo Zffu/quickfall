@@ -3,6 +3,7 @@
  */
 
 #include "../src/utils/hashes.c"
+#include "../src/lexer/tokens.c"
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -20,13 +21,13 @@ char* tokens[9] = {
 };
 
 // Replace the current size with the highest possible hash.
-bool takenHashes[10];
+bool takenHashes[highestTokenHash];
 
 /**
  * Performs the hash checking logic.
  */
 int main() {
-    for(int i = 0; i < 10; ++i) {
+    for(int i = 0; i < highestTokenHash; ++i) {
         int hash = tokenHash(tokens[i]);
 
         if(takenHashes[hash] != 0) {
