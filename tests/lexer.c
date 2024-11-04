@@ -1,3 +1,7 @@
+/**
+ * Test for a basic lexer implementation.
+ */
+
 #include "../src/lexer/lexer.c"
 #include <stdio.h>
 #include <time.h>
