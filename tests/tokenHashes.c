@@ -7,7 +7,7 @@
 #include <stdbool.h>
 
 // The tokens to test
-char* tokens[10] = {
+char* tokens[9] = {
     "function",
     "return",
     "var",
@@ -16,8 +16,7 @@ char* tokens[10] = {
     "(",
     ")",
     "[",
-    "]",
-    "ara"
+    "]"
 };
 
 // Replace the current size with the highest possible hash.
@@ -27,7 +26,7 @@ bool takenHashes[10];
  * Performs the hash checking logic.
  */
 int main() {
-    for(int i = 0; i < 11; ++i) {
+    for(int i = 0; i < 10; ++i) {
         int hash = tokenHash(tokens[i]);
 
         if(takenHashes[hash] != 0) {
