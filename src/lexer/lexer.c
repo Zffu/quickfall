@@ -15,6 +15,9 @@ struct Token {
   char value[highestTokenLength];  
 };
 
+/**
+ * The result of the lexer execution.
+ */
 struct LexerResult {
     int size;
     struct Token tokens[1024];
