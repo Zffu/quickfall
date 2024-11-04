@@ -24,7 +24,7 @@ struct LexerResult {
 };
 
 /**
- * Runs the lexer logic.
+ * Runs the lexer on the provided string and returns the parsed tokens.
  */
 struct LexerResult runLexer(char string[]) {
     struct LexerResult result;
