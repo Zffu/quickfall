@@ -11,6 +11,9 @@ int main(int argc, char* argv[]) {
     }
 }
 
+/**
+ * Shows the CLI help message.
+ */
 void showHelpMessage() {
     printf("Quickfall commands:\n   quickfall -v - Shows the version information of your Quickfall distribution.\n   quickfall -l <file> - Runs a Quickfall lexer check on the provided file.");
 }
