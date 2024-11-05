@@ -12,7 +12,7 @@
  */
 struct Token {
   int type;
-  char value[highestTokenLength];  
+  char value[longestKeywordSize];  
 };
 
 /**
@@ -34,18 +34,33 @@ struct LexerResult runLexer(char string[]) {
     for(int ii = 0; ii < strlen(string); ++ii) {
         char c = string[ii];
 
-        if(c == ' ') {
-            if(i != 0) {
-                pushToken(i, result);
-            }
-        }
-        else {
-            result.tokens[result.size].value[i] = c;
-            i++;
-
-            if(i == highestTokenLength) {
-                pushToken(i, result);
-            }
+        switch(c) {
+            case '{':
+                pushToken(i, result, BRACKETS_OPEN);
+                break;
+            case '}':
+                pushToken(i, result, BRACKETS_CLOSE);
+                break;
+            case '(':
+                pushToken(i, result, PAREN_OPEN);
+                break;
+            case ')':
+                pushToken(i, result, PAREN_CLOSE);
+                break;
+            case '[':
+                pushToken(i, result, ARRAY_OPEN);
+                break;
+            case ']':
+                pushToken(i, result, ARRAY_CLOSE);
+                break;
+            case ' ':
+                break; 
+            default:
+                result.tokens[result.size].value[i] = c;
+                if(i == longestKeywordSize) {
+                    pushToken(i, result, KEYWORD);
+                }                        
+                break;
         }
     }
 
@@ -57,11 +72,7 @@ struct LexerResult runLexer(char string[]) {
     return result;
 }
 
-void pushToken(int i, struct LexerResult result) {
+void pushToken(int i, struct LexerResult result, enum TokenType type) {
     i = 0;
-    int hash = tokenHash(result.tokens[result.size].value);
-
-    if(rawValues[hash] == result.tokens[result.size].value) {
-        result.tokens[result.size].type = types[hash];
-    }
+    result.tokens[result.size].type = type;
 }

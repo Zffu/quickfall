@@ -1,9 +1,8 @@
 /**
- * The token hash -> token type table.
+ * Data related to tokens
  */
 
-#define highestTokenHash 10
-#define highestTokenLength 8
+#define longestKeywordSize 1
 
 /**
  * The token types.
@@ -17,21 +16,6 @@ enum TokenType {
     PAREN_OPEN = 6,
     PAREN_CLOSE = 7,
     ARRAY_OPEN = 8,
-    ARRAY_CLOSE = 9
+    ARRAY_CLOSE = 9,
+    KEYWORD = 10
 };
-
-int types[highestTokenHash] = {};
-char* rawValues[highestTokenHash] = {};
-
-/**
- * Inits the tables of tokens
- */
-void initTypes() {
-    types[8] = FUNCTION;
-    types[6] = RETURN;
-    types[3] = VAR;
-    
-    rawValues[8] = "function";
-    rawValues[6] = "return";
-    rawValues[3] = "var";
-}
