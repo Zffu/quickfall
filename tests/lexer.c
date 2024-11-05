@@ -1,21 +1,34 @@
 /**
- * Test for a basic lexer implementation.
+ * Tests the Lexer on a file.
  */
 
-#include "../src/lexer/lexer.c"
-#include <stdio.h>
 #include <time.h>
+#include <stdio.h>
+#include "../src/lexer/lexer.c"
 
-int main() {
-    clock_t ts = clock();
-    struct LexerResult result = runLexer("var function function");
-    ts = clock() - ts;
-
-    printf("\n\nLexer took %fs\n", ts / CLOCKS_PER_SEC);
-
-    for(int i = 0; i < result.size + 1; ++i) {
-        printf("Token: t:%d raw:%s'\n", result.tokens[i].type, result.tokens[i].value);
+int main(int argc, char* argv[]) {
+    if(argc < 2) {
+        printf("Usage: <executable> <file>");
+        return - 1;
     }
 
-    return 0;
+    clock_t ts = clock();
+
+    char line[128];
+
+    FILE* filePtr = fopen(argv[1], "r");
+
+    printf("\nToken Analysis Test (Per Line):\n\n");
+
+    while(fgets(line, 128, filePtr) != NULL) {
+        struct LexerResult result = runLexer(line);
+
+        //printf("\nFound %d tokens:\n", result.size);        
+        for(int i = 0; i < result.size; ++i) {
+            //printf("Token -> type: %d, raw value: %s\n", result.tokens[i].type, result.tokens[i].value);
+        }
+    }
+
+    ts = clock() - ts;
+    printf("Finished lexer analysis in %dms!", ts);
 }
