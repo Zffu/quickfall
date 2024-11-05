@@ -21,7 +21,7 @@ enum TokenType {
 };
 
 int types[highestTokenHash] = {};
-string rawValues[highestTokenHash] = {};
+char* rawValues[highestTokenHash] = {};
 
 /**
  * Inits the tables of tokens
