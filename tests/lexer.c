@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
             count += result.size;
         }
 
-        printf("Found %d tokens in file!", count);
+        printf("Found %d tokens in file!\n", count);
     }
 
     ts = clock() - ts;
