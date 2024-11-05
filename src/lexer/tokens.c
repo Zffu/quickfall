@@ -21,6 +21,7 @@ enum TokenType {
 };
 
 int types[highestTokenHash] = {};
+string rawValues[highestTokenHash] = {};
 
 /**
  * Inits the tables of tokens
@@ -29,4 +30,8 @@ void initTypes() {
     types[8] = FUNCTION;
     types[6] = RETURN;
     types[3] = VAR;
+    
+    rawValues[8] = "function";
+    rawValues[6] = "return";
+    rawValues[3] = "var";
 }
