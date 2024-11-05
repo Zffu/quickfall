@@ -36,9 +36,7 @@ struct LexerResult runLexer(char string[]) {
 
         if(c == ' ') {
             if(i != 0) {
-                i = 0;
-                result.tokens[result.size].type = types[tokenHash(result.tokens[result.size].value)];
-                result.size++;
+                pushToken(i, result);
             }
         }
         else {
@@ -46,9 +44,7 @@ struct LexerResult runLexer(char string[]) {
             i++;
 
             if(i == highestTokenLength) {
-                i = 0;
-                result.tokens[result.size].type = types[tokenHash(result.tokens[result.size].value)];
-                result.size++;
+                pushToken(i, result);
             }
         }
     }
@@ -59,4 +55,13 @@ struct LexerResult runLexer(char string[]) {
     }
 
     return result;
+}
+
+void pushToken(int i, struct LexerResult result) {
+    i = 0;
+    int hash = tokenHash(result.tokens[result.size].value);
+
+    if(rawValues[hash] == result.tokens[result.size].value) {
+        result.tokens[result.size].type = types[hash];
+    }
 }
