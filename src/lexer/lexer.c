@@ -72,6 +72,9 @@ struct LexerResult runLexer(char string[]) {
     return result;
 }
 
+/**
+ * Sets the token type of the currently selected token in the LexerResult with the provided token type.
+ */
 void pushToken(int i, struct LexerResult result, enum TokenType type) {
     i = 0;
     result.tokens[result.size].type = type;
