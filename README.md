@@ -12,7 +12,7 @@ Before contributing, you should take a look at the [contributor conduct](https:/
 
 When you want to report an issue or request features, [please create an issue](https://github.com/Quickfall/quickfall/issues). 
 
-We warmly welcome contributions by everyone, make sure that your code works and is decently written in order to preserve Quickfall's speed.
+We warmly welcome contributions by everyone, make sure that your code works and is decently written and documented (take a look at some existing code for that) in order to preserve Quickfall's speed and quality.
 
 ## License
 Most of the project is licensed under the MIT license except when stated otherwise.
