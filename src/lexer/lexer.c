@@ -30,9 +30,11 @@ struct LexerResult runLexer(char string[]) {
     struct LexerResult result;
 
     int i = 0;
+    int matched = 0;
 
     for(int ii = 0; ii < strlen(string); ++ii) {
         char c = string[ii];
+        matched = 0;
 
         switch(c) {
             case '{':
@@ -53,14 +55,19 @@ struct LexerResult runLexer(char string[]) {
             case ']':
                 pushToken(i, result, ARRAY_CLOSE);
                 break;
-            case ' ':
-                break; 
-            default:
-                result.tokens[result.size].value[i] = c;
-                if(i == longestKeywordSize) {
-                    pushToken(i, result, KEYWORD);
-                }                        
-                break;
+            default: ;
+                int length = strlen(result.tokens[result.size].value);
+                result.tokens[result.size].value[length] = c;
+
+                if(length + 1 >= smallestKeywordSize) {
+                    int hash = tokenHash(result.tokens[result.size].value);
+
+                    printf("%d", hash);
+
+                    if(strcmp(result.tokens[result.size].value, rawKeywords[hash]) == 0) {
+                        pushToken(i, result, keywords[hash]);
+                    }
+                }
         }
     }
 

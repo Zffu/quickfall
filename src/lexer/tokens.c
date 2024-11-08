@@ -2,7 +2,8 @@
  * Data related to tokens
  */
 
-#define longestKeywordSize 1
+#define longestKeywordSize 4
+#define smallestKeywordSize 4
 
 /**
  * The token types.
@@ -17,5 +18,26 @@ enum TokenType {
     PAREN_CLOSE = 7,
     ARRAY_OPEN = 8,
     ARRAY_CLOSE = 9,
+
     KEYWORD = 10
 };
+
+int keywords[6];
+char* rawKeywords[6];
+
+/**
+ * Instantiates the keywords array.
+ */
+static void initKeywords() {
+    keywords[4] = FUNCTION;
+    keywords[3] = KEYWORD;
+    keywords[2] = KEYWORD;
+    keywords[1] = KEYWORD;
+    keywords[0] = KEYWORD;
+
+    rawKeywords[4] = "func";
+    rawKeywords[3] = "func";
+    rawKeywords[2] = "func";
+    rawKeywords[1] = "func";
+    rawKeywords[0] = "func";
+}
