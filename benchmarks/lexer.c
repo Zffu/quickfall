@@ -10,21 +10,14 @@ long long charsPerSecond = 0;
 long highestCharsPerSecond = 0;
 long lowestCharsPerSecond = 2147483647;
 
-void performBenchmarkEntryTest(char fileName[]) {
+int size = 0;
+char* buffer;
+
+void performBenchmarkEntryTest() {
     QueryPerformanceFrequency(&frequency);
     QueryPerformanceCounter(&start);
 
-    FILE* filePtr = fopen(fileName, "r");
-
-    fseek(filePtr, 0, SEEK_END);
-    int size = ftell(filePtr);
-    fseek(filePtr, 0, SEEK_SET);
-
-    char* bufferPtr = (char*) malloc(size * sizeof(char));
-
-    fread(bufferPtr, 1, size, filePtr);
-
-    struct LexerResult result = runLexer(bufferPtr);
+    struct LexerResult result = runLexer(buffer);
 
     QueryPerformanceCounter(&end);
 
@@ -47,6 +40,16 @@ void main(int argc, char* argv[]) {
         printf("Usage <executable> <file> <runs>");
         return -1;
     }
+
+    FILE* filePtr = fopen(argv[1], "r");
+
+    fseek(filePtr, 0, SEEK_END);
+    int size = ftell(filePtr);
+    fseek(filePtr, 0, SEEK_SET);
+
+    char* bufferPtr = (char*) malloc(size * sizeof(char));
+
+    fread(bufferPtr, 1, size, filePtr);
 
     for(int i = 0; i < atoi(argv[2]); ++i) {
         performBenchmarkEntryTest(argv[1]);
