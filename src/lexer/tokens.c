@@ -41,3 +41,24 @@ static void initKeywords() {
     rawKeywords[1] = "func";
     rawKeywords[0] = "func";
 }
+
+struct KeywordResult {
+    int count;
+    char* keywords[10];
+    enum TokenType types[10];
+};
+
+struct KeywordResult getKeywords(char start) {
+    struct KeywordResult result;
+    result.count = 0;
+
+    switch(start) {
+        case 'f':
+            result.keywords[0] = "func";
+            result.types[0] = FUNCTION;
+            result.count++;
+            break;
+    }
+
+    return result;
+}

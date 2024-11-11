@@ -4,7 +4,9 @@
 
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "../src/lexer/lexer.c"
+#include <windows.h>
 
 int main(int argc, char* argv[]) {
     if(argc < 2) {
@@ -12,37 +14,29 @@ int main(int argc, char* argv[]) {
         return - 1;
     }
 
-    clock_t ts = clock();
-
-    char line[128];
+    LARGE_INTEGER frequency, start, end;
+    QueryPerformanceFrequency(&frequency);
+    QueryPerformanceCounter(&start);
 
     FILE* filePtr = fopen(argv[1], "r");
 
-    if(argc > 2) {
-        printf("\nToken Analysis Test (Debugging Mode):\n\n");
+    fseek(filePtr, 0, SEEK_END);
+    int size = ftell(filePtr);
+    fseek(filePtr, 0, SEEK_SET);
 
-        while(fgets(line, 128, filePtr) != NULL) {
-            struct LexerResult result = runLexer(line);
+    char* bufferPtr = (char*) malloc(size * sizeof(char));
 
-            printf("\nFound %d tokens:\n", result.size);        
-            for(int i = 0; i < result.size; ++i) {
-                printf("Token -> type: %d, raw value: %s\n", result.tokens[i].type, result.tokens[i].value);
-            }
-        }
-    }
-    else {
-        printf("\nToken Analysis Test:\n\n");
+    fread(bufferPtr, 1, size, filePtr);
 
-        int count = 0;
+    struct LexerResult result = runLexer(bufferPtr);
 
-        while(fgets(line, 128, filePtr) != NULL) {
-            struct LexerResult result = runLexer(line);
-            count += result.size;
-        }
+    QueryPerformanceCounter(&end);
 
-        printf("Found %d tokens in file!\n", count);
-    }
+    float timeTaken = (end.QuadPart - start.QuadPart) * 1000000000.0 / frequency.QuadPart;
+    int charPerSecond = 1000000000 / (timeTaken / (size + 1));
 
-    ts = clock() - ts;
-    printf("Finished lexer analysis in %dms!", ts);
+    printf("Finished lexer analysis in %.0f microseconds!\n", timeTaken / 1000);
+    printf("Approximative Characters per second: %d", charPerSecond);
+
+    free(bufferPtr);
 }

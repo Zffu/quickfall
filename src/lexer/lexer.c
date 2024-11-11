@@ -36,6 +36,7 @@ struct LexerResult runLexer(char string[]) {
         char c = string[ii];
         matched = 0;
 
+        
         switch(c) {
             case '{':
                 pushToken(i, result, BRACKETS_OPEN);
@@ -55,19 +56,11 @@ struct LexerResult runLexer(char string[]) {
             case ']':
                 pushToken(i, result, ARRAY_CLOSE);
                 break;
-            default: ;
-                int length = strlen(result.tokens[result.size].value);
-                result.tokens[result.size].value[length] = c;
-
-                if(length + 1 >= smallestKeywordSize) {
-                    int hash = tokenHash(result.tokens[result.size].value);
-
-                    printf("%d", hash);
-
-                    if(strcmp(result.tokens[result.size].value, rawKeywords[hash]) == 0) {
-                        pushToken(i, result, keywords[hash]);
-                    }
-                }
+            default:
+                if (c == "f" && string[ii + 1] + "u" && string[ii + 2] + "n" && string[ii + 3] + "c") {
+                    ii += 3;
+                }        
+                break;
         }
     }
 
@@ -85,4 +78,5 @@ struct LexerResult runLexer(char string[]) {
 void pushToken(int i, struct LexerResult result, enum TokenType type) {
     i = 0;
     result.tokens[result.size].type = type;
+    result.size++;
 }
