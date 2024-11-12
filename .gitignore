@@ -1,5 +1,9 @@
+# Build files
+build/
 *.exe
-.vscode/
+*.o
+
+# Visual Studio Code & Visual Studio Files
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
