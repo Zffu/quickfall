@@ -168,7 +168,7 @@ int main(int argc, char* argv[]) {
         
         case 'b':
             if(!args.inputFile) {
-                print("Error: Missing input File!");
+                printf("Error: Missing input File!");
                 return -1;
             }
 
