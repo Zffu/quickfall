@@ -1,6 +1,7 @@
 # Build files
 build/
 *.exe
+*.o
 
 # Visual Studio Code & Visual Studio Files
 *.vcxproj
