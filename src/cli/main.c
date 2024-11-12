@@ -118,7 +118,7 @@ char* readFile(const char* path, int* size) {
     *size = ftell(filePtr);
     fseek(filePtr, 0, SEEK_SET);
 
-    char* bufferPtr = (char*) malloc((*size + 1) * sizeof(char));
+    char* bufferPtr = (char*) malloc(size);
     if (bufferPtr == NULL) {
         printf("Error: Memory allocation failed\n");
         fclose(filePtr);
