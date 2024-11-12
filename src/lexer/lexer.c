@@ -4,15 +4,16 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "./tokens.c"
-#include "../utils/hashes.c"
+#include <ctype.h>
+#include "./tokens.h"
+#include "../utils/hashes.h"
 
 /**
  * A token that was parsed by the Lexer.
  */
 struct Token {
-  int type;
-  char value[longestKeywordSize];  
+    int type;
+    char value[longestKeywordSize];  // Increased size to handle longer values like numbers
 };
 
 /**
@@ -28,44 +29,79 @@ struct LexerResult {
  */
 struct LexerResult runLexer(char string[]) {
     struct LexerResult result;
+    result.size = 0;
+    
+    const int len = strlen(string);
+    for(int i = 0; i < len; ++i) {
+        const char c = string[i];
 
-    int i = 0;
-    int matched = 0;
-
-    for(int ii = 0; ii < strlen(string); ++ii) {
-        char c = string[ii];
-        matched = 0;
-
+        if (c == ' ' || c == '\t' || c == '\n') {
+            continue;
+        } else if (isdigit(c)) {
+            int numLen = 0;
+            char numStr[32] = {0};
+            
+            while (i < len && (isdigit(string[i]) || string[i] == '.')) {
+                numStr[numLen++] = string[i++];
+            }
+            i--;
+            
+            struct Token token;
+            token.type = NUMBER;
+            strncpy(token.value, numStr, sizeof(token.value) - 1);
+            result.tokens[result.size++] = token;
+            continue;
+        } else if (c == '"') {
+            int numLen = 0;
+            char strValue[longestKeywordSize] = {0};
+            i++;
+            
+            while (i < len && string[i] != '"') {
+                strValue[numLen++] = string[i++];
+            }
+            
+            struct Token token;
+            token.type = STRING;
+            strncpy(token.value, strValue, sizeof(token.value) - 1);
+            result.tokens[result.size++] = token;
+            continue;
+        } else if (isalpha(c)) {
+            int wordLen = 0;
+            char word[longestKeywordSize] = {0};
+            
+            while (i < len && (isalnum(string[i]) || string[i] == '_')) {
+                word[wordLen++] = string[i++];
+            }
+            i--;
+            
+            struct Token token;
+            
+            if (strcmp(word, "func") == 0) {
+                token.type = FUNCTION;
+            } else if (strcmp(word, "true") == 0 || strcmp(word, "false") == 0) {
+                token.type = BOOLEAN;
+            } else if (strcmp(word, "null") == 0) {
+                token.type = NU;
+            } else {
+                token.type = KEYWORD;
+            }
+            
+            strncpy(token.value, word, sizeof(token.value) - 1);
+            result.tokens[result.size++] = token;
+            continue;
+        }
         
         switch(c) {
-            case '{':
-                pushToken(i, result, BRACKETS_OPEN);
-                break;
-            case '}':
-                pushToken(i, result, BRACKETS_CLOSE);
-                break;
-            case '(':
-                pushToken(i, result, PAREN_OPEN);
-                break;
-            case ')':
-                pushToken(i, result, PAREN_CLOSE);
-                break;
-            case '[':
-                pushToken(i, result, ARRAY_OPEN);
-                break;
-            case ']':
-                pushToken(i, result, ARRAY_CLOSE);
-                break;
-            default:
-                if (c == "f" && string[ii + 1] + "u" && string[ii + 2] + "n" && string[ii + 3] + "c") {
-                    ii += 3;
-                }        
-                break;
+            case '{': pushToken(&result, BRACKETS_OPEN); break;
+            case '}': pushToken(&result, BRACKETS_CLOSE); break;
+            case '(': pushToken(&result, PAREN_OPEN); break;
+            case ')': pushToken(&result, PAREN_CLOSE); break;
+            case '[': pushToken(&result, ARRAY_OPEN); break;
+            case ']': pushToken(&result, ARRAY_CLOSE); break;
         }
     }
 
-    // Handle EOF token
-    if(strlen(result.tokens[result.size].value) == 0) {
+    if (result.size > 0 && strlen(result.tokens[result.size - 1].value) == 0) {
         result.size--;
     }
 
@@ -75,8 +111,7 @@ struct LexerResult runLexer(char string[]) {
 /**
  * Sets the token type of the currently selected token in the LexerResult with the provided token type.
  */
-void pushToken(int i, struct LexerResult result, enum TokenType type) {
-    i = 0;
-    result.tokens[result.size].type = type;
-    result.size++;
+void pushToken(struct LexerResult* result, enum TokenType type) {
+    result->tokens[result->size].type = type;
+    result->size++;
 }

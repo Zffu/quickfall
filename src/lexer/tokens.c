@@ -2,7 +2,7 @@
  * Data related to tokens
  */
 
-#define longestKeywordSize 4
+#define longestKeywordSize 32 // Pumped up to handle longer values like numbers
 #define smallestKeywordSize 4
 
 /**
@@ -18,8 +18,12 @@ enum TokenType {
     PAREN_CLOSE = 7,
     ARRAY_OPEN = 8,
     ARRAY_CLOSE = 9,
-
-    KEYWORD = 10
+    NUMBER = 10,
+    STRING = 11,
+    BOOLEAN = 12,
+    NU = 13, // Null is a keyword but also a value
+    
+    KEYWORD = 14
 };
 
 int keywords[6];
@@ -54,9 +58,17 @@ struct KeywordResult getKeywords(char start) {
 
     switch(start) {
         case 'f':
+            // Return both possibilities for 'f' prefix
             result.keywords[0] = "func";
             result.types[0] = FUNCTION;
-            result.count++;
+            result.keywords[1] = "false";
+            result.types[1] = BOOLEAN;
+            result.count = 2;
+            break;
+        case 't':
+            result.keywords[0] = "true";
+            result.types[0] = BOOLEAN;
+            result.count = 1;
             break;
     }
 
