@@ -22,6 +22,7 @@ CFLAGS = -Wall -Wextra -std=c11 -Wimplicit-function-declaration
 SRC_DIR = src
 CLI_DIR = $(SRC_DIR)/cli
 LEXER_DIR = $(SRC_DIR)/lexer
+PARSER_DIR = $(SRC_DIR)/parser
 UTILS_DIR = $(SRC_DIR)/utils
 BUILD_DIR = build
 
@@ -29,7 +30,9 @@ BUILD_DIR = build
 SOURCES = $(CLI_DIR)/main.c \
           $(LEXER_DIR)/lexer.c \
           $(LEXER_DIR)/tokens.c \
-          $(UTILS_DIR)/hashes.c
+          $(PARSER_DIR)/parser.c \
+          $(UTILS_DIR)/hashes.c \
+          
 
 # Object files
 OBJECTS = $(SOURCES:%.c=$(BUILD_DIR)/%.o)
@@ -50,6 +53,7 @@ check_commands:
 $(BUILD_DIR):
 	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)cli
 	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)lexer
+	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)parser
 	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)utils
 
 # Compile source files
