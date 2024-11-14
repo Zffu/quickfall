@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "../lexer/lexer.h"
+#include "../parser/parser.h"
 
 // Version
 #define VERSION "0.1.0"
@@ -158,10 +159,7 @@ int main(int argc, char* argv[]) {
             char* buff = readFile(args.inputFile, size);
             struct LexerResult result = runLexer(buff);
 
-            printf("Tokens:\n");
-            for (int i = 0; i < result.size; i++) {
-                printf("  [%d] Type: %d, Value: '%s'\n", i, result.tokens[i].type, result.tokens[i].value);
-            }
+            runParser(result);
 
             free(buff);
             return 1;
