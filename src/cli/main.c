@@ -108,7 +108,7 @@ void showHelpMessage() {
 /**
  * Reads a file into a buffer and returns the buffer and size.
  */
-char* readFile(const char* path, int* size) {
+char* readFile(const char* path) {
     FILE* filePtr = fopen(path, "r");
     if (filePtr == NULL) {
         printf("Error: Could not open file '%s'\n", path);
@@ -116,7 +116,7 @@ char* readFile(const char* path, int* size) {
     }
 
     fseek(filePtr, 0, SEEK_END);
-    *size = ftell(filePtr);
+    int size = ftell(filePtr);
     fseek(filePtr, 0, SEEK_SET);
 
     char* bufferPtr = (char*) malloc(size + 1);
@@ -126,8 +126,8 @@ char* readFile(const char* path, int* size) {
         exit(1);
     }
 
-    fread(bufferPtr, 1, *size, filePtr);
-    bufferPtr[*size] = '\0';
+    fread(bufferPtr, 1, size, filePtr);
+    bufferPtr[size] = '\0';
     fclose(filePtr);
     return bufferPtr;
 }
@@ -155,8 +155,7 @@ int main(int argc, char* argv[]) {
                 return -1;
             }
             
-            int* size;
-            char* buff = readFile(args.inputFile, size);
+            char* buff = readFile(args.inputFile);
             struct LexerResult result = runLexer(buff);
 
             runParser(result);
