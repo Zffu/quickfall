@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "../parser/ast.h"
 #include "../lexer/lexer.h"
+#include "../parser/parser.h"
 
 // Version
 #define VERSION "0.1.0"
@@ -28,6 +30,12 @@ struct Arguments {
 ██ ▄▄ ██ ██    ██ ██ ██      ██  ██  ██      ██   ██ ██      ██      \n\
  ██████   ██████  ██  ██████ ██   ██ ██      ██   ██ ███████ ███████ \n\
     ▀▀                                                                 \n"
+
+
+char* getStringCounterpart(enum ASTNodeType type)  {
+    char* debug[18] = {"Variable Definition", "Function Definition", "Function Name", "Function Template", "Function Body", "Function Call", "Variable", "Parameters", "Parameter", "Parameter Type", "Parameter Name", "Generic", "Function Invoking Target", "Function Invoking Parameters", "Variable Type", "Variable Meta", "Variable Name", "Variable Value"};
+    return debug[type];
+}
 
 /**
  * Parse command line arguments into a structured format
@@ -107,7 +115,7 @@ void showHelpMessage() {
 /**
  * Reads a file into a buffer and returns the buffer and size.
  */
-char* readFile(const char* path, int* size) {
+char* readFile(const char* path) {
     FILE* filePtr = fopen(path, "r");
     if (filePtr == NULL) {
         printf("Error: Could not open file '%s'\n", path);
@@ -115,7 +123,7 @@ char* readFile(const char* path, int* size) {
     }
 
     fseek(filePtr, 0, SEEK_END);
-    *size = ftell(filePtr);
+    int size = ftell(filePtr);
     fseek(filePtr, 0, SEEK_SET);
 
     char* bufferPtr = (char*) malloc(size + 1);
@@ -125,8 +133,8 @@ char* readFile(const char* path, int* size) {
         exit(1);
     }
 
-    fread(bufferPtr, 1, *size, filePtr);
-    bufferPtr[*size] = '\0';
+    fread(bufferPtr, 1, size, filePtr);
+    bufferPtr[size] = '\0';
     fclose(filePtr);
     return bufferPtr;
 }
@@ -154,14 +162,18 @@ int main(int argc, char* argv[]) {
                 return -1;
             }
             
-            int* size;
-            char* buff = readFile(args.inputFile, size);
+            char* buff = readFile(args.inputFile);
             struct LexerResult result = runLexer(buff);
 
-            printf("Tokens:\n");
-            for (int i = 0; i < result.size; i++) {
-                printf("  [%d] Type: %d, Value: '%s'\n", i, result.tokens[i].type, result.tokens[i].value);
+            struct ASTNode* node = runParser(result);
+
+            if(node == NULL) {
+                printf("Error: cannot generate output as the provided AST node is null!");
+                return;
             }
+
+            printf("AST Node dump:\n");
+            dumpAST(node,0);
 
             free(buff);
             return 1;
@@ -192,5 +204,25 @@ int main(int argc, char* argv[]) {
             printf("Error: Unknown command '%s'\n", args.command);
             showHelpMessage();
             return 0;
+    }
+}
+
+void dumpAST(struct ASTNode* node, int depth) {
+    for(int i = 0; i < depth; ++i) {
+        printf("  ");
+    }
+
+    printf("AST Node of type %s (%d) with value '%s'\n", getStringCounterpart(node->type), node->type, (node->value != "" ? node->value : "None"));
+    
+    if(node->left != NULL) {
+        dumpAST(node->left, depth + 1);
+    }
+
+    if(node->right != NULL) {
+        dumpAST(node->right, depth + 1);
+    }
+
+    if(node->next != NULL) {
+        dumpAST(node->next, depth);
     }
 }

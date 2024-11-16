@@ -8,7 +8,7 @@
  * Represents a single token from lexical analysis
  */
 struct Token {
-    int type;
+    enum TokenType type;
     char value[32];  // Using 32 as longestKeywordSize
 };
 

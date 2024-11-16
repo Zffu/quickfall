@@ -18,7 +18,10 @@ enum TokenType {
     STRING = 11,
     BOOLEAN = 12,
     NU = 13,
-    KEYWORD = 14
+    KEYWORD = 14,
+    SEMICOLON = 15,
+    COMMA = 16,
+    DECLARE = 17
 };
 
 struct KeywordResult {
