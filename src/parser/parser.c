@@ -29,6 +29,11 @@ struct ASTNode* parseParameters(struct LexerResult result, int index) {
             return root;
         }
 
+        if(t.type != COMMA && t.type != KEYWORD) {
+            printf("Error: Parameters must be literals! Got %d", t.type);
+            return NULL;
+        }
+
         if(t.type == COMMA) {
             if(mode != 2) {
                 printf("Error: Parameters were not passed correctly!\n");
@@ -122,6 +127,8 @@ struct ASTNode* parseFunctionInvoke(struct LexerResult result, int index) {
     node->right = createASTNode(AST_INVOKE_PARAMETERS);
     memcpy(node->left->value, result.tokens[index].value, strlen(result.tokens[index].value));
 
+    index++;
+
     int i = 0;
     for(; index < result.size; ++index) {
         struct Token t = result.tokens[index];
@@ -145,6 +152,7 @@ struct ASTNode* parseFunctionInvoke(struct LexerResult result, int index) {
 
         current->next = n;
         current = n;
+        i = 1;
     }
 
     node->end = index;
@@ -176,7 +184,7 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
 
         if(t.type == KEYWORD) {
             if(next.type == PAREN_OPEN) {
-                struct ASTNode* node = parseFunctionInvoke(result, index + 2);
+                struct ASTNode* node = parseFunctionInvoke(result, index);
 
                 if(node != NULL) {
                     index = node->end;

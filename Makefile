@@ -16,7 +16,7 @@ else
 endif
 
 # Compiler settings
-CFLAGS = -Wall -Wextra -std=c11 -Wimplicit-function-declaration
+CFLAGS = -Wall -Wextra -std=c11 -Wimplicit-function-declaration -g
 
 # Directories
 SRC_DIR = src
@@ -31,6 +31,7 @@ SOURCES = $(CLI_DIR)/main.c \
           $(LEXER_DIR)/lexer.c \
           $(LEXER_DIR)/tokens.c \
           $(PARSER_DIR)/parser.c \
+          $(PARSER_DIR)/ast.c \
           $(UTILS_DIR)/hashes.c \
           
 
@@ -62,7 +63,7 @@ $(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
 
 # Link object files
 $(TARGET): $(OBJECTS)
-	gcc $(OBJECTS) -o $@
+	gcc $(OBJECTS) -g -o $@
 
 # Clean build files
 clean:
