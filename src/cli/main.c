@@ -212,7 +212,7 @@ void dumpAST(struct ASTNode* node, int depth) {
         printf("  ");
     }
 
-    printf("AST Node of type %s (%d)\n", getStringCounterpart(node->type), node->type);
+    printf("AST Node of type %s (%d) with value %s\n", getStringCounterpart(node->type), node->type, (node->value != "" ? node->value : "None"));
     
     if(node->left != NULL) {
         dumpAST(node->left, depth + 1);
