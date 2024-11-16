@@ -23,7 +23,7 @@ struct ASTNode {
     struct ASTNode* left;
     struct ASTNode* right;
     struct ASTNode* next;
-    int size;
+    int end;
 };
 
 /**

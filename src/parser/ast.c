@@ -10,7 +10,7 @@ struct ASTNode* createASTNode(enum ASTNodeType type) {
     node->right = NULL;
     node->next = NULL;
     node->type = type;
-    node->size = 0;
+    node->end = 0;
 
     return node;
 }
