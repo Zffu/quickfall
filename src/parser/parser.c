@@ -7,6 +7,11 @@
 #include "./ast.h"
 #include <stdio.h>
 
+struct ASTNode* parseParameters(struct LexerResult result, int index);
+struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index);
+struct ASTNode* parseExpression(struct LexerResult result, int index, int end);
+
+
 /**
  * Parses parameters of a function.
  */
@@ -58,7 +63,9 @@ struct ASTNode* parseParameters(struct LexerResult result, int index) {
 /**
  * Parses a function declaration.
  */
-void parseFunctionDeclaration(struct LexerResult result, int index) {
+struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
+    struct ASTNode* node = createASTNode(AST_FUNCTION_DEF);
+
     if(result.tokens[index + 2].type != PAREN_OPEN) {
         printf("Error: Excepted a paren after function name!\n");
         return;
@@ -66,9 +73,13 @@ void parseFunctionDeclaration(struct LexerResult result, int index) {
 
     struct ASTNode* parameters = parseParameters(result, index + 3);
 
+    node->left = createASTNode(AST_FUNCTION_TEMPLATE);
+    node->left->left = createASTNode(AST_FUNCTION_NAME);
+    node->left->right = parameters;
+
     if(!parameters) {
         printf("Error: Argument parsing went wrong!\n");
-        return;
+        return NULL;
     }
 
     index = parameters->end + 1;
@@ -79,30 +90,53 @@ void parseFunctionDeclaration(struct LexerResult result, int index) {
         for(;index < result.size +1; ++index) {
             printf("Index: %d, Type: %d\n", index, result.tokens[index].type);
         }
-        return;
+        return NULL;
     }
 
     index++;
 
+    int start = index;
+
     for(;index < result.size; ++index) {
         struct Token t = result.tokens[index];
 
-        if(t.type == BRACKETS_CLOSE) break;
+        if(t.type == BRACKETS_CLOSE) {
+            node->right = parseExpression(result, start, index); //todo: make a function to remove the need to loop to find the closing point
+        }
 
         printf("Token in method body: %d\n", t.type);
     }
+
+    return node;
 }
 
-void runParser(struct LexerResult result) {
-    for(int i = 0; i < result.size; ++i) {
-        struct Token t = result.tokens[i];
-        struct Token next = result.tokens[i + 1];
+/**
+ * Parses an expression in the specified range.
+ */
+struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
+    struct ASTNode* root = createASTNode(AST_GENERIC);
+    struct ASTNode* current = root;
+
+    for(; index < end; ++index) {
+        struct Token t = result.tokens[index];
+        struct Token next = result.tokens[index + 1];
 
         if(t.type == FUNCTION) {
 
             if(next.type == KEYWORD) {
-                parseFunctionDeclaration(result, i);
+                struct ASTNode* node = parseFunctionDeclaration(result, index);
+
+                if(node != NULL) {
+                    current->next = node;
+                    current = node;
+                }
             }
         }
     }
+
+    return root;
+}
+
+struct ASTNode* runParser(struct LexerResult result) {
+    return parseExpression(result, 0, result.size);
 }

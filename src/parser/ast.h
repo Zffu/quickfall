@@ -7,13 +7,19 @@
 enum ASTNodeType {
     AST_VARIABLE_DEF,
     AST_FUNCTION_DEF,
+    AST_FUNCTION_NAME,
+    AST_FUNCTION_TEMPLATE,
+    AST_FUNCTION_BODY,
     AST_FUNCTION_CALL,
     AST_VARIABLE,
     AST_PARAMETERS,
     AST_PARAM,
     AST_PARAM_TYPE,
-    AST_PARAM_NAME
+    AST_PARAM_NAME,
+    AST_GENERIC
 };
+
+char* debug[11] = {"Variable Definition", "Function Definition", "Function Name", "Function Template", "Function Body", "Function Call", "Variable", "Parameters", "Parameter", "Parameter Type", "Parameter Name", "Generic"};
 
 /**
  * An AST node.
