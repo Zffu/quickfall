@@ -159,6 +159,26 @@ struct ASTNode* parseFunctionInvoke(struct LexerResult result, int index) {
     return node;
 }
 
+struct ASTNode* parseVariableDefinition(struct LexerResult result, int index) {
+    struct ASTNode* node = createASTNode(AST_VARIABLE_DEF);
+    node->left = createASTNode(AST_VARIABLE_NAME);
+
+    memcpy(node->left->value, result.tokens[index].value, strlen(result.tokens[index].value));
+
+    struct Token val = result.tokens[index + 2];
+
+    if(val.type != KEYWORD && val.type != NUMBER && val.type != STRING && val.type != BOOLEAN) {
+        printf("Error: Disallowed token as variable value: %d\n", val.type);
+        return NULL;
+    }
+
+    node->right = createASTNode(AST_VARIABLE_VALUE);
+    memcpy(node->right->value, result.tokens[index + 2].value, strlen(result.tokens[index + 2].value));
+
+    node->end = index + 2;
+    return node;
+}
+
 /**
  * Parses an expression in the specified range.
  */
@@ -187,6 +207,15 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
         else if(t.type == KEYWORD) {
             if(next.type == PAREN_OPEN) {
                 struct ASTNode* node = parseFunctionInvoke(result, index);
+
+                if(node != NULL) {
+                    index = node->end;
+                    current->next = node;
+                    current = node;
+                }
+            }
+            if(next.type == DECLARE) {
+                struct ASTNode* node = parseVariableDefinition(result, index);
 
                 if(node != NULL) {
                     index = node->end;
