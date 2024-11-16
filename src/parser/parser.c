@@ -97,7 +97,7 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
 
     int start = index;
 
-    for(;index < result.size; ++index) {
+    for(;index < result.size + 1; ++index) {
         struct Token t = result.tokens[index];
 
         if(t.type == BRACKETS_CLOSE) {

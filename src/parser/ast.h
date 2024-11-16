@@ -19,8 +19,6 @@ enum ASTNodeType {
     AST_GENERIC
 };
 
-char* debug[11] = {"Variable Definition", "Function Definition", "Function Name", "Function Template", "Function Body", "Function Call", "Variable", "Parameters", "Parameter", "Parameter Type", "Parameter Name", "Generic"};
-
 /**
  * An AST node.
  */
