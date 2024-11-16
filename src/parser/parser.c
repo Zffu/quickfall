@@ -122,15 +122,15 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
 
 struct ASTNode* parseFunctionInvoke(struct LexerResult result, int index) {
     struct ASTNode* node = createASTNode(AST_FUNCTION_CALL);
-    struct ASTNode* current = node;
     node->left = createASTNode(AST_INVOKE_TARGET);
     node->right = createASTNode(AST_INVOKE_PARAMETERS);
+    struct ASTNode* current = node->right;
     memcpy(node->left->value, result.tokens[index].value, strlen(result.tokens[index].value));
 
-    index++;
+    index += 2;
 
     int i = 0;
-    for(; index < result.size; ++index) {
+    for(; index < result.size + 1; ++index) {
         struct Token t = result.tokens[index];
 
         if(t.type == PAREN_CLOSE) {
@@ -147,10 +147,12 @@ struct ASTNode* parseFunctionInvoke(struct LexerResult result, int index) {
             continue;
         }
 
-        struct ASTNode* n = createASTNode(AST_PARAM_NAME);
+        struct ASTNode* n = createASTNode(AST_PARAM);
+
         memcpy(n->value, result.tokens[index].value, strlen(result.tokens[index].value));
 
         current->next = n;
+
         current = n;
         i = 1;
     }
