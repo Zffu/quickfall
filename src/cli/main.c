@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "../parser/ast.h"
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
 
@@ -29,6 +30,12 @@ struct Arguments {
 ██ ▄▄ ██ ██    ██ ██ ██      ██  ██  ██      ██   ██ ██      ██      \n\
  ██████   ██████  ██  ██████ ██   ██ ██      ██   ██ ███████ ███████ \n\
     ▀▀                                                                 \n"
+
+
+char* getStringCounterpart(enum ASTNodeType type)  {
+    char* debug[12] = {"Variable Definition", "Function Definition", "Function Name", "Function Template", "Function Body", "Function Call", "Variable", "Parameters", "Parameter", "Parameter Type", "Parameter Name", "Generic"};
+    return debug[type];
+}
 
 /**
  * Parse command line arguments into a structured format
@@ -158,7 +165,15 @@ int main(int argc, char* argv[]) {
             char* buff = readFile(args.inputFile);
             struct LexerResult result = runLexer(buff);
 
-            runParser(result);
+            struct ASTNode* node = runParser(result);
+
+            if(node == NULL) {
+                printf("Error: cannot generate output as the provided AST node is null!");
+                return;
+            }
+
+            printf("AST Node dump:\n");
+            dumpAST(node,0);
 
             free(buff);
             return 1;
@@ -189,5 +204,25 @@ int main(int argc, char* argv[]) {
             printf("Error: Unknown command '%s'\n", args.command);
             showHelpMessage();
             return 0;
+    }
+}
+
+void dumpAST(struct ASTNode* node, int depth) {
+    for(int i = 0; i < depth; ++i) {
+        printf("  ");
+    }
+
+    printf("AST Node of type %s (%d)\n", getStringCounterpart(node->type), node->type);
+    
+    if(node->left != NULL) {
+        dumpAST(node->left, depth + 1);
+    }
+
+    if(node->right != NULL) {
+        dumpAST(node->right, depth + 1);
+    }
+
+    if(node->next != NULL) {
+        dumpAST(node->next, depth);
     }
 }
