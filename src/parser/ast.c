@@ -4,12 +4,11 @@
 /**
  * Creates an AST node.
  */
-struct ASTNode* createASTNode(enum ASTNodeType type, char* value) {
+struct ASTNode* createASTNode(enum ASTNodeType type) {
     struct ASTNode* node = malloc(sizeof(struct ASTNode));
     node->left = NULL;
     node->right = NULL;
     node->next = NULL;
-    node->value = value;
     node->type = type;
     node->end = 0;
 

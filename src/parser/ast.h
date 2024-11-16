@@ -24,7 +24,6 @@ enum ASTNodeType {
  */
 struct ASTNode {
     enum ASTNodeType type;
-    char* value;
     struct ASTNode* left;
     struct ASTNode* right;
     struct ASTNode* next;
@@ -34,6 +33,6 @@ struct ASTNode {
 /**
  * Creates an AST node.
  */
-struct ASTNode* createASTNode(enum ASTNodeType type, char* value);
+struct ASTNode* createASTNode(enum ASTNodeType type);
 
 #endif
