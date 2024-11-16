@@ -33,7 +33,7 @@ struct Arguments {
 
 
 char* getStringCounterpart(enum ASTNodeType type)  {
-    char* debug[12] = {"Variable Definition", "Function Definition", "Function Name", "Function Template", "Function Body", "Function Call", "Variable", "Parameters", "Parameter", "Parameter Type", "Parameter Name", "Generic"};
+    char* debug[14] = {"Variable Definition", "Function Definition", "Function Name", "Function Template", "Function Body", "Function Call", "Variable", "Parameters", "Parameter", "Parameter Type", "Parameter Name", "Generic", "Function Invoking Target", "Function Invoking Parameters"};
     return debug[type];
 }
 
@@ -212,7 +212,7 @@ void dumpAST(struct ASTNode* node, int depth) {
         printf("  ");
     }
 
-    printf("AST Node of type %s (%d) with value %s\n", getStringCounterpart(node->type), node->type, (node->value != "" ? node->value : "None"));
+    printf("AST Node of type %s (%d) with value '%s'\n", getStringCounterpart(node->type), node->type, (node->value != "" ? node->value : "None"));
     
     if(node->left != NULL) {
         dumpAST(node->left, depth + 1);

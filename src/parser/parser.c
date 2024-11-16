@@ -115,6 +115,42 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
     return node;
 }
 
+struct ASTNode* parseFunctionInvoke(struct LexerResult result, int index) {
+    struct ASTNode* node = createASTNode(AST_FUNCTION_CALL);
+    struct ASTNode* current = node;
+    node->left = createASTNode(AST_INVOKE_TARGET);
+    node->right = createASTNode(AST_INVOKE_PARAMETERS);
+    memcpy(node->left->value, result.tokens[index].value, strlen(result.tokens[index].value));
+
+    int i = 0;
+    for(; index < result.size; ++index) {
+        struct Token t = result.tokens[index];
+
+        if(t.type == PAREN_CLOSE) {
+            node->end = index;
+            return node;
+        }
+
+        if(t.type == COMMA) {
+            if(i == 0) {
+                printf("Error: Invoker arguments were passed wrongly!\n");
+                return NULL;
+            }
+            i = 0;
+            continue;
+        }
+
+        struct ASTNode* n = createASTNode(AST_PARAM_NAME);
+        memcpy(n->value, result.tokens[index].value, strlen(result.tokens[index].value));
+
+        current->next = n;
+        current = n;
+    }
+
+    node->end = index;
+    return node;
+}
+
 /**
  * Parses an expression in the specified range.
  */
@@ -127,9 +163,20 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
         struct Token next = result.tokens[index + 1];
 
         if(t.type == FUNCTION) {
-
             if(next.type == KEYWORD) {
                 struct ASTNode* node = parseFunctionDeclaration(result, index);
+
+                if(node != NULL) {
+                    index = node->end;
+                    current->next = node;
+                    current = node;
+                }
+            }
+        }
+
+        if(t.type == KEYWORD) {
+            if(next.type == PAREN_OPEN) {
+                struct ASTNode* node = parseFunctionInvoke(result, index + 2);
 
                 if(node != NULL) {
                     index = node->end;
