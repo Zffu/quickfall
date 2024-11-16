@@ -180,9 +180,11 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
                     current = node;
                 }
             }
+            else {
+                printf("Error: Excepted function name after func!\n");
+            }
         }
-
-        if(t.type == KEYWORD) {
+        else if(t.type == KEYWORD) {
             if(next.type == PAREN_OPEN) {
                 struct ASTNode* node = parseFunctionInvoke(result, index);
 
@@ -192,6 +194,9 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
                     current = node;
                 }
             }
+        }
+        else {
+            printf("Error: Unexcepted token %d\n", t.type);
         }
     }
 
