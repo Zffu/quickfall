@@ -24,6 +24,7 @@ enum ASTNodeType {
  */
 struct ASTNode {
     enum ASTNodeType type;
+    char value[32];
     struct ASTNode* left;
     struct ASTNode* right;
     struct ASTNode* next;

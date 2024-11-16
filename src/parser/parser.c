@@ -6,6 +6,7 @@
 #include "../lexer/lexer.h"
 #include "./ast.h"
 #include <stdio.h>
+#include <string.h>
 
 struct ASTNode* parseParameters(struct LexerResult result, int index);
 struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index);
@@ -75,6 +76,7 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
 
     node->left = createASTNode(AST_FUNCTION_TEMPLATE);
     node->left->left = createASTNode(AST_FUNCTION_NAME);
+    memcpy(node->left->left->value, result.tokens[index + 1].value, strlen(result.tokens[index + 1].value));
     node->left->right = parameters;
 
     if(!parameters) {
@@ -107,6 +109,7 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
         printf("Token in method body: %d\n", t.type);
     }
 
+    node->end = index;
     return node;
 }
 
@@ -127,6 +130,7 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
                 struct ASTNode* node = parseFunctionDeclaration(result, index);
 
                 if(node != NULL) {
+                    index = node->end;
                     current->next = node;
                     current = node;
                 }
