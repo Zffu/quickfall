@@ -99,6 +99,7 @@ struct LexerResult runLexer(char string[]) {
             case '[': pushToken(&result, ARRAY_OPEN); break;
             case ']': pushToken(&result, ARRAY_CLOSE); break;
             case ';': pushToken(&result, SEMICOLON); break;
+            case ',': pushToken(&result, COMMA); break;
             case '=': pushToken(&result, DECLARE); break;
         }
     }
