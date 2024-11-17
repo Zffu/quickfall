@@ -7,6 +7,10 @@
 
 #include "../parser/ast.h"
 
-void compile(struct ASTNode* tree);
+struct CompilerOutput {
+    char output[2048];
+};
+
+struct CompilerOutput compile(struct ASTNode* node);
 
 #endif
