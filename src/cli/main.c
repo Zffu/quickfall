@@ -19,6 +19,7 @@ struct Arguments {
     char* command;
     char* inputFile;
     char* outputFile;
+    char* platform;
     int showHelp;
     int showVersion;
     int error;
@@ -46,6 +47,7 @@ struct Arguments parseArguments(int argc, char* argv[]) {
         .command = NULL,
         .inputFile = NULL,
         .outputFile = "a.out",
+        .platform = "win",
         .showHelp = 0,
         .showVersion = 0,
         .error = 0
@@ -72,6 +74,14 @@ struct Arguments parseArguments(int argc, char* argv[]) {
             if (i + 1 < argc) {
                 args.outputFile = argv[++i];
             } else {
+                args.error = 1;
+            }
+        }
+        else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--platform") == 0) {
+            if(i + i < argc) {
+                args.platform = argv[++i];
+            }
+            else {
                 args.error = 1;
             }
         }
@@ -140,7 +150,7 @@ char* readFile(const char* path) {
     return bufferPtr;
 }
 
-struct CompilerOutput compileFile(char* filePath) {
+struct CompilerOutput compileFile(char* filePath, char* platform) {
     char* buffer = readFile(filePath);
     struct LexerResult result = runLexer(buffer);
 
@@ -153,7 +163,7 @@ struct CompilerOutput compileFile(char* filePath) {
     
     free(buffer);
 
-    return compile(node);
+    return compile(node, platform);
 }
 
 int main(int argc, char* argv[]) {
@@ -179,7 +189,7 @@ int main(int argc, char* argv[]) {
                 return -1;
             }
             
-            printf("Compiled:\n%s", compileFile(args.inputFile));
+            printf("Compiled:\n%s", compileFile(args.inputFile, args.platform));
 
             return 1;
         
@@ -191,7 +201,7 @@ int main(int argc, char* argv[]) {
 
             printf("→ Building %s...\n", args.inputFile);
 
-            struct CompilerOutput output = compileFile(args.inputFile);
+            struct CompilerOutput output = compileFile(args.inputFile, args.platform);
 
             FILE* fptr = fopen(args.outputFile, "w");
             fprintf(fptr, output.output);

@@ -11,7 +11,7 @@ struct CompilerOutput {
     char output[2048];
 };
 
-struct CompilerOutput compile(struct ASTNode* node) {
+struct CompilerOutput compile(struct ASTNode* node, char* platform) {
     char sections[1024] = {""};
     char startOutput[1024] = {"_start:"};
 

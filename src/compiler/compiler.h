@@ -11,6 +11,6 @@ struct CompilerOutput {
     char output[2048];
 };
 
-struct CompilerOutput compile(struct ASTNode* node);
+struct CompilerOutput compile(struct ASTNode* node, char* platform);
 
 #endif
