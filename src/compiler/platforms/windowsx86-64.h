@@ -2,4 +2,7 @@
  * Compiling for Windows x86-64 systems.
  */
 
-char* win64compile(struct ASTNode* node);
+#include "../../parser/ast.h"
+#include "../compiler.h"
+
+struct CompilerOutput win64compile(struct ASTNode* node);
