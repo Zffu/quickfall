@@ -9,6 +9,7 @@
 #include "../parser/ast.h"
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
+#include "../compiler/compiler.h"
 
 // Version
 #define VERSION "0.1.0"
@@ -139,6 +140,22 @@ char* readFile(const char* path) {
     return bufferPtr;
 }
 
+struct CompilerOutput compileFile(char* filePath) {
+    char* buffer = readFile(filePath);
+    struct LexerResult result = runLexer(buffer);
+
+    struct ASTNode* node = runParser(result);
+
+    if(node == NULL) {
+        printf("Error: cannot generate output as the provided AST node is null!");
+        return;
+    }   
+    
+    free(buffer);
+
+    return compile(node);
+}
+
 int main(int argc, char* argv[]) {
     struct Arguments args = parseArguments(argc, argv);
 
@@ -162,20 +179,8 @@ int main(int argc, char* argv[]) {
                 return -1;
             }
             
-            char* buff = readFile(args.inputFile);
-            struct LexerResult result = runLexer(buff);
+            printf("Compiled:\n%s", compileFile(args.inputFile));
 
-            struct ASTNode* node = runParser(result);
-
-            if(node == NULL) {
-                printf("Error: cannot generate output as the provided AST node is null!");
-                return;
-            }
-
-            printf("AST Node dump:\n");
-            dumpAST(node,0);
-
-            free(buff);
             return 1;
         
         case 'b':
@@ -184,7 +189,14 @@ int main(int argc, char* argv[]) {
                 return -1;
             }
 
-            printf("→ Creating new project '%s'...\n", args.inputFile);
+            printf("→ Building %s...\n", args.inputFile);
+
+            struct CompilerOutput output = compileFile(args.inputFile);
+
+            FILE* fptr = fopen(args.outputFile, "w");
+            fprintf(fptr, output.output);
+            fclose(fptr);
+
             return 1;
 
         case 'i':
