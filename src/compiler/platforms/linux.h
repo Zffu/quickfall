@@ -7,7 +7,6 @@
 
 #include <string.h>
 #include "../../parser/ast.h"
-#include "./platforms.h"
 
 char* decSec(char* name, char* type, char* val);
 char* movR(char* name, char* v);

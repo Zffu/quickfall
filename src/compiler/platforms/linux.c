@@ -4,7 +4,6 @@
 
 #include <string.h>
 #include "../../parser/ast.h"
-#include "./platforms.h"
 
 /**
  * Handles the decSec assembly thing.

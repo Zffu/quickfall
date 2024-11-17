@@ -5,7 +5,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "../parser/ast.h"
-#include "./platforms/platforms.h"
 #include "./platforms/linux.h"
 
 struct CompilerOutput {
