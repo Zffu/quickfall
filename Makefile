@@ -23,6 +23,8 @@ SRC_DIR = src
 CLI_DIR = $(SRC_DIR)/cli
 LEXER_DIR = $(SRC_DIR)/lexer
 PARSER_DIR = $(SRC_DIR)/parser
+COMPILER_DIR = $(SRC_DIR)/compiler
+COMPILER_PLATFORMS = $(COMPILER_DIR)/platforms
 UTILS_DIR = $(SRC_DIR)/utils
 BUILD_DIR = build
 
@@ -32,6 +34,9 @@ SOURCES = $(CLI_DIR)/main.c \
           $(LEXER_DIR)/tokens.c \
           $(PARSER_DIR)/parser.c \
           $(PARSER_DIR)/ast.c \
+          $(COMPILER_DIR)/compiler.c \
+          $(COMPILER_PLATFORMS)/linux.c \
+          $(COMPILER_PLATFORMS)/windows.c \
           $(UTILS_DIR)/hashes.c \
           
 
@@ -53,6 +58,8 @@ check_commands:
 # Create build directory structure
 $(BUILD_DIR):
 	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)cli
+	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)compiler
+	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)compiler$(PATHSEP)platforms
 	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)lexer
 	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)parser
 	$(MKDIR) $(BUILD_DIR)$(PATHSEP)$(SRC_DIR)$(PATHSEP)utils
