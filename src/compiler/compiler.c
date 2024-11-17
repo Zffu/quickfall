@@ -25,6 +25,10 @@ struct CompilerOutput compile(struct ASTNode* node) {
                 strcat(sections, node->right->next->value);
                 continue;
             }
+            if(strcmp(node->left->value, "secEnd") == 0) {
+                strcat(sections, "\n\n");
+                continue;
+            }
         }
     }
 

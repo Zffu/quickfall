@@ -22,13 +22,6 @@ char* decSec(char* name, char* type, char* val) {
 }
 
 /**
- * Handles the secEnd assembly thing.
- */
-char* secEnd() {
-    return "\n\n";
-}
-
-/**
  * Handles the movR assembly thing.
  */
 char* movR(char* name, char *v) {

@@ -10,7 +10,6 @@
 #include "./platforms.h"
 
 char* decSec(char* name, char* type, char* val);
-char* secEnd();
 char* movR(char* name, char* v);
 char* sectG(char* val);
 char* syscall();
