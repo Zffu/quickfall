@@ -5,13 +5,27 @@
 #include <string.h>
 #include <stdio.h>
 #include "../parser/ast.h"
+
 #include "./platforms/linux.h"
+#include "./platforms/windows.h"
+
+enum Platform {
+    WINDOWS,
+    LINUX
+};
+
+enum Platform platformFromString(char* platform) {
+    if(strcmp(platform, "win")) return WINDOWS;
+    else LINUX;
+}
 
 struct CompilerOutput {
     char output[2048];
 };
 
 struct CompilerOutput compile(struct ASTNode* node, char* platform) {
+    enum Platform p = platformFromString(platform);
+
     char sections[1024] = {""};
     char startOutput[1024] = {"_start:"};
 
@@ -27,6 +41,15 @@ struct CompilerOutput compile(struct ASTNode* node, char* platform) {
             if(strcmp(node->left->value, "secEnd") == 0) {
                 strcat(sections, "\n\n");
                 continue;
+            }
+
+            if(strcmp(node->left->value, "gDef") == 0) {
+                if(p == WINDOWS) strcat(sections, globalDef(node->right->next->value));
+                else {
+                    strcat(sections, "section .text");
+                    strcat(sections, sectG(node->right->next->value));
+                    strcat(sections, "\n\n");
+                }
             }
         }
     }
