@@ -24,13 +24,13 @@ void globalDef(char* buffer, char* name) {
  * Handles the decSec assembly thing.
  */
 void winDecSec(char* buffer, char* name, char* type, char* value) {
-    strcat(buffer, "\n");
+    strcat(buffer, "\n    ");
     strcat(buffer, name);
-    strcat(buffer, ": ");
+    strcat(buffer, "     ");
     strcat(buffer, type);
-    strcat(buffer, " '");
+    strcat(buffer, "  '");
     strcat(buffer, value);
-    strcat(buffer, "', 10,0");
+    strcat(buffer, "', 13, 10, 0");
 }
 
 /**

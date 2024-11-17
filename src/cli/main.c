@@ -153,12 +153,13 @@ char* readFile(const char* path) {
 struct CompilerOutput compileFile(char* filePath, char* platform) {
     char* buffer = readFile(filePath);
     struct LexerResult result = runLexer(buffer);
+    struct CompilerOutput o;
 
     struct ASTNode* node = runParser(result);
 
     if(node == NULL) {
         printf("Error: cannot generate output as the provided AST node is null!");
-        return;
+        return o;
     }   
     
     free(buffer);
@@ -194,7 +195,7 @@ int main(int argc, char* argv[]) {
             return 1;
         
         case 'b':
-            if(!args.inputFile) {
+            if(!args.inputFile && !args.platform) {
                 printf("Error: Missing input File!");
                 return -1;
             }

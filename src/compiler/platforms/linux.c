@@ -5,12 +5,6 @@
 #include <string.h>
 #include "../../parser/ast.h"
 
-void debug_strcat(char* p, char* p1) {
-    printf("strcat called! 1st null: %d, 2nd: %d\n", p == NULL, p1 == NULL);
-
-    //strcat(p,p1);
-}
-
 /**
  * Handles the decSec assembly thing.
  */

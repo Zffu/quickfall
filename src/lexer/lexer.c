@@ -25,6 +25,14 @@ struct LexerResult {
 };
 
 /**
+ * Sets the token type of the currently selected token in the LexerResult with the provided token type.
+ */
+void pushToken(struct LexerResult* result, enum TokenType type) {
+    result->tokens[result->size].type = type;
+    result->size++;
+}
+
+/**
  * Runs the lexer on the provided string and returns the parsed tokens.
  */
 struct LexerResult runLexer(char string[]) {
@@ -109,12 +117,4 @@ struct LexerResult runLexer(char string[]) {
     }
 
     return result;
-}
-
-/**
- * Sets the token type of the currently selected token in the LexerResult with the provided token type.
- */
-void pushToken(struct LexerResult* result, enum TokenType type) {
-    result->tokens[result->size].type = type;
-    result->size++;
 }

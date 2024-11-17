@@ -76,7 +76,7 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
 
     if(result.tokens[index + 2].type != PAREN_OPEN) {
         printf("Error: Excepted a paren after function name!\n");
-        return;
+        return NULL;
     }
 
     struct ASTNode* parameters = parseParameters(result, index + 3);

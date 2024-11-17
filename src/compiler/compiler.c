@@ -24,10 +24,11 @@ struct CompilerOutput {
 };
 
 struct CompilerOutput compile(struct ASTNode* node, char* platform) {
-    enum Platform p = LINUX;
+    enum Platform p = platformFromString(platform);
 
+    char start[1024] = {""};
     char sections[1024] = {""};
-    char startOutput[1024] = {"_start:"};
+    char startOutput[1024] = {"main:"};
 
     while(node->next != NULL) {
         node = node->next;
@@ -45,7 +46,11 @@ struct CompilerOutput compile(struct ASTNode* node, char* platform) {
                 strcat(sections, "\n\n");
             }
             else if(strcmp(node->left->value, "gDef") == 0) {
-                if(p == WINDOWS) globalDef(sections, node->right->next->value);
+                if(p == WINDOWS) {
+                    strcat(start, "\n\nsection .text");
+                    globalDef(start, node->right->next->value);
+                    strcat(start, "\n\n");
+                }
                 else {
                     strcat(sections, "section .text");
                     sectG(sections, node->right->next->value);
@@ -67,13 +72,38 @@ struct CompilerOutput compile(struct ASTNode* node, char* platform) {
                     regXOR(startOutput, node->right->next->value, node->right->next->next->value);
                 }
             }
+            else if(p == WINDOWS) {
+                if(strcmp(node->left->value, "extrnLoad") == 0) {
+                    extrnLoad(start, node->right->next->value);
+                }
+                else if(strcmp(node->left->value, "push") == 0) {
+                    push(startOutput, node->right->next->value);
+                }
+                else if(strcmp(node->left->value, "call") == 0) {
+                    call(startOutput, node->right->next->value);
+                }
+                else if(strcmp(node->left->value, "add") == 0) {
+                    add(startOutput, node->right->next->value, node->right->next->next->value);
+                }
+                else if(strcmp(node->left->value, "ret") == 0) {
+                    ret(startOutput);
+                }
+            }
 
         }
     }
 
     struct CompilerOutput o;
-    strcat(o.output, sections);
-    strcat(o.output, startOutput);
+    strcat(o.output, start);
+
+    if(p != WINDOWS) {
+        strcat(o.output, sections);
+        strcat(o.output, startOutput);
+    }
+    else {
+        strcat(o.output, startOutput);
+        strcat(o.output, sections);
+    }
 
     printf("\n%s", o.output);
     return o;
