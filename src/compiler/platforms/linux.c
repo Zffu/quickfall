@@ -7,16 +7,6 @@
 #include "./platforms.h"
 
 /**
- * Handles the secDec assembly thing.
- */
-char* secDec(char* sectName) {
-    char instruction[32] = {"section ."};
-    strcat(instruction, sectName);
-
-    return instruction;
-}
-
-/**
  * Handles the decSec assembly thing.
  */
 char* decSec(char* name, char* type, char* val) {

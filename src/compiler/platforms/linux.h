@@ -9,7 +9,6 @@
 #include "../../parser/ast.h"
 #include "./platforms.h"
 
-char* secDec(char* sectName);
 char* decSec(char* name, char* type, char* val);
 char* secEnd();
 char* movR(char* name, char* v);

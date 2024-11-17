@@ -20,9 +20,11 @@ struct CompilerOutput compile(struct ASTNode* node) {
         node = node->next;
 
         if(node->type == AST_FUNCTION_CALL) {
-            struct FunctionResult result = handleLinuxLowlevelFunctions(node);
-
-            if(result.mode == 0) strcat(startOutput, result.output);
+            if(strcmp(node->left->value, "secDec") == 0) {
+                strcat(sections, "section .");
+                strcat(sections, node->right->next->value);
+                continue;
+            }
         }
     }
 
