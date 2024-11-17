@@ -7,23 +7,19 @@
 #include "../compiler.h"
 
 struct CompilerOutput win64compile(struct ASTNode* node) {
-    char segments[1024] = {".LC0\n\t\t.globl main\n\t\t.seh_proc"};
+    char segments[1024] = {".LC0\n    .globl main\n"};
     char main[1024] = {"main:"};
 
     while(node->next != NULL) {
         node = node->next;
 
         if(node->type == AST_FUNCTION_CALL) {
-            if(strcmp(node->left->value, "sallocPtr") == 0) {
+            if(strcmp(node->left->value, "salloc") == 0) {
                 strcat(main, "\n    subq    $");
                 strcat(main, node->right->next->value);
                 strcat(main, ", %rsp");
             }
-            else if(strcmp(node->left->value, "salloc") == 0) {
-                strcat(main, "\n    .seh_stackalloc ");
-                strcat(main, node->right->next->value);
-            }
-            else if(strcmp(node->left->value, "sfreePtr") == 0) {
+            else if(strcmp(node->left->value, "sfree") == 0) {
                 strcat(main, "\n    addq    $");
                 strcat(main, node->right->next->value);
                 strcat(main, ", %rsp");
@@ -34,9 +30,6 @@ struct CompilerOutput win64compile(struct ASTNode* node) {
                 strcat(segments, " '");
                 strcat(segments, node->right->next->next->value);
                 strcat(segments, "'");
-            }
-            else if(strcmp(node->left->value, "prologue") == 0) {
-                strcat(main, "\n    .seh_endprologue");
             }
             else if(strcmp(node->left->value, "call") == 0) {
                 strcat(main, "\n    call    ");
@@ -53,7 +46,7 @@ struct CompilerOutput win64compile(struct ASTNode* node) {
         }
     }  
 
-    strcat(main, "\n    ret\n    .seh_endproc");  
+    strcat(main, "\n    ret");  
 
     struct CompilerOutput o;
 
