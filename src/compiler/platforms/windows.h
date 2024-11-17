@@ -7,7 +7,7 @@
 
 char* extrnLoad(char* name);
 char* globalDef(char* name);
-char* decSec(char* name, char* type, char* value);
+char* winDecSec(char* name, char* type, char* value);
 char* push(char* name);
 char* call(char* name);
 char* add(char* name, char* value);

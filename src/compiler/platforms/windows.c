@@ -27,7 +27,7 @@ char* globalDef(char* name) {
 /**
  * Handles the decSec assembly thing.
  */
-char* decSec(char* name, char* type, char* value) {
+char* winDecSec(char* name, char* type, char* value) {
     char instructions[32] = {"\n"};
     strcat(instructions, name);
     strcat(instructions, ": ");

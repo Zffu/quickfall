@@ -43,13 +43,18 @@ struct CompilerOutput compile(struct ASTNode* node, char* platform) {
                 continue;
             }
 
-            if(strcmp(node->left->value, "gDef") == 0) {
+            else if(strcmp(node->left->value, "gDef") == 0) {
                 if(p == WINDOWS) strcat(sections, globalDef(node->right->next->value));
                 else {
                     strcat(sections, "section .text");
                     strcat(sections, sectG(node->right->next->value));
                     strcat(sections, "\n\n");
                 }
+            }
+
+            else if(strcmp(node->left->value, "decSec") == 0) {
+                if(p == WINDOWS) strcat(sections, winDecSec(node->right->next->value, node->right->next->next->value, node->right->next->next->next->value));
+                else strcat(sections, decSec(node->right->next->value, node->right->next->next->value, node->right->next->next->next->value));
             }
         }
     }
