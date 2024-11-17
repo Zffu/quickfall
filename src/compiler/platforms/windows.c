@@ -7,73 +7,61 @@
 /**
  * Handles the extrnLoad assembly thing.
  */
-char* extrnLoad(char* name) {
-    char instruction[32] = {"\nextern "};
-    strcat(instruction, name);
-
-    return instruction;
+void extrnLoad(char* buffer, char* name) {
+    strcat(buffer, "\nextern ");
+    strcat(buffer, name);
 }
 
 /**
  * Handles the globalDef assembly thing.
  */
-char* globalDef(char* name) {
-    char instruction[32] = {"\nglobal "};
-    strcat(instruction, name);
-
-    return instruction;
+void globalDef(char* buffer, char* name) {
+    strcat(buffer, "\nglobal ");
+    strcat(buffer, name);
 }
 
 /**
  * Handles the decSec assembly thing.
  */
-char* winDecSec(char* name, char* type, char* value) {
-    char instructions[32] = {"\n"};
-    strcat(instructions, name);
-    strcat(instructions, ": ");
-    strcat(instructions, type);
-    strcat(instructions, " '");
-    strcat(instructions, value);
-    strcat(instructions, "', 10,0");
-
-    return instructions;
+void winDecSec(char* buffer, char* name, char* type, char* value) {
+    strcat(buffer, "\n");
+    strcat(buffer, name);
+    strcat(buffer, ": ");
+    strcat(buffer, type);
+    strcat(buffer, " '");
+    strcat(buffer, value);
+    strcat(buffer, "', 10,0");
 }
 
 /**
  * Handles the push assembly thing.
  */
-char* push(char* name) {
-    char instruction[32] = {"\n    push "};
-    strcat(instruction, name);
-
-    return instruction;
+void push(char* buffer, char* name) {
+    strcat(buffer, "\n    push ");
+    strcat(buffer, name);
 }
 
 /**
  * Handles the call assembly thing.
  */
-char* call(char* name) {
-    char instruction[32] = {"\n    call "};
-    strcat(instruction, name);
-
-    return instruction;
+void call(char* buffer, char* name) {
+    strcat(buffer, "\n    call ");
+    strcat(buffer, name);
 }
 
 /**
  * Handles the add assembly thing.
  */
-char* add(char* name, char* value) {
-    char instruction[32] = {"\n    add "};
-    strcat(instruction, name);
-    strcat(instruction, ", ");
-    strcat(instruction, value);
-
-    return instruction;
+void add(char* buffer, char* name, char* value) {
+    strcat(buffer, "\n    add ");
+    strcat(buffer, name);
+    strcat(buffer, ", ");
+    strcat(buffer, value);
 }
 
 /**
  * Handles the ret assembly thing.
  */
-char* ret() {
-    return "\n    ret";
+void ret(char* buffer) {
+    strcat(buffer, "\n    ret");
 }

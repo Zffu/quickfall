@@ -5,56 +5,56 @@
 #include <string.h>
 #include "../../parser/ast.h"
 
+void debug_strcat(char* p, char* p1) {
+    printf("strcat called! 1st null: %d, 2nd: %d\n", p == NULL, p1 == NULL);
+
+    //strcat(p,p1);
+}
+
 /**
  * Handles the decSec assembly thing.
  */
-char* decSec(char* name, char* type, char* val) {
-    char instruction[32] = {""};
-    strcat(instruction, name);
-    strcat(instruction, " ");
-    strcat(instruction, type);
-    strcat(instruction, " '");
-    strcat(instruction, val);
-    strcat(instruction, "', 0");
-
-    return instruction;
+void decSec(char* buffer, char* name, char* type, char* val) {
+    strcat(buffer, "\n    ");
+    strcat(buffer, name);
+    strcat(buffer, " ");
+    strcat(buffer, type);
+    strcat(buffer, " '");
+    strcat(buffer, val);
+    strcat(buffer, "', 0");
 }
 
 /**
  * Handles the movR assembly thing.
  */
-char* movR(char* name, char *v) {
-    char instruction[32] = {"\n    mov "};
-    strcat(instruction, name);
-    strcat(instruction, ", ");
-    strcat(instruction, v);
-
-    return instruction;
+void movR(char* buffer, char* name, char *v) {
+    strcat(buffer, "\n    mov ");
+    strcat(buffer, name);
+    strcat(buffer, ", ");
+    strcat(buffer, v);
 }
 
 /**
  * Handles the sectG assembly thing.
  */
-char* sectG(char* name) {
-    char instruction[32] = "\n    global ";
-    strcat(instruction, name);
-    
-    return name;
+void sectG(char* buffer, char* name) {
+    strcat(buffer, "\n    global ");
+    strcat(buffer, name);
 }
 
 /**
  * Handles the syscall assembly thing.
  */
-char* syscall() {
-    return "\n    int 0x80";
+void syscall(char* buffer) {
+    strcat(buffer, "\n    int 0x80");
 }
 
 /**
  * Handles the regXOR assembly thing.
  */
-char* regXOR(char* name, char* name2) {
-    char instruction[32] = {"\n    xor "};
-    strcat(instruction, name);
-    strcat(instruction, ", ");
-    strcat(instruction, name2);
+void regXOR(char* buffer, char* name, char* name2) {
+    strcat(buffer, "\n    xor ");
+    strcat(buffer, name);
+    strcat(buffer, ", ");
+    strcat(buffer, name2);
 }
