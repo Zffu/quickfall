@@ -27,9 +27,9 @@ struct CompilerOutput win64compile(struct ASTNode* node) {
             else if(strcmp(node->left->value, "stackPut") == 0) {
                 strcat(segments, "\n    .");
                 strcat(segments, node->right->next->value);
-                strcat(segments, ' "');
+                strcat(segments, "\" ");
                 strcat(segments, node->right->next->next->value);
-                strcat(segments, '"');
+                strcat(segments, "\"");
             }
             else if(strcmp(node->left->value, "call") == 0) {
                 strcat(main, "\n    call    ");
