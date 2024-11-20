@@ -226,6 +226,21 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
                 }
             }
         }
+        else if(t.type == USE) {
+            if(next.type == STRING) {
+                struct ASTNode* node = createASTNode(AST_USE_STDL);
+                node->right = createASTNode(AST_STDL_TARGET);
+
+                memcpy(node->right->value, next.value, strlen(next.value));
+                
+                index++;
+                current->next = node;
+                current = node;
+            }
+            else {
+                printf("Error: Excepted string litteral after use\n");
+            }
+        }
         else {
             printf("Error: Unexcepted token %d\n", t.type);
         }
