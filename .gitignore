@@ -4,6 +4,7 @@ build/
 *.o
 
 # Visual Studio Code & Visual Studio Files
+.vscode/
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
