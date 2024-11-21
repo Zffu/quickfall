@@ -150,16 +150,15 @@ char* readFile(const char* path) {
     return bufferPtr;
 }
 
-struct CompilerOutput compileFile(char* filePath, char* platform) {
+char* compileFile(char* filePath, char* platform) {
     char* buffer = readFile(filePath);
     struct LexerResult result = runLexer(buffer);
-    struct CompilerOutput o;
 
     struct ASTNode* node = runParser(result);
 
     if(node == NULL) {
         printf("Error: cannot generate output as the provided AST node is null!");
-        return o;
+        return NULL;
     }   
     
     free(buffer);
@@ -202,10 +201,15 @@ int main(int argc, char* argv[]) {
 
             printf("→ Building %s...\n", args.inputFile);
 
-            struct CompilerOutput output = compileFile(args.inputFile, args.platform);
+            char* output = compileFile(args.inputFile, args.platform);
+
+            if(output == NULL) {
+                printf("Error: Building went wrong!\n");
+                return -1;
+            }
 
             FILE* fptr = fopen(args.outputFile, "w");
-            fprintf(fptr, output.output);
+            fprintf(fptr, output);
             fclose(fptr);
 
             return 1;
