@@ -16,6 +16,9 @@ struct CompilingContext {
     char* main; // the main function.
 };
 
-struct CompilerOutput compile(struct ASTNode* node, char* platform);
+/**
+ * Compiles the AST node tree into Assembly.
+ */
+char* compile(struct ASTNode* node, char* platform);
 
 #endif
