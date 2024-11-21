@@ -95,10 +95,6 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
 
     if(result.tokens[index].type != BRACKETS_OPEN) {
         printf("Error: Excepted function body declaration got %d instead!\n", result.tokens[index - 1].type);
-        printf("Dump:\n");
-        for(;index < result.size +1; ++index) {
-            printf("Index: %d, Type: %d\n", index, result.tokens[index].type);
-        }
         return NULL;
     }
 
@@ -112,8 +108,6 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
         if(t.type == BRACKETS_CLOSE) {
             node->right = parseExpression(result, start, index); //todo: make a function to remove the need to loop to find the closing point
         }
-
-        printf("Token in method body: %d\n", t.type);
     }
 
     node->end = index;
