@@ -58,6 +58,8 @@ void win64(struct CompilingContext ctx, struct ASTNode* node) {
         win64(ctx, node->right); // Parses the AST_GENERIC Node.
     }
     else if(node->type == AST_GENERIC) {
+        printf("yay generic shit\n");
+
         struct ASTNode* n = node;
         while (n->next != NULL) {
             n = n->next;
