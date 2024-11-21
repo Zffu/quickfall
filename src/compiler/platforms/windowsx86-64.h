@@ -8,4 +8,4 @@
 /**
  * Gets the Assembly output of the AST node.
  */
-char* win64output(struct ASTNode* node);
+void win64output(struct CompilingContext ctx, struct ASTNode* node);
