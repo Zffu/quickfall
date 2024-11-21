@@ -40,11 +40,8 @@ struct CompilerOutput compile(struct ASTNode* node, char* platform) {
             // todo: move stdl loading somewhere else
             //
 
-            printf("ssdsd\n");
             strcat(fileName, node->right->value);
             strcat(fileName, ".qfall"); // Do not dynamically check the extension for now.
-
-            printf("djskjokjdsjsd\n");
 
             FILE* fptr = fopen(fileName, "r");
 
@@ -53,7 +50,6 @@ struct CompilerOutput compile(struct ASTNode* node, char* platform) {
                 continue;
             }
 
-            printf("vp\n");
 
             fseek(fptr, 0, SEEK_END);
             int size = ftell(fptr);
@@ -63,12 +59,9 @@ struct CompilerOutput compile(struct ASTNode* node, char* platform) {
             fread(buff, 1, size, fptr);
             fclose(fptr);
 
-            printf("wat\n");
-
             struct LexerResult result = runLexer(buff);
             struct ASTNode* n = runParser(result);
 
-            printf("skibidi\n");
             while (n->next != NULL) {
                 n = n->next;
 
