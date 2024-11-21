@@ -74,10 +74,10 @@ char* compile(struct ASTNode* node, char* platform) {
             struct LexerResult result = runLexer(buff);
             struct ASTNode* n = runParser(result);
 
-            win64(ctx, n);
+            win64(ctx, n, 0);
         }
         else {
-            win64(ctx, node);
+            win64(ctx, node, 0);
         }
     }
 

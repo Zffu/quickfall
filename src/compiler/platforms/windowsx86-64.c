@@ -11,19 +11,22 @@
 /**
  * Gets the assembly output of the AST Node.
  */
-void win64(struct CompilingContext ctx, struct ASTNode* node) {
+void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) {
     if(node->type == AST_FUNCTION_CALL) {
+
+        char* funcBuff = (genericState == 0 ? ctx.main : ctx.sections);
+
         // Handles the low level function here for now.
         
         if(strcmp(node->left->value, "salloc") == 0) {
-            strcat(ctx.main, "\n    subq    $");
-            strcat(ctx.main, node->right->next->value);
-            strcat(ctx.main, ", %rsp");
+            strcat(funcBuff, "\n    subq    $");
+            strcat(funcBuff, node->right->next->value);
+            strcat(funcBuff, ", %rsp");
         }
         else if(strcmp(node->left->value, "sfree") == 0) {
-            strcat(ctx.main, "\n    addq    $");
-            strcat(ctx.main, node->right->next->value);
-            strcat(ctx.main, ", %rsp");
+            strcat(funcBuff, "\n    addq    $");
+            strcat(funcBuff, node->right->next->value);
+            strcat(funcBuff, ", %rsp");
         }
         else if(strcmp(node->left->value, "stackPut") == 0) {
             strcat(ctx.defaultSection, "\n    .");
@@ -33,21 +36,21 @@ void win64(struct CompilingContext ctx, struct ASTNode* node) {
             strcat(ctx.defaultSection, "\"");
         }
         else if(strcmp(node->left->value, "call") == 0) {
-            strcat(ctx.main, "\n    call    ");
-            strcat(ctx.main, node->right->next->value);
+            strcat(funcBuff, "\n    call    ");
+            strcat(funcBuff, node->right->next->value);
         }
         else if(strcmp(node->left->value, "mov") == 0) {
-            strcat(ctx.main, "\n    leaq    .");
-            strcat(ctx.main, node->right->next->value);
-            strcat(ctx.main, "(%");
-            strcat(ctx.main, node->right->next->next->value);
-            strcat(ctx.main, "), %");
-            strcat(ctx.main, node->right->next->next->next->value);
+            strcat(funcBuff, "\n    leaq    .");
+            strcat(funcBuff, node->right->next->value);
+            strcat(funcBuff, "(%");
+            strcat(funcBuff, node->right->next->next->value);
+            strcat(funcBuff, "), %");
+            strcat(funcBuff, node->right->next->next->next->value);
         }
         else {
             // If the function isn't an internal, jump to it.
-            strcat(ctx.main, "\n    jmp .");
-            strcat(ctx.main, node->left->value);
+            strcat(funcBuff, "\n    jmp .");
+            strcat(funcBuff, node->left->value);
         }
     }
     else if(node->type == AST_FUNCTION_DEF) {
@@ -55,14 +58,14 @@ void win64(struct CompilingContext ctx, struct ASTNode* node) {
         strcat(ctx.sections, node->left->value);
         strcat(ctx.sections, ":");
 
-        win64(ctx, node->right); // Parses the AST_GENERIC Node.
+        win64(ctx, node->right, genericState); // Parses the AST_GENERIC Node.
     }
-    else if(node->type == AST_GENERIC) {
+    else if(node->type == AST_GENERIC || node->type == AST_FUNCTION_GENERIC) {
         struct ASTNode* n = node;
         while (n->next != NULL) {
             n = n->next;
 
-            win64(ctx, n);
+            win64(ctx, n, (node->type == AST_GENERIC ? 0 : 1));
         }
     }
     else {

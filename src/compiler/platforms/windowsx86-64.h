@@ -10,4 +10,4 @@
 /**
  * Gets the Assembly output of the AST node.
  */
-void win64(struct CompilingContext ctx, struct ASTNode* node);
+void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState);
