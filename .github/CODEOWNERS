@@ -8,20 +8,20 @@ LICENSE @Zffu
 CODE_OF_CONDUCT.md @Zffu
 
 # Github CI
-.github/workflows/* @Zffu @TheAlternativeDev
-.github/* @Zffu @TheAlternativeDev
+.github/workflows/* @Zffu @thealternatedev
+.github/* @Zffu @thealternatedev
 
 # .gitignore file
-.gitignore @Zffu @TheAlternativeDev
+.gitignore @Zffu @thealternatedev
 
 # Quickfall SRC Code
-.src/*.c @Zffu @TheAlternativeDev
+.src/*.c @Zffu @thealternatedev
 
 # Quickfall SRC Headers
-.src/*.h @Zffu @TheAlternativeDev
+.src/*.h @Zffu @thealternatedev
 
 # Quickfall Examples
-examples/* @Zffu @TheAlternativeDev
+examples/* @Zffu @thealternatedev
 
 # Quickfall Benchmarks
-benchmarks/* @Zffu @TheAlternativeDev
+benchmarks/* @Zffu @thealternatedev
