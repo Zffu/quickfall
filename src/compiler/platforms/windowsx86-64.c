@@ -28,7 +28,7 @@ void win64(struct CompilingContext ctx, struct ASTNode* node) {
         else if(strcmp(node->left->value, "stackPut") == 0) {
             strcat(ctx.defaultSection, "\n    .");
             strcat(ctx.defaultSection, node->right->next->value);
-            strcat(ctx.defaultSection, "\" ");
+            strcat(ctx.defaultSection, " \"");
             strcat(ctx.defaultSection, node->right->next->next->value);
             strcat(ctx.defaultSection, "\"");
         }
