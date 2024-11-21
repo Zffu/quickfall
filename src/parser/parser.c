@@ -10,7 +10,7 @@
 
 struct ASTNode* parseParameters(struct LexerResult result, int index);
 struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index);
-struct ASTNode* parseExpression(struct LexerResult result, int index, int end);
+struct ASTNode* parseExpression(struct LexerResult result, int index, int end, enum ASTNodeType type);
 
 
 /**
