@@ -5,8 +5,6 @@
 #include "../../parser/ast.h"
 #include "../compiler.h"
 
-struct CompilerOutput win64compile(struct ASTNode* node);
-
 /**
  * Gets the Assembly output of the AST node.
  */
