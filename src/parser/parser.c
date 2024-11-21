@@ -106,7 +106,7 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
         struct Token t = result.tokens[index];
 
         if(t.type == BRACKETS_CLOSE) {
-            node->right = parseExpression(result, start, index); //todo: make a function to remove the need to loop to find the closing point
+            node->right = parseExpression(result, start, index, AST_FUNCTION_GENERIC); //todo: make a function to remove the need to loop to find the closing point
         }
     }
 
@@ -178,8 +178,8 @@ struct ASTNode* parseVariableDefinition(struct LexerResult result, int index) {
 /**
  * Parses an expression in the specified range.
  */
-struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
-    struct ASTNode* root = createASTNode(AST_GENERIC);
+struct ASTNode* parseExpression(struct LexerResult result, int index, int end, enum ASTNodeType type) {
+    struct ASTNode* root = createASTNode(type);
     struct ASTNode* current = root;
 
     for(; index < end; ++index) {
@@ -244,5 +244,5 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
 }
 
 struct ASTNode* runParser(struct LexerResult result) {
-    return parseExpression(result, 0, result.size);
+    return parseExpression(result, 0, result.size, AST_GENERIC);
 }
