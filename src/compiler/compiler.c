@@ -29,8 +29,15 @@ char* compile(struct ASTNode* node, char* platform) {
 
     // Default size buffers for now, todo: use realloc for less memory usage.
     ctx.defaultSection = malloc(512);
+    memset(ctx.defaultSection, 0, 512);
+    strcat(ctx.defaultSection, WIN_64_DEFAULT_SECTION); // Change this based on the platform
+
     ctx.sections = malloc(1024);
+    memset(ctx.sections, 0, 1024);
+
     ctx.main = malloc(1024);
+    memset(ctx.main, 0, 1024);
+    strcat(ctx.main, "\nmain:");
 
     while(node->next != NULL) {
         node = node->next;
@@ -67,12 +74,15 @@ char* compile(struct ASTNode* node, char* platform) {
             struct LexerResult result = runLexer(buff);
             struct ASTNode* n = runParser(result);
 
-            if(p == WINDOWS) win64(ctx, n);
+            win64(ctx, n);
+        }
+        else {
+            win64(ctx, node);
         }
     }
 
     char* buff = malloc(2048);
-    buff[0] = "\0";
+    memset(buff, 0, 2048);
 
     strcat(buff, ctx.defaultSection);
     strcat(buff, ctx.sections);
