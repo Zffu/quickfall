@@ -7,6 +7,9 @@
 
 #include "../lexer/lexer.h"
 
+/**
+ * Runs the parser
+ */
 struct ASTNode* runParser(struct LexerResult result);
 
 #endif
