@@ -17,8 +17,8 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end);
  * Parses parameters of a function.
  */
 struct ASTNode* parseParameters(struct LexerResult result, int index) {
-    struct ASTNode* root = NULL;
-    struct ASTNode* current = NULL;
+    struct ASTNode* root = createASTNode(AST_PARAM);
+    struct ASTNode* current = root;
     int mode = 0;
 
     for(; index < result.size + 1; ++index) {
