@@ -55,10 +55,11 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
     }
     else if(node->type == AST_FUNCTION_DEF) {
         strcat(ctx.sections, "\n.");
-        strcat(ctx.sections, node->left->value);
+        strcat(ctx.sections, node->left->left->value);
         strcat(ctx.sections, ":");
 
         win64(ctx, node->right, genericState); // Parses the AST_GENERIC Node.
+        strcat(ctx.sections, "\n    ret\n");
     }
     else if(node->type == AST_GENERIC || node->type == AST_FUNCTION_GENERIC) {
         struct ASTNode* n = node;
