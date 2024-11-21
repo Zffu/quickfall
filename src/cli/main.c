@@ -59,7 +59,7 @@ struct Arguments parseArguments(int argc, char* argv[]) {
     }
 
     // First argument is always the command
-    args.command = argv[1];
+    args.command = (argv[1] != NULL ? argv[1] : "");
 
     // Parse flags and options
     for (int i = 2; i < argc; i++) {
