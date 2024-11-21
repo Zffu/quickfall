@@ -1,0 +1,27 @@
+#
+# Quickfall Codeowners File.
+#
+
+# Markdown files that aren't supposed to change.
+SECURITY.md @Zffu
+LICENSE @Zffu
+CODE_OF_CONDUCT.md @Zffu
+
+# Github CI
+.github/workflows/* @Zffu @TheAlternativeDev
+.github/* @Zffu @TheAlternativeDev
+
+# .gitignore file
+.gitignore @Zffu @TheAlternativeDev
+
+# Quickfall SRC Code
+.src/*.c @Zffu @TheAlternativeDev
+
+# Quickfall SRC Headers
+.src/*.h @Zffu @TheAlternativeDev
+
+# Quickfall Examples
+examples/* @Zffu @TheAlternativeDev
+
+# Quickfall Benchmarks
+benchmarks/* @Zffu @TheAlternativeDev
