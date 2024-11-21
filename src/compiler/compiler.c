@@ -22,10 +22,15 @@ enum Platform platformFromString(char* platform) {
     else LINUX;
 }
 
-struct CompilerOutput compile(struct ASTNode* node, char* platform) {
+char* compile(struct ASTNode* node, char* platform) {
     enum Platform p = platformFromString(platform);
 
-    struct CompilerOutput o;
+    struct CompilingContext ctx;
+
+    // Default size buffers for now, todo: use realloc for less memory usage.
+    ctx.defaultSection = malloc(512);
+    ctx.sections = malloc(1024);
+    ctx.main = malloc(1024);
 
     while(node->next != NULL) {
         node = node->next;
@@ -62,15 +67,17 @@ struct CompilerOutput compile(struct ASTNode* node, char* platform) {
             struct LexerResult result = runLexer(buff);
             struct ASTNode* n = runParser(result);
 
-            while (n->next != NULL) {
-                n = n->next;
-
-                if(n->type == AST_FUNCTION_DEF) {
-                    printf("Defined function %s\n", n->right->left->value);
-                }
-            }
+            if(p == WINDOWS) win64(ctx, n);
         }
     }
 
-    return o;
+    char* buff = malloc(2048);
+    buff[0] = "\0";
+
+    strcat(buff, ctx.defaultSection);
+    strcat(buff, ctx.sections);
+    strcat(buff, ctx.main);
+    strcat(buff, "\n    ret\n");
+
+    return buff;
 }
