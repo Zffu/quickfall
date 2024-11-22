@@ -53,7 +53,6 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
 	    if(node->right->next != NULL) { 
             	int argCount = 0;
             	while(node->right->next->next != NULL) {
-			printf("This shit is working! :fire:\n");
                 	node->right->next = node->right->next->next;
                 
                 	char b[5] = {""};
