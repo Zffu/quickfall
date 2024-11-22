@@ -64,7 +64,7 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
                 	strcat(ctx.sections, ":");
                 	strcat(ctx.sections, "\n    .ascii \"");
                 	strcat(ctx.sections, node->right->next->value);
-                	strcat(ctx.sections, "\"");
+                	strcat(ctx.sections, "\\0\"");
 
                 	strcat(funcBuff, "\n    leaq    .LC");
 
