@@ -149,11 +149,6 @@ char* compileFile(char* filePath, char* platform) {
     struct LexerResult result = runLexer(buffer);
 
     struct ASTNode* node = runParser(result);
-
-    if(node == NULL) {
-        printf("Error: cannot generate output as the provided AST node is null!");
-        return NULL;
-    }   
     
     free(buffer);
 
