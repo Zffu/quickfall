@@ -49,21 +49,22 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
         }
         else {
             // If the function isn't an internal, jump to it.
-
+	
 	    if(node->right->next != NULL) { 
             	int argCount = 0;
-            	while(node->right->next->next != NULL) {
-                	node->right->next = node->right->next->next;
-                
+            	while(node->right->next != NULL) {
+			node->right = node->right->next;
+
+			printf("da param: %s\n", node->right->value);
                 	char b[5] = {""};
-                	sprintf(b, "%d", ctx.section + 1);
+                	sprintf(b, "%d", ctx.section++ + 1);
 
                 	strcat(ctx.sections, "\n.");
                 	strcat(ctx.sections, "LC");
                 	strcat(ctx.sections, b);
                 	strcat(ctx.sections, ":");
                 	strcat(ctx.sections, "\n    .ascii \"");
-                	strcat(ctx.sections, node->right->next->value);
+                	strcat(ctx.sections, node->right->value);
                 	strcat(ctx.sections, "\\0\"");
 
                 	strcat(funcBuff, "\n    leaq    .LC");
