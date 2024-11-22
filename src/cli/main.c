@@ -222,23 +222,3 @@ int main(int argc, char* argv[]) {
             return 0;
     }
 }
-
-void dumpAST(struct ASTNode* node, int depth) {
-    for(int i = 0; i < depth; ++i) {
-        printf("  ");
-    }
-
-    printf("AST Node of type %s (%d) with value '%s'\n", getStringCounterpart(node->type), node->type, (node->value != "" ? node->value : "None"));
-    
-    if(node->left != NULL) {
-        dumpAST(node->left, depth + 1);
-    }
-
-    if(node->right != NULL) {
-        dumpAST(node->right, depth + 1);
-    }
-
-    if(node->next != NULL) {
-        dumpAST(node->next, depth);
-    }
-}
