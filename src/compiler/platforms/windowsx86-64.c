@@ -55,7 +55,6 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
             	while(node->right->next != NULL) {
 			node->right = node->right->next;
 
-			printf("da param: %s\n", node->right->value);
                 	char b[5] = {""};
                 	sprintf(b, "%d", ctx.section++ + 1);
 
