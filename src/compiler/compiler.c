@@ -43,9 +43,6 @@ char* compile(struct ASTNode* node, char* platform) {
         node = node->next;
 
         if(node->type == AST_USE_STDL) {
-
-            printf("Importing %s from STDL!\n", node->right->value);
-
             char fileName[32] = "stdl/";
 
             //
