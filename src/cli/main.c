@@ -53,7 +53,7 @@ struct Arguments parseArguments(int argc, char* argv[]) {
     }
 
     // First argument is always the command
-    args.command = (argv[1] != NULL ? argv[1] : "");
+    args.command = (argv[1] != NULL ? argv[1] : "h");
 
     // Parse flags and options
     for (int i = 2; i < argc; i++) {
@@ -157,6 +157,11 @@ char* compileFile(char* filePath, char* platform) {
 
 int main(int argc, char* argv[]) {
     struct Arguments args = parseArguments(argc, argv);
+
+    if (args.showHelp) {
+    	showHelpMessage();
+	return 1;
+    }
 
     if (args.error) {
         printf("Error: Invalid argument format\n");
