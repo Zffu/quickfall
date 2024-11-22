@@ -33,12 +33,6 @@ struct Arguments {
  ██████   ██████  ██  ██████ ██   ██ ██      ██   ██ ███████ ███████ \n\
     ▀▀                                                                 \n"
 
-
-char* getStringCounterpart(enum ASTNodeType type)  {
-    char* debug[18] = {"Variable Definition", "Function Definition", "Function Name", "Function Template", "Function Body", "Function Call", "Variable", "Parameters", "Parameter", "Parameter Type", "Parameter Name", "Generic", "Function Invoking Target", "Function Invoking Parameters", "Variable Type", "Variable Meta", "Variable Name", "Variable Value"};
-    return debug[type];
-}
-
 /**
  * Parse command line arguments into a structured format
  */
