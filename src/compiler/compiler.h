@@ -14,6 +14,7 @@ struct CompilingContext {
     char* defaultSection; // the default (.LC0 in x64) section, is used to store variables for now.
     char* sections; // the additional sections generated.
     char* main; // the main function.
+    int section; // the current section index.
 };
 
 /**

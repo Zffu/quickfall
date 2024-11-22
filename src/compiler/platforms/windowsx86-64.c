@@ -49,6 +49,49 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
         }
         else {
             // If the function isn't an internal, jump to it.
+
+	    if(node->right->next != NULL) { 
+            	int argCount = 0;
+            	while(node->right->next->next != NULL) {
+			printf("This shit is working! :fire:\n");
+                	node->right->next = node->right->next->next;
+                
+                	char b[5] = {""};
+                	sprintf(b, "%d", ctx.section + 1);
+
+                	strcat(ctx.sections, "\n.");
+                	strcat(ctx.sections, "LC");
+                	strcat(ctx.sections, b);
+                	strcat(ctx.sections, ":");
+                	strcat(ctx.sections, "\n    .ascii \"");
+                	strcat(ctx.sections, node->right->next->value);
+                	strcat(ctx.sections, "\"");
+
+                	strcat(funcBuff, "\n    leaq    .LC");
+
+                	strcat(funcBuff, b);
+                	strcat(funcBuff, "(%rip), %rax");
+                	strcat(funcBuff, "\n    movq %rax,");
+
+                	switch(argCount) {
+                    		case 0:
+                        		strcat(funcBuff, "%rcx");
+                        		break;
+                    		case 1:
+                        		strcat(funcBuff, "%rdx");
+                        		break;
+                    		case 2:
+                        		strcat(funcBuff, "%r8");
+                        		break;
+                    		case 3:
+                        		strcat(funcBuff, "%r9");
+                        		break;            
+                	}
+
+                	argCount++;
+            	}
+	    }
+
             strcat(funcBuff, "\n    jmp .");
             strcat(funcBuff, node->left->value);
         }
