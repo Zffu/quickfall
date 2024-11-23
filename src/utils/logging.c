@@ -21,3 +21,7 @@
 #define BACKGROUND_MAGENTA "\x1b[45m"
 #define BACKGROUND_CYAN "\x1b[46m"
 #define BACKGROUND_WHITE "\x1b[47m"
+
+#define STYLE_BOLD "\x1b[1m"
+#define STYLE_ITALIC "\x1b[3m"
+#define STYLE_UNDERLINE "\x1b[4m"
