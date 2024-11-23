@@ -33,12 +33,6 @@ struct Arguments {
  ██████   ██████  ██  ██████ ██   ██ ██      ██   ██ ███████ ███████ \n\
     ▀▀                                                                 \n"
 
-
-char* getStringCounterpart(enum ASTNodeType type)  {
-    char* debug[18] = {"Variable Definition", "Function Definition", "Function Name", "Function Template", "Function Body", "Function Call", "Variable", "Parameters", "Parameter", "Parameter Type", "Parameter Name", "Generic", "Function Invoking Target", "Function Invoking Parameters", "Variable Type", "Variable Meta", "Variable Name", "Variable Value"};
-    return debug[type];
-}
-
 /**
  * Parse command line arguments into a structured format
  */
@@ -59,7 +53,7 @@ struct Arguments parseArguments(int argc, char* argv[]) {
     }
 
     // First argument is always the command
-    args.command = (argv[1] != NULL ? argv[1] : "");
+    args.command = (argv[1] != NULL ? argv[1] : "h");
 
     // Parse flags and options
     for (int i = 2; i < argc; i++) {
@@ -150,17 +144,11 @@ char* readFile(const char* path) {
     return bufferPtr;
 }
 
-struct CompilerOutput compileFile(char* filePath, char* platform) {
+char* compileFile(char* filePath, char* platform) {
     char* buffer = readFile(filePath);
     struct LexerResult result = runLexer(buffer);
-    struct CompilerOutput o;
 
     struct ASTNode* node = runParser(result);
-
-    if(node == NULL) {
-        printf("Error: cannot generate output as the provided AST node is null!");
-        return o;
-    }   
     
     free(buffer);
 
@@ -169,6 +157,11 @@ struct CompilerOutput compileFile(char* filePath, char* platform) {
 
 int main(int argc, char* argv[]) {
     struct Arguments args = parseArguments(argc, argv);
+
+    if (args.showHelp) {
+    	showHelpMessage();
+	return 1;
+    }
 
     if (args.error) {
         printf("Error: Invalid argument format\n");
@@ -202,10 +195,15 @@ int main(int argc, char* argv[]) {
 
             printf("→ Building %s...\n", args.inputFile);
 
-            struct CompilerOutput output = compileFile(args.inputFile, args.platform);
+            char* output = compileFile(args.inputFile, args.platform);
+
+            if(output == NULL) {
+                printf("Error: Building went wrong!\n");
+                return -1;
+            }
 
             FILE* fptr = fopen(args.outputFile, "w");
-            fprintf(fptr, output.output);
+            fprintf(fptr, output);
             fclose(fptr);
 
             return 1;
@@ -227,25 +225,5 @@ int main(int argc, char* argv[]) {
             printf("Error: Unknown command '%s'\n", args.command);
             showHelpMessage();
             return 0;
-    }
-}
-
-void dumpAST(struct ASTNode* node, int depth) {
-    for(int i = 0; i < depth; ++i) {
-        printf("  ");
-    }
-
-    printf("AST Node of type %s (%d) with value '%s'\n", getStringCounterpart(node->type), node->type, (node->value != "" ? node->value : "None"));
-    
-    if(node->left != NULL) {
-        dumpAST(node->left, depth + 1);
-    }
-
-    if(node->right != NULL) {
-        dumpAST(node->right, depth + 1);
-    }
-
-    if(node->next != NULL) {
-        dumpAST(node->next, depth);
     }
 }

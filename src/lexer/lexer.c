@@ -90,7 +90,10 @@ struct LexerResult runLexer(char string[]) {
                 token.type = BOOLEAN;
             } else if (strcmp(word, "null") == 0) {
                 token.type = NU;
-            } else {
+            } else if(strcmp(word, "use") == 0) {
+                token.type = USE;
+            } 
+            else {
                 token.type = KEYWORD;
             }
             

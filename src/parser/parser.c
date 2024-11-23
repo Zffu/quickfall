@@ -10,15 +10,15 @@
 
 struct ASTNode* parseParameters(struct LexerResult result, int index);
 struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index);
-struct ASTNode* parseExpression(struct LexerResult result, int index, int end);
+struct ASTNode* parseExpression(struct LexerResult result, int index, int end, enum ASTNodeType type);
 
 
 /**
  * Parses parameters of a function.
  */
 struct ASTNode* parseParameters(struct LexerResult result, int index) {
-    struct ASTNode* root = NULL;
-    struct ASTNode* current = NULL;
+    struct ASTNode* root = createASTNode(AST_PARAM);
+    struct ASTNode* current = root;
     int mode = 0;
 
     for(; index < result.size + 1; ++index) {
@@ -95,10 +95,6 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
 
     if(result.tokens[index].type != BRACKETS_OPEN) {
         printf("Error: Excepted function body declaration got %d instead!\n", result.tokens[index - 1].type);
-        printf("Dump:\n");
-        for(;index < result.size +1; ++index) {
-            printf("Index: %d, Type: %d\n", index, result.tokens[index].type);
-        }
         return NULL;
     }
 
@@ -110,10 +106,8 @@ struct ASTNode* parseFunctionDeclaration(struct LexerResult result, int index) {
         struct Token t = result.tokens[index];
 
         if(t.type == BRACKETS_CLOSE) {
-            node->right = parseExpression(result, start, index); //todo: make a function to remove the need to loop to find the closing point
+            node->right = parseExpression(result, start, index, AST_FUNCTION_GENERIC); //todo: make a function to remove the need to loop to find the closing point
         }
-
-        printf("Token in method body: %d\n", t.type);
     }
 
     node->end = index;
@@ -184,8 +178,8 @@ struct ASTNode* parseVariableDefinition(struct LexerResult result, int index) {
 /**
  * Parses an expression in the specified range.
  */
-struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
-    struct ASTNode* root = createASTNode(AST_GENERIC);
+struct ASTNode* parseExpression(struct LexerResult result, int index, int end, enum ASTNodeType type) {
+    struct ASTNode* root = createASTNode(type);
     struct ASTNode* current = root;
 
     for(; index < end; ++index) {
@@ -226,6 +220,21 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
                 }
             }
         }
+        else if(t.type == USE) {
+            if(next.type == STRING) {
+                struct ASTNode* node = createASTNode(AST_USE_STDL);
+                node->right = createASTNode(AST_STDL_TARGET);
+
+                memcpy(node->right->value, next.value, strlen(next.value));
+                
+                index++;
+                current->next = node;
+                current = node;
+            }
+            else {
+                printf("Error: Excepted string litteral after use\n");
+            }
+        }
         else {
             printf("Error: Unexcepted token %d\n", t.type);
         }
@@ -235,5 +244,5 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end) {
 }
 
 struct ASTNode* runParser(struct LexerResult result) {
-    return parseExpression(result, 0, result.size);
+    return parseExpression(result, 0, result.size, AST_GENERIC);
 }

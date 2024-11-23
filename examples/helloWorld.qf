@@ -3,4 +3,4 @@ stackPut(ascii, "Hello World\0");
 salloc(40);
 mov(LC0, rip, rcx);
 call(printf);
-sfreePtr(40);
+sfree(40);

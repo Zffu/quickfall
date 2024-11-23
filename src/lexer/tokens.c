@@ -25,6 +25,6 @@ enum TokenType {
     KEYWORD = 14,
     SEMICOLON = 15,
     COMMA = 16,
-    DECLARE = 17
+    DECLARE = 17,
+    USE = 18
 };
-
