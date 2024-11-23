@@ -1,6 +1,9 @@
 /**
  * The main file of the Quickfall CLI.
  * A modern, fast and lightweight programming language.
+ * Usage:
+ * quickfall build <input> -o <output> - Builds the input files into an output.
+ * quickfall help - Shows the help command.
  */
 
 #include <stdio.h>
