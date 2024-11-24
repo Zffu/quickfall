@@ -12,3 +12,14 @@ long* timeTaken;
  * @param the category array.
  */
 void setCategories(int count, char* categories[]) {};
+
+/**
+ * Stops the current benchmarking timer.
+ * @param category the initiator category of this.
+ */
+void stopBenchmarkTimer(int category);
+
+/**
+ * Starts a benchmarking timer.
+ */
+void startBenchmarkTimer();
