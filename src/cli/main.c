@@ -46,6 +46,8 @@ void showHelpMessage() {
 
 	showCommandEntry("compile, c", "Compiles the Quickfall program into an executable for the targeted platform.", 2, arguments, argumentDescriptions);
 	
+	showCommandEntry("version, v", "Shows the current version of Quickfall.", 0, NULL, NULL);
+
 	showCommandEntry("help, h", "Shows a message with helpful Quickfall information.", 0, NULL, NULL);
 
 }
