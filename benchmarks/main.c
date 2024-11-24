@@ -127,7 +127,7 @@ void main(int argc, char* argv[]) {
     }
 
     printf("========= Benchmarking Results =========\n");
-    printf("Total time taken: %.3f micros, Average time per run: %.3f\n micros", totalTimeTaken, totalTimeTaken / runs);
+    printf("Total time taken: %.3f micros, Average time per run: %.3f\n micros\n\n", totalTimeTaken, totalTimeTaken / runs);
     for(int i = 0; i < 5; ++i) {
 	printf("%s: total: %.3f microseconds, avg: %.3f microseconds (%.3f percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (timeTaken[i] / totalTimeTaken) * 100);
 	
