@@ -43,23 +43,23 @@ double get_time()
 
 char** categories;
 
-long* timeTaken;
+double* timeTaken;
 
-long startTime;
+double startTime;
 
-long long totalTimeTaken;
+double totalTimeTaken;
 
 void startTimer() {
-    long time = get_time();
+    double time = get_time();
     if(time > 0) startTime = time;
 }
 
 void endTimer(int category) {
-    long time = (get_time() - startTime);
+    double time = (get_time() - startTime);
     if(time > 0) {
 	totalTimeTaken += time;
 	timeTaken[category] += time;
-	printf("Timer cat %d appened!: curr: %d\n", category, timeTaken[category]);
+	printf("Timer cat %d appened!: curr: %f\n", category, timeTaken[category]);
     }
 }
 
@@ -124,9 +124,10 @@ void main(int argc, char* argv[]) {
     }
 
     printf("========= Benchmarking Results =========\n");
+    printf("Total time taken: %f, Average time per run: %f\n", totalTimeTaken, totalTimeTaken / runs);
     for(int i = 0; i < 5; ++i) {
         if(timeTaken[i] > 0) {
-		printf("%s: total: %d microseconds, avg: %d microseconds (%d percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (totalTimeTaken / timeTaken[i]) * 100);
+		printf("%s: total: %f microseconds, avg: %f microseconds (%f percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (timeTaken[i] / totalTimeTaken) * 100);
 	}
 	else {
 		printf("Category %s didn't show in the benchmarking, results are possibly impacted!\n", categories[i]);
