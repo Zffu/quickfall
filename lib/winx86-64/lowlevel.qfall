@@ -16,6 +16,8 @@ func sfree(int size) {}
 
 /**
  * Puts a value of the provided type into a stack section.
+ * @param type the Assembly type of the value.
+ * @param value the value.
  */
 func sput(? type, ? value) {}
 
