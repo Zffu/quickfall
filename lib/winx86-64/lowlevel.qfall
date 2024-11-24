@@ -4,6 +4,7 @@
 
 /**
  * Marks a specific amount of bytes of the stack as used.
+ * @param the size to mark (in bytes).
  */ 
 func salloc(int size) {}
 
