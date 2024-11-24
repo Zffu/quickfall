@@ -23,5 +23,8 @@ func sput(? type, ? value) {}
 
 /**
  * Moves a section register value into another register.
+ * @param section the Assembly section where the origin value is stored.
+ * @param originRegister the register to grab the origin value from.
+ * @param destRegister the register where the value needs to be moved.
  */
 func mov(str section, str originRegister, str destRegister) {}
