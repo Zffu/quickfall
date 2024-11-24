@@ -13,47 +13,59 @@
 #include "../src/compiler/compiler.h"
 
 //
-//
 // Timing Utilities
 //
-//
+#ifdef WIN32
 
-float totalTimeTaken;
-float* timeTaken;
+#include <windows.h>
+double get_time()
+{
+    LARGE_INTEGER t, f;
+    QueryPerformanceCounter(&t);
+    QueryPerformanceFrequency(&f);
+    return ((double)t.QuadPart/(double)f.QuadPart) * 1000000;
+}
 
-LARGE_INTEGER frequency, start, end;
+#else
 
-int categoriesSize;
+#include <sys/time.h>
+#include <sys/resource.h>
+
+double get_time()
+{
+    struct timeval t;
+    struct timezone tzp;
+    gettimeofday(&t, &tzp);
+    return t.tv_sec + t.tv_usec*1e-6;
+}
+
+#endif
+
 char** categories;
 
-/**
- * Sets the categories for the Quickfall Benchmarking Context.
- */
-void setCategories(int amount, char* categories[]) {
-    categories = categories;
-    timeTaken = malloc(amount * sizeof(float));
-    categoriesSize = amount;
+long* timeTaken;
+
+long startTime;
+
+long long totalTimeTaken;
+
+void startTimer() {
+    long time = get_time();
+    if(time > 0) startTime = time;
+}
+
+void endTimer(int category) {
+    long time = (get_time() - startTime);
+    if(time > 0) {
+	totalTimeTaken += time;
+	timeTaken[category] += time;
+	printf("Timer cat %d appened!: curr: %d\n", category, timeTaken[category]);
+    }
 }
 
 /**
  * Starts the monitoring
  */
-void startMonitoring() {
-    QueryPerformanceFrequency(&frequency);
-    QueryPerformanceCounter(&start);
-}
-
-/**
- * Stops monitoring the current benchmark context.
- */
-void stopMonitoring(int category) {
-    QueryPerformanceCounter(&end);
-    float taken = (end.QuadPart - start.QuadPart) * 1000000.0 / frequency.QuadPart;
-
-    totalTimeTaken += taken;
-    timeTaken[category] += taken;
-}
-
 
 void main(int argc, char* argv[]) {
     if(argc < 2) {
@@ -67,11 +79,13 @@ void main(int argc, char* argv[]) {
         runs = atoi(argv[2]);
     }
 
-    char* categories[] = {"File IO (Open)", "Lexer", "Parser", "Compiler", "File IO (Close)"};
-    setCategories(5, categories);
+    char* c[5] = {"File IO (Open)", "Lexer", "Parser", "Compiler", "File IO (Close)"};
+    categories = c;
+
+    timeTaken = malloc(sizeof(long) * 5);
 
     for(int i = 0; i < runs; ++i) {
-        startMonitoring();
+        startTimer();
         FILE* fptr = fopen(argv[1], "r");
 
         fseek(fptr, 0, SEEK_END);
@@ -80,41 +94,42 @@ void main(int argc, char* argv[]) {
 
         char* buff = (char*) malloc(size);
         fread(buff, 1, size, fptr);
+	buff[size] = '\0';
         fclose(fptr);
 
-        stopMonitoring(0);
-        startMonitoring();
+        endTimer(0);
+        startTimer();
 
         struct LexerResult result = runLexer(buff);
 
-        stopMonitoring(1);
+        endTimer(1);
 
-        startMonitoring();
+        startTimer();
 
         struct ASTNode* node = runParser(result);
+	
+        endTimer(2);
+        startTimer();
 
-        stopMonitoring(2);
-        startMonitoring();
+        char* compiled = compile(node, "win");
 
-        struct CompilerOutput compiled = compile(node, "win");
+        endTimer(3);
+		
+        startTimer();
+	
+        fptr = fopen("output.txt", "w");
+	fprintf(fptr, compiled);
 
-        stopMonitoring(3);
-
-        char* output = argv[2];
-        strcat(output, ".build");
-
-        startMonitoring();
-
-        fptr = fopen(output, "w");
-        fprintf(fptr, compiled.output);
-
-        stopMonitoring(4);
+        endTimer(4);
     }
 
     printf("========= Benchmarking Results =========\n");
-    
     for(int i = 0; i < 5; ++i) {
-        float taken = timeTaken[i] / runs;
-        printf("%s: %fμs (%d%)\n", categories[i], taken, ((totalTimeTaken / runs) / taken) * 100);
+        if(timeTaken[i] > 0) {
+		printf("%s: total: %d microseconds, avg: %d microseconds (%d percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (totalTimeTaken / timeTaken[i]) * 100);
+	}
+	else {
+		printf("Category %s didn't show in the benchmarking, results are possibly impacted!\n", categories[i]);
+	}
     }
 }
