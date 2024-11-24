@@ -15,7 +15,7 @@ func sfree(int size) {}
 /**
  * Puts a value of the provided type into a stack section.
  */
-func stackPut(? type, ? value) {}
+func sput(? type, ? value) {}
 
 /**
  * Moves a section register value into another register.
