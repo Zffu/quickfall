@@ -6,3 +6,8 @@
  * Allocates some memory on the stack
  */ 
 func salloc(int size) {}
+
+/**
+ * Marks a portion of the stack of the provided size to be unused.
+ */
+func sfree(int size) {}
