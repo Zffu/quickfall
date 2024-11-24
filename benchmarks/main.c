@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <math.h>
 
 #include "../src/lexer/lexer.h"
 #include "../src/parser/parser.h"
@@ -56,10 +57,8 @@ void startTimer() {
 
 void endTimer(int category) {
     double time = (get_time() - startTime);
-    if(time > 0) {
-	totalTimeTaken += time;
-	timeTaken[category] += time;
-    }
+    totalTimeTaken += time;
+    timeTaken[category] += time;
 }
 
 /**
@@ -81,7 +80,12 @@ void main(int argc, char* argv[]) {
     char* c[5] = {"File IO (Open)", "Lexer", "Parser", "Compiler", "File IO (Close)"};
     categories = c;
 
-    timeTaken = malloc(sizeof(long) * 5);
+    timeTaken = malloc(sizeof(double) * 5);
+
+    // Clear the stats
+    for(int i = 0; i < 5; ++i) {
+	timeTaken[i] = 0;
+    }
 
     for(int i = 0; i < runs; ++i) {
         startTimer();
@@ -123,13 +127,9 @@ void main(int argc, char* argv[]) {
     }
 
     printf("========= Benchmarking Results =========\n");
-    printf("Total time taken: %.3f, Average time per run: %.3f\n", totalTimeTaken, totalTimeTaken / runs);
+    printf("Total time taken: %.3f micros, Average time per run: %.3f\n micros", totalTimeTaken, totalTimeTaken / runs);
     for(int i = 0; i < 5; ++i) {
-        if(timeTaken[i] > 0) {
-		printf("%s: total: %.3f microseconds, avg: %.3f microseconds (%.3f percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (timeTaken[i] / totalTimeTaken) * 100);
-	}
-	else {
-		printf("Category %s didn't show in the benchmarking, results are possibly impacted!\n", categories[i]);
-	}
+	printf("%s: total: %.3f microseconds, avg: %.3f microseconds (%.3f percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (timeTaken[i] / totalTimeTaken) * 100);
+	
     }
 }
