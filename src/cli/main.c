@@ -21,18 +21,19 @@
 
 
 void showCommandEntry(char* commandName, char* description, int argumentCount, char* argumentNames[], char* argumentDescriptions[]) {
-	printf("    >  %s\n\n       %s%sDescription%s: %s\n", commandName, STYLE_BOLD, STYLE_UNDERLINE, RESET, description);
+	printf("\n    >  %s\n\n       %s%sDescription%s: %s\n", commandName, STYLE_BOLD, STYLE_UNDERLINE, RESET, description);
 
 	if(argumentCount > 0) {
 		printf("\n\n       %s%sArguments%s: ", STYLE_BOLD, STYLE_UNDERLINE, RESET);
 		for(int i = 0; i < argumentCount; ++i) {
-			printf("\n         > %s%s%s: %s\n\n", TEXT_GRAY, argumentNames[i], RESET, argumentDescriptions[i]);
+			printf("\n         > %s%s%s: %s", TEXT_GRAY, argumentNames[i], RESET, argumentDescriptions[i]);
 		}
+		printf("\n");
 	}
 }
 
 void showHelpMessage() {
-	printf("\n%sQuickfall%s - The programming language.\n\nCommands:\n\n", TEXT_CYAN, RESET);
+	printf("\n%sQuickfall%s - The programming language.\n\nCommands:\n", TEXT_CYAN, RESET);
 	
 	char** arguments = malloc(5 * 24);
 	char** argumentDescriptions = malloc(5 * 256);
