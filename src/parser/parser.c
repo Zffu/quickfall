@@ -186,6 +186,10 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end, e
         struct Token t = result.tokens[index];
         struct Token next = result.tokens[index + 1];
 
+	if(t.type == SEMICOLON) {
+		continue;
+	}
+
         if(t.type == FUNCTION) {
             if(next.type == KEYWORD) {
                 struct ASTNode* node = parseFunctionDeclaration(result, index);
