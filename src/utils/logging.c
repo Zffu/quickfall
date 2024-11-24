@@ -12,6 +12,7 @@
 #define TEXT_MAGENTA "\x1b[35m"
 #define TEXT_CYAN "\x1b[36m"
 #define TEXT_WHITE "\x1b[37m"
+#define TEXT_GRAY "\033[90m"
 
 #define BACKGROUND_BLACK "\x1b[40m"
 #define BACKGROUND_RED "\x1b[41m"
