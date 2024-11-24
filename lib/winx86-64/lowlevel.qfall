@@ -10,6 +10,7 @@ func salloc(int size) {}
 
 /**
  * Marks a specific amount of bytes of the stack as used.
+ * @param size the size to mark (in bytes).
  */
 func sfree(int size) {}
 
