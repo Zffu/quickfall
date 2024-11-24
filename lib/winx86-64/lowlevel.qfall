@@ -1,0 +1,8 @@
+/**
+ * The quickfall std::lowlevel for Windows x86-64 architecture.
+ */
+
+/**
+ * Allocates some memory on the stack
+ */ 
+func salloc(int size) {}
