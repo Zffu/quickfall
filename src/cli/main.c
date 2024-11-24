@@ -1,6 +1,9 @@
 /**
- * The main file of the Quickfall CLI.
+ * The file of the Quickfall CLI.
  * A modern, fast and lightweight programming language.
+ * Usage:
+ * quickfall build <input> -o <output> - Builds the input files into an output.
+ * quickfall help - Shows the help command.
  */
 
 #include <stdio.h>
@@ -11,219 +14,137 @@
 #include "../parser/parser.h"
 #include "../compiler/compiler.h"
 
+#include "../utils/logging.c"
+
 // Version
 #define VERSION "0.1.0"
 
-// CLI Arguments structure
-struct Arguments {
-    char* command;
-    char* inputFile;
-    char* outputFile;
-    char* platform;
-    int showHelp;
-    int showVersion;
-    int error;
-};
 
-#define BANNER "\
- ██████  ██    ██ ██  ██████ ██   ██ ███████  █████  ██      ██      \n\
-██    ██ ██    ██ ██ ██      ██  ██  ██      ██   ██ ██      ██      \n\
-██    ██ ██    ██ ██ ██      █████   █████   ███████ ██      ██      \n\
-██ ▄▄ ██ ██    ██ ██ ██      ██  ██  ██      ██   ██ ██      ██      \n\
- ██████   ██████  ██  ██████ ██   ██ ██      ██   ██ ███████ ███████ \n\
-    ▀▀                                                                 \n"
+void showCommandEntry(char* commandName, char* description, int argumentCount, char* argumentNames[], char* argumentDescriptions[]) {
+	printf("\n    >  %s\n\n       %s%sDescription%s: %s\n", commandName, STYLE_BOLD, STYLE_UNDERLINE, RESET, description);
 
-/**
- * Parse command line arguments into a structured format
- */
-struct Arguments parseArguments(int argc, char* argv[]) {
-    struct Arguments args = {
-        .command = NULL,
-        .inputFile = NULL,
-        .outputFile = "a.out",
-        .platform = "win",
-        .showHelp = 0,
-        .showVersion = 0,
-        .error = 0
-    };
-
-    if (argc < 2) {
-        args.showHelp = 1;
-        return args;
-    }
-
-    // First argument is always the command
-    args.command = (argv[1] != NULL ? argv[1] : "h");
-
-    // Parse flags and options
-    for (int i = 2; i < argc; i++) {
-        if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--file") == 0) {
-            if (i + 1 < argc) {
-                args.inputFile = argv[++i];
-            } else {
-                args.error = 1;
-            }
-        }
-        else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0) {
-            if (i + 1 < argc) {
-                args.outputFile = argv[++i];
-            } else {
-                args.error = 1;
-            }
-        }
-        else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--platform") == 0) {
-            if(i + i < argc) {
-                args.platform = argv[++i];
-            }
-            else {
-                args.error = 1;
-            }
-        }
-        else if (args.inputFile == NULL) {
-            // If no input file specified yet, treat as input file
-            args.inputFile = argv[i];
-        }
-    }
-
-    return args;
+	if(argumentCount > 0) {
+		printf("\n\n       %s%sArguments%s: ", STYLE_BOLD, STYLE_UNDERLINE, RESET);
+		for(int i = 0; i < argumentCount; ++i) {
+			printf("\n         > %s%s%s: %s", TEXT_GRAY, argumentNames[i], RESET, argumentDescriptions[i]);
+		}
+		printf("\n");
+	}
 }
 
-/**
- * Shows the CLI help message with modern formatting.
- */
 void showHelpMessage() {
-    printf("%s\n", BANNER);
-    printf("Quickfall v%s - A modern, fast and lightweight programming language\n\n", VERSION);
-    
-    printf("USAGE:\n");
-    printf("  quickfall <command> [options]\n\n");
-    
-    printf("COMMANDS:\n");
-    printf("  r, run           Run a Quickfall program\n");
-    printf("  b, build         Build a Quickfall program to executable\n");
-    printf("  i, init          Create a new Quickfall project\n");
-    printf("  t, test          Run tests for a Quickfall project\n");
-    printf("  h, help          Show this help message\n");
-    printf("  v, version       Show version information\n\n");
-    
-    printf("OPTIONS:\n");
-    printf("  -f, --file    Specify input file path\n");
-    printf("  -o, --output  Specify output file path (for build)\n\n");
-    
-    printf("EXAMPLES:\n");
-    printf("  $ quickfall run example.qf\n");
-    printf("  $ quickfall build example.qf -o example\n");
-    printf("  $ quickfall init my-project\n");
-    printf("  $ quickfall test\n");
+	printf("\n%sQuickfall%s - The programming language.\n\nCommands:\n", TEXT_CYAN, RESET);
+	
+	char** arguments = malloc(5 * 24);
+	char** argumentDescriptions = malloc(5 * 256);
+	
+	arguments[0] = "-p";
+	argumentDescriptions[0] = "Determines the targeted platform. Defaults to the current platform.";
+	
+	arguments[1] = "-o";
+	argumentDescriptions[1] = "Determines the output file of the compiling. Is required";
+
+	showCommandEntry("compile, c", "Compiles the Quickfall program into an executable for the targeted platform.", 2, arguments, argumentDescriptions);
+	
+	showCommandEntry("version, v", "Shows the current version of Quickfall.", 0, NULL, NULL);
+
+	showCommandEntry("help, h", "Shows a message with helpful Quickfall information.", 0, NULL, NULL);
+
 }
 
-/**
- * Reads a file into a buffer and returns the buffer and size.
- */
-char* readFile(const char* path) {
-    FILE* filePtr = fopen(path, "r");
-    if (filePtr == NULL) {
-        printf("Error: Could not open file '%s'\n", path);
-        exit(1);
-    }
-
-    fseek(filePtr, 0, SEEK_END);
-    int size = ftell(filePtr);
-    fseek(filePtr, 0, SEEK_SET);
-
-    char* bufferPtr = (char*) malloc(size + 1);
-    if (bufferPtr == NULL) {
-        printf("Error: Memory allocation failed\n");
-        fclose(filePtr);
-        exit(1);
-    }
-
-    fread(bufferPtr, 1, size, filePtr);
-    bufferPtr[size] = '\0';
-    fclose(filePtr);
-    return bufferPtr;
-}
-
-char* compileFile(char* filePath, char* platform) {
-    char* buffer = readFile(filePath);
-    struct LexerResult result = runLexer(buffer);
-
-    struct ASTNode* node = runParser(result);
-    
-    free(buffer);
-
-    return compile(node, platform);
-}
 
 int main(int argc, char* argv[]) {
-    struct Arguments args = parseArguments(argc, argv);
+	if(argc < 2) {
+		showHelpMessage();
+		return -1;
+	}
 
-    if (args.showHelp) {
-    	showHelpMessage();
-	return 1;
-    }
+	switch(argv[1][0]) {
+		case 'c':
+			if(strlen(argv[1]) > 1 && strcmp(argv[1], "compile") != 0) {
+				printf("Unknown command!\n");
+				showHelpMessage();
+				break;
+			}
+					
+			if(argc < 3) {
+				printf("%sInvalid Usage! Correct command usage: quickfall compile <target>%s\n", TEXT_RED, RESET);
+				return -1;
+			}
 
-    if (args.error) {
-        printf("Error: Invalid argument format\n");
-        showHelpMessage();
-        return 1;
-    }
+			FILE* fptr = fopen(argv[2], "r");
 
-    switch(args.command[0]) {
-        case 'h':
-            showHelpMessage();
-            return 0;
-        case 'v':
-            printf("Quickfall version %s\n", VERSION);
-            return 0;
+			if(fptr == NULL) {
+				printf("%sCouldn't open the %s file! Are you sure it exists?%s\n", TEXT_RED, argv[2], RESET);
+				return -1;
+			}
 
-        case 'r':
-            if(!args.inputFile) {
-                printf("Error: Missing input file!\n");
-                return -1;
-            }
-            
-            printf("Compiled:\n%s", compileFile(args.inputFile, args.platform));
+			char* outputFile = NULL;
+			int foundOutput = 0;
 
-            return 1;
-        
-        case 'b':
-            if(!args.inputFile && !args.platform) {
-                printf("Error: Missing input File!");
-                return -1;
-            }
+			for(int i = 2; i < argc; ++i) {
+				if(foundOutput) {
+					outputFile = argv[i];
+					break;
+				}
 
-            printf("→ Building %s...\n", args.inputFile);
+				if(argv[i][1] == 'o') {
+					foundOutput = 1;
+				}
+			}
+			
+			if(outputFile == NULL) {
+				printf("%sError: the output file destination wasn't provided! Please use the -o argument to add an output!%s", TEXT_RED, RESET);
+				return -1;
+			}
 
-            char* output = compileFile(args.inputFile, args.platform);
+			fseek(fptr, 0, SEEK_END);
+			int size = ftell(fptr);
+			fseek(fptr, 0, SEEK_SET);
 
-            if(output == NULL) {
-                printf("Error: Building went wrong!\n");
-                return -1;
-            }
+			char* buff = malloc(size + 1); // Allocates one more byte for the \0 char.
 
-            FILE* fptr = fopen(args.outputFile, "w");
-            fprintf(fptr, output);
-            fclose(fptr);
+			fread(buff, 1, size, fptr);
+			buff[size] = '\0';
+			fclose(fptr);
 
-            return 1;
+			struct LexerResult result = runLexer(buff);
+			struct ASTNode* root = runParser(result);
 
-        case 'i':
-            if(!args.inputFile) {
-                printf("Error: Missing project name\n");
-                return -1;
-            }
+			char* output = compile(root, "win"); // todo: change the platform.
+			
+			if(output == NULL) {
+				printf("%sError: Compiling failed! Coudln't gather the output!%s\n", TEXT_RED, RESET);
+				return -1;
+			}	
 
-            printf("→ Creating new project '%s'...\n", args.inputFile);
-            return 1;
-        
-        case 't':
-            printf("→ Running tests...\n");
-            return 1;
-        
-        default:
-            printf("Error: Unknown command '%s'\n", args.command);
-            showHelpMessage();
-            return 0;
-    }
+			fptr = fopen(outputFile, "w");
+			fprintf(fptr, output);
+			fclose(fptr);
+
+
+			break;
+		case 'v':
+			if(strlen(argv[1]) > 1 && strcmp(argv[1], "version") != 0) {
+				printf("Unknown command!\n");
+				showHelpMessage();
+				break;
+			}
+			printf("Currently installed Quickfall version: %s\n", VERSION);
+			break;
+		case 'h':
+			if(strlen(argv[1]) > 1 && strcmp(argv[1], "help") != 0) {
+				printf("Unknown command!\n");
+				showHelpMessage();
+				break;
+			}
+			showHelpMessage();
+			break;
+		default:
+			printf("Unknown command!\n");
+			showHelpMessage();
+	}
+
 }
+
+
