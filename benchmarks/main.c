@@ -59,7 +59,6 @@ void endTimer(int category) {
     if(time > 0) {
 	totalTimeTaken += time;
 	timeTaken[category] += time;
-	printf("Timer cat %d appened!: curr: %f\n", category, timeTaken[category]);
     }
 }
 
