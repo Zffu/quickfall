@@ -4,3 +4,4 @@
 
 char** categories;
 
+long* timeTaken;
