@@ -1,5 +1,5 @@
 /**
- * The main file of the Quickfall CLI.
+ * The file of the Quickfall CLI.
  * A modern, fast and lightweight programming language.
  * Usage:
  * quickfall build <input> -o <output> - Builds the input files into an output.
@@ -14,6 +14,47 @@
 #include "../parser/parser.h"
 #include "../compiler/compiler.h"
 
+#include "../utils/logging.c"
+
 // Version
 #define VERSION "0.1.0"
+
+
+void showCommandEntry(char* commandName, char* description, int argumentCount, char* argumentNames[], char* argumentDescriptions[]) {
+	printf("    >  %s\n\n       %s%sDescription%s: %s\n", commandName, STYLE_BOLD, STYLE_UNDERLINE, RESET, description);
+
+	if(argumentCount > 0) {
+		printf("\n\n       %s%sArguments%s: ", STYLE_BOLD, STYLE_UNDERLINE, RESET);
+		for(int i = 0; i < argumentCount; ++i) {
+			printf("\n         > %s%s%s: %s\n\n", TEXT_GRAY, argumentNames[i], RESET, argumentDescriptions[i]);
+		}
+	}
+}
+
+void showHelpMessage() {
+	printf("\n%sQuickfall%s - The programming language.\n\nCommands:\n\n", TEXT_CYAN, RESET);
+	
+	char** arguments = malloc(5 * 24);
+	char** argumentDescriptions = malloc(5 * 256);
+	
+	arguments[0] = "-p";
+	argumentDescriptions[0] = "Determines the targeted platform. Defaults to the current platform.";
+	
+	arguments[1] = "-o";
+	argumentDescriptions[1] = "Determines the output file of the compiling. Is required";
+
+	showCommandEntry("compile, c", "Compiles the Quickfall program into an executable for the targeted platform.", 2, arguments, argumentDescriptions);
+	
+	showCommandEntry("help, h", "Shows a message with helpful Quickfall information.", 0, NULL, NULL);
+
+}
+
+
+int main(int argc, char* argv[]) {
+	if(argc < 2) {
+		showHelpMessage();
+		return -1;
+	}
+}
+
 
