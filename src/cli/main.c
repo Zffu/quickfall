@@ -58,6 +58,38 @@ int main(int argc, char* argv[]) {
 		showHelpMessage();
 		return -1;
 	}
+
+	switch(argv[1][0]) {
+		case 'c':
+			if(strlen(argv[1]) > 1 && strcmp(argv[1], "compile") != 0) {
+				printf("Unknown command!\n");
+				showHelpMessage();
+				break;
+			}
+					
+			printf("Compiling...");
+			break;
+		case 'v':
+			if(strlen(argv[1]) > 1 && strcmp(argv[1], "version") != 0) {
+				printf("Unknown command!\n");
+				showHelpMessage();
+				break;
+			}
+			printf("Quickfall ver");
+			break;
+		case 'h':
+			if(strlen(argv[1]) > 1 && strcmp(argv[1], "help") != 0) {
+				printf("Unknown command!\n");
+				showHelpMessage();
+				break;
+			}
+			showHelpMessage();
+			break;
+		default:
+			printf("Unknown command!\n");
+			showHelpMessage();
+	}
+
 }
 
 
