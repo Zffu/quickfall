@@ -67,7 +67,62 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 					
-			printf("Compiling...");
+			if(argc < 3) {
+				printf("%sInvalid Usage! Correct command usage: quickfall compile <target>%s\n", TEXT_RED, RESET);
+				return -1;
+			}
+
+			FILE* fptr = fopen(argv[2], "r");
+
+			if(fptr == NULL) {
+				printf("%sCouldn't open the %s file! Are you sure it exists?%s\n", TEXT_RED, argv[2], RESET);
+				return -1;
+			}
+
+			char* outputFile = NULL;
+			int foundOutput = 0;
+
+			for(int i = 2; i < argc; ++i) {
+				if(foundOutput) {
+					outputFile = argv[i];
+					break;
+				}
+
+				if(argv[i][1] == 'o') {
+					foundOutput = 1;
+				}
+			}
+			
+			if(outputFile == NULL) {
+				printf("%sError: the output file destination wasn't provided! Please use the -o argument to add an output!%s", TEXT_RED, RESET);
+				return -1;
+			}
+
+			fseek(fptr, 0, SEEK_END);
+			int size = ftell(fptr);
+			fseek(fptr, 0, SEEK_SET);
+
+			char* buff = malloc(size + 1); // Allocates one more byte for the \0 char.
+
+			fread(buff, 1, size, fptr);
+			buff[size] = '\0';
+			fclose(fptr);
+
+			struct LexerResult result = runLexer(buff);
+			struct ASTNode* root = runParser(result);
+
+			char* output = compile(root, "win"); // todo: change the platform.
+			
+			if(output == NULL) {
+				printf("%sError: Compiling failed! Coudln't gather the output!%s\n", TEXT_RED, RESET);
+				return -1;
+			}	
+
+			fptr = fopen(outputFile, "w");
+			fprintf(fptr, output);
+			fclose(fptr);
+
+
 			break;
 		case 'v':
 			if(strlen(argv[1]) > 1 && strcmp(argv[1], "version") != 0) {
@@ -75,7 +130,7 @@ int main(int argc, char* argv[]) {
 				showHelpMessage();
 				break;
 			}
-			printf("Quickfall ver");
+			printf("Currently installed Quickfall version: %s\n", VERSION);
 			break;
 		case 'h':
 			if(strlen(argv[1]) > 1 && strcmp(argv[1], "help") != 0) {
