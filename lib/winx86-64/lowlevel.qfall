@@ -8,7 +8,7 @@
 func salloc(int size) {}
 
 /**
- * Marks a portion of the stack of the provided size to be unused.
+ * Marks a specific amount of bytes of the stack as used.
  */
 func sfree(int size) {}
 
