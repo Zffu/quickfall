@@ -163,7 +163,7 @@ struct ASTNode* parseVariableDefinition(struct LexerResult result, int index) {
 
     struct Token val = result.tokens[index + 2];
 
-    if(val.type != KEYWORD && val.type != NUMBER && val.type != STRING && val.type != BOOLEAN) {
+    if(val.type != KEYWORD && val.type != NUMBER && val.type != STRING && val.type != BOOLEAN_VALUE) {
         printf("Error: Disallowed token as variable value: %d\n", val.type);
         return NULL;
     }
