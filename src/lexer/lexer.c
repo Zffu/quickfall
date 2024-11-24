@@ -87,7 +87,7 @@ struct LexerResult runLexer(char string[]) {
             if (strcmp(word, "func") == 0) {
                 token.type = FUNCTION;
             } else if (strcmp(word, "true") == 0 || strcmp(word, "false") == 0) {
-                token.type = BOOLEAN;
+                token.type = BOOL;
             } else if (strcmp(word, "null") == 0) {
                 token.type = NU;
             } else if(strcmp(word, "use") == 0) {
