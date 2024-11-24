@@ -123,10 +123,10 @@ void main(int argc, char* argv[]) {
     }
 
     printf("========= Benchmarking Results =========\n");
-    printf("Total time taken: %f, Average time per run: %f\n", totalTimeTaken, totalTimeTaken / runs);
+    printf("Total time taken: %.3f, Average time per run: %.3f\n", totalTimeTaken, totalTimeTaken / runs);
     for(int i = 0; i < 5; ++i) {
         if(timeTaken[i] > 0) {
-		printf("%s: total: %f microseconds, avg: %f microseconds (%f percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (timeTaken[i] / totalTimeTaken) * 100);
+		printf("%s: total: %.3f microseconds, avg: %.3f microseconds (%.3f percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (timeTaken[i] / totalTimeTaken) * 100);
 	}
 	else {
 		printf("Category %s didn't show in the benchmarking, results are possibly impacted!\n", categories[i]);
