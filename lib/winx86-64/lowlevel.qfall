@@ -3,7 +3,7 @@
  */
 
 /**
- * Allocates some memory on the stack
+ * Marks a specific amount of bytes of the stack as used.
  */ 
 func salloc(int size) {}
 
