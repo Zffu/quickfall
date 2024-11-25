@@ -44,11 +44,16 @@ double get_time()
 
 char** categories;
 
-double* timeTaken;
-
+double totalTimeTaken;
 double startTime;
 
-double totalTimeTaken;
+struct CategoryStatistics {
+	double max;
+	double low;
+	double total;
+};
+
+struct CategoryStatistics* stats;
 
 void startTimer() {
     double time = get_time();
@@ -58,7 +63,9 @@ void startTimer() {
 void endTimer(int category) {
     double time = (get_time() - startTime);
     totalTimeTaken += time;
-    timeTaken[category] += time;
+    stats[category].total += time;
+    if(stats[category].max < time) stats[category].max = time;
+    if(stats[category].low > time) stats[category].low = time;
 }
 
 /**
@@ -80,12 +87,7 @@ void main(int argc, char* argv[]) {
     char* c[5] = {"File IO (Open)", "Lexer", "Parser", "Compiler", "File IO (Close)"};
     categories = c;
 
-    timeTaken = malloc(sizeof(double) * 5);
-
-    // Clear the stats
-    for(int i = 0; i < 5; ++i) {
-	timeTaken[i] = 0;
-    }
+    stats = malloc(sizeof(CategoryStatistics) * 5);
 
     for(int i = 0; i < runs; ++i) {
         startTimer();
@@ -95,7 +97,7 @@ void main(int argc, char* argv[]) {
         int size = ftell(fptr);
         fseek(fptr, 0, SEEK_SET);
 
-        char* buff = (char*) malloc(size);
+        char* buff = (char*) malloc(size + 1);
         fread(buff, 1, size, fptr);
 	buff[size] = '\0';
         fclose(fptr);
@@ -129,7 +131,7 @@ void main(int argc, char* argv[]) {
     printf("========= Benchmarking Results =========\n");
     printf("Total time taken: %.3f micros, Average time per run: %.3f\n micros\n\n", totalTimeTaken, totalTimeTaken / runs);
     for(int i = 0; i < 5; ++i) {
-	printf("%s: total: %.3f microseconds, avg: %.3f microseconds (%.3f percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (timeTaken[i] / totalTimeTaken) * 100);
+	printf("%s: total: %.3f microseconds, avg: %.3f microseconds (%.3f percent of overall)\n", categories[i], stats[i].total, stats[i].total / runs, (stats[i].total / totalTimeTaken) * 100);
 	
     }
 }
