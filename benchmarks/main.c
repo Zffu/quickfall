@@ -140,7 +140,7 @@ void main(int argc, char* argv[]) {
     for(int i = 0; i < 5; ++i) {
 	printf("Benchmarking Results of %s:\n", categories[i]);
 	printf("  Total time duration: %.2fus (%.1f percent over total running time)\n", stats[i].total, (stats[i].total / totalTimeTaken) * 100);
-	printf("  Range (%sFastest%s, %sLowest%s): %s%0.fus%s  ... %s%.2fus%s\n\n", TEXT_GREEN, RESET, TEXT_RED, RESET, TEXT_GREEN, stats[i].low, RESET, TEXT_RED, stats[i].max, RESET);
+	printf("  Range (%sFastest%s, %sLowest%s): %s%0.fus%s  ... %s%.2fus%s\n\n", TEXT_HGREEN, RESET, TEXT_HRED, RESET, TEXT_HGREEN, stats[i].low, RESET, TEXT_HRED, stats[i].max, RESET);
 	
     }
 }
