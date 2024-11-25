@@ -35,6 +35,7 @@ SOURCES = $(CLI_DIR)/main.c \
           $(PARSER_DIR)/parser.c \
           $(PARSER_DIR)/ast.c \
           $(COMPILER_DIR)/compiler.c \
+	  $(COMPILER_DIR)/stdl.c \
           $(COMPILER_PLATFORMS)/linux.c \
           $(COMPILER_PLATFORMS)/windowsx86-64.c \
           $(UTILS_DIR)/hashes.c \
