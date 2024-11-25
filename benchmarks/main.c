@@ -147,6 +147,7 @@ void main(int argc, char* argv[]) {
     for(int i = 0; i < 5; ++i) {
 	printf("Benchmarking Results of %s:\n", categories[i]);
 	printf("  Total time duration: %s%.2fus%s (%s%.1f%%%s over total running time)\n", TEXT_HCYAN, stats[i].total, RESET, TEXT_CYAN, (stats[i].total / totalTimeTaken) * 100, RESET);
+	printf("  Average: %s%.2fus%s\n", TEXT_HCYAN, stats[i].total / runs, RESET);
 	printf("  Range (%sFastest%s, %sLowest%s): %s%0.fus%s  ... %s%.2fus%s\n\n", TEXT_HGREEN, RESET, TEXT_HRED, RESET, TEXT_HGREEN, stats[i].low, RESET, TEXT_HRED, stats[i].max, RESET);
 	
 	double* averages = malloc(sizeof(double) * 10);
@@ -171,15 +172,17 @@ void main(int argc, char* argv[]) {
 		if(ii == 0) strcat(spacing, "  \0");
 		else if(ii != 9) strcat(spacing, " \0");
 
-		printf("%d%% to %d%% Percentile:%s ", ii * 10, (ii + 1) * 10, spacing);
 		int clean = (averages[ii] / highestAverage) * 25;
+
+		printf("  %d%% to %d%% Percentile:%s%s ", ii * 10, (ii + 1) * 10, spacing, TEXT_GRAY);
 		for(int c = 0; c < clean; ++c) {
 			printf("#");
 		}
-		printf("\n");
+		printf("%s (%s%.2fus%s average)\n", RESET, TEXT_HCYAN, averages[ii], RESET);
 	}
 
-	printf("\n");
-
+	double timeWithoutHighest = stats[i].total - highestAverage;
+	printf("\n  Total time duration without highest avg: %s%.1fus%s (%s%.1f%%%s over total running time)", TEXT_HCYAN, timeWithoutHighest, RESET, TEXT_CYAN, (timeWithoutHighest / totalTimeTaken) * 100, RESET);
+	printf("\n  Average without highest avg: %s%.2fus%s\n\n", TEXT_HCYAN, (timeWithoutHighest / runs), RESET);
     }
 }
