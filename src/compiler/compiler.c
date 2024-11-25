@@ -26,6 +26,7 @@ char* compile(struct ASTNode* node, char* platform) {
     enum Platform p = platformFromString(platform);
 
     struct CompilingContext ctx;
+    ctx.section = 1;
 
     // Default size buffers for now, todo: use realloc for less memory usage.
     ctx.defaultSection = malloc(512);

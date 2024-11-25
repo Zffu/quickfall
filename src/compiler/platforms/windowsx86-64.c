@@ -50,13 +50,13 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
         }
         else {
             // If the function isn't an internal, jump to it!
-	    if(node->right->next != NULL) { 
+	    if(node->right->next != NULL) {
             	int argCount = 0;
             	while(node->right->next != NULL) {
 			node->right = node->right->next;
 
                 	char b[5] = {""};
-                	sprintf(b, "%d", ctx.section++ + 1);
+                	snprintf(b, 5, "%d", ctx.section++);
 
                 	strcat(ctx.sections, "\n.");
                 	strcat(ctx.sections, "LC");
@@ -67,7 +67,6 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
                 	strcat(ctx.sections, "\\0\"");
 
                 	strcat(funcBuff, "\n    leaq    .LC");
-
                 	strcat(funcBuff, b);
                 	strcat(funcBuff, "(%rip), %rax");
                 	strcat(funcBuff, "\n    movq %rax,");
@@ -110,6 +109,7 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
 
             win64(ctx, n, (node->type == AST_GENERIC ? 0 : 1));
         }
+
     }
     else if(node->type == AST_USE_STDL) {
 	loadAndDump(ctx, node->right->value);
