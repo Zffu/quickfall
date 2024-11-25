@@ -12,6 +12,7 @@
 #include "../src/parser/parser.h"
 #include "../src/parser/ast.h"
 #include "../src/compiler/compiler.h"
+#include "../src/utils/logging.c"
 
 //
 // Timing Utilities
@@ -139,7 +140,7 @@ void main(int argc, char* argv[]) {
     for(int i = 0; i < 5; ++i) {
 	printf("Benchmarking Results of %s:\n", categories[i]);
 	printf("  Total time duration: %.2fus (%.1f percent over total running time)\n", stats[i].total, (stats[i].total / totalTimeTaken) * 100);
-	printf("  Range (Fastest, Lowest): %0.fus  ... %.2fus\n\n", stats[i].low, stats[i].max);
+	printf("  Range (%sFastest%s, %sLowest%s): %s%0.fus%s  ... %s%.2fus%s\n\n", TEXT_GREEN, RESET, TEXT_RED, RESET, TEXT_GREEN, stats[i].low, RESET, TEXT_RED, stats[i].max, RESET);
 	
     }
 }
