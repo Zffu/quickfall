@@ -138,7 +138,8 @@ void main(int argc, char* argv[]) {
     printf("Total time taken: %.3f micros, Average time per run: %.3f\n micros\n\n", totalTimeTaken, totalTimeTaken / runs);
     for(int i = 0; i < 5; ++i) {
 	printf("Benchmarking Results of %s:\n", categories[i]);
-	printf("  Total time duration: %.2fus (%.1f percent over total running time)\n\n", stats[i].total, (stats[i].total / totalTimeTaken) * 100);
+	printf("  Total time duration: %.2fus (%.1f percent over total running time)\n", stats[i].total, (stats[i].total / totalTimeTaken) * 100);
+	printf("  Range (Fastest, Lowest): %0.fus  ... %.2fus\n\n", stats[i].low, stats[i].max);
 	
     }
 }
