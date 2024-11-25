@@ -48,8 +48,7 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
             strcat(funcBuff, node->right->next->next->next->value);
         }
         else {
-            // If the function isn't an internal, jump to it.
-	
+            // If the function isn't an internal, jump to it!
 	    if(node->right->next != NULL) { 
             	int argCount = 0;
             	while(node->right->next != NULL) {
@@ -103,7 +102,7 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
         win64(ctx, node->right, genericState); // Parses the AST_GENERIC Node.
         strcat(ctx.sections, "\n    ret\n");
     }
-    else if(node->type == AST_GENERIC || node->type == AST_FUNCTION_GENERIC) {
+    else if(node->type == AST_FUNCTION_GENERIC || node->type == AST_GENERIC) {
         struct ASTNode* n = node;
         while (n->next != NULL) {
             n = n->next;
