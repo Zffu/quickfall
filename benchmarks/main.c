@@ -52,6 +52,7 @@ struct CategoryStatistics {
 	double max;
 	double low;
 	double total;
+	double* runs;
 };
 
 struct CategoryStatistics* stats;
@@ -61,10 +62,11 @@ void startTimer() {
     if(time > 0) startTime = time;
 }
 
-void endTimer(int category) {
+void endTimer(int run, int category) {
     double time = (get_time() - startTime);
     totalTimeTaken += time;
     stats[category].total += time;
+    stats[category].runs[run] = time;
     if(stats[category].max < time) stats[category].max = time;
     if(stats[category].low > time) stats[category].low = time;
 }
@@ -94,6 +96,11 @@ void main(int argc, char* argv[]) {
 	stats[i].total = 0;
 	stats[i].max = 0;
 	stats[i].low = 1000000;
+	stats[i].runs = malloc(sizeof(double) * runs);
+
+	for(int ii = 0; ii < 100; ++ii) {
+		stats[i].runs[i] = 0;
+	}
     }
 
     for(int i = 0; i < runs; ++i) {
@@ -109,30 +116,30 @@ void main(int argc, char* argv[]) {
 	buff[size] = '\0';
         fclose(fptr);
 
-        endTimer(0);
+        endTimer(i, 0);
         startTimer();
 
         struct LexerResult result = runLexer(buff);
 
-        endTimer(1);
+        endTimer(i, 1);
 
         startTimer();
 
         struct ASTNode* node = runParser(result);
 	
-        endTimer(2);
+        endTimer(i, 2);
         startTimer();
 
         char* compiled = compile(node, "win");
 
-        endTimer(3);
+        endTimer(i, 3);
 		
         startTimer();
 	
         fptr = fopen("output.txt", "w");
 	fprintf(fptr, compiled);
 
-        endTimer(4);
+        endTimer(i, 4);
     }
 
     printf("========= Benchmarking Results =========\n");
