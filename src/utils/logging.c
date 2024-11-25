@@ -4,6 +4,11 @@
 
 #define RESET "\x1b[0m"
 
+#define STYLE_BOLD "\x1b[1m"
+#define STYLE_ITALIC "\x1b[3m"
+#define STYLE_UNDERLINE "\x1b[4m"
+#define STYLE_STRIKETROUGH "\x1b[9m"
+
 #define PREFIX "\x1b["
 
 #define CLASSIC_OP PREFIX "0;"
@@ -98,3 +103,4 @@
 #define BTEXT_HCYAN BOLD_OP HCYAN
 #define BTEXT_HWHITE BOLD_OP HWHITE
 #define BTEXT_HGRAY BOLD_OP HGRAY
+
