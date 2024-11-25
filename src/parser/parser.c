@@ -163,7 +163,7 @@ struct ASTNode* parseVariableDefinition(struct LexerResult result, int index) {
 
     struct Token val = result.tokens[index + 2];
 
-    if(val.type != KEYWORD && val.type != NUMBER && val.type != STRING && val.type != BOOLEAN) {
+    if(val.type != KEYWORD && val.type != NUMBER && val.type != STRING && val.type != BOOLEAN_VALUE) {
         printf("Error: Disallowed token as variable value: %d\n", val.type);
         return NULL;
     }
@@ -185,6 +185,10 @@ struct ASTNode* parseExpression(struct LexerResult result, int index, int end, e
     for(; index < end; ++index) {
         struct Token t = result.tokens[index];
         struct Token next = result.tokens[index + 1];
+
+	if(t.type == SEMICOLON) {
+		continue;
+	}
 
         if(t.type == FUNCTION) {
             if(next.type == KEYWORD) {

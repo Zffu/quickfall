@@ -16,7 +16,7 @@ enum TokenType {
     ARRAY_CLOSE = 9,
     NUMBER = 10,
     STRING = 11,
-    BOOLEAN = 12,
+    BOOLEAN_VALUE = 12,
     NU = 13,
     KEYWORD = 14,
     SEMICOLON = 15,
