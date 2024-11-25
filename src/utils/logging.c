@@ -19,6 +19,16 @@
 #define WHITE "37m"
 #define GRAY "90m"
 
+#define HBLACK "90m"
+#define HRED "91m"
+#define HGREEN "92m"
+#define HYELLOW "93m"
+#define HBLUE "94m"
+#define HMAGENTA "95m"
+#define HCYAN "96m"
+#define HWHITE "97m"
+#define HGRAY "98m"
+
 #define BG_BLACK "40m"
 #define BG_RED "41m"
 #define BG_GREEN "42m"
@@ -28,6 +38,16 @@
 #define BG_CYAN "46m"
 #define BG_WHITE "47m"
 #define BG_GRAY "48m"
+
+#define BG_HBLACK "100m"
+#define BG_HRED "101m"
+#define BG_HGRREEN "102m"
+#define BG_HYELLOW "103m"
+#define BG_HBLUE "104m"
+#define BG_HPURPLE "105m"
+#define BG_HCYAN "106m"
+#define BG_HWHITE "107m"
+#define BH_HGRAY "108m"
 
 #define TEXT_RED CLASSIC_OP RED
 #define TEXT_BLACK CLASSIC_OP BLACK
@@ -48,4 +68,3 @@
 #define BACKGROUND_CYAN CLASSIC_OP BG_CYAN
 #define BACKGROUND_WHITE CLASSIC_OP BG_WHITE
 #define BACKGROUND_GRAY CLASSIC_OP BG_GRAY
-
