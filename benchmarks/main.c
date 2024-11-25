@@ -12,6 +12,7 @@
 #include "../src/parser/parser.h"
 #include "../src/parser/ast.h"
 #include "../src/compiler/compiler.h"
+#include "../src/utils/logging.c"
 
 //
 // Timing Utilities
@@ -44,21 +45,30 @@ double get_time()
 
 char** categories;
 
-double* timeTaken;
-
+double totalTimeTaken;
 double startTime;
 
-double totalTimeTaken;
+struct CategoryStatistics {
+	double max;
+	double low;
+	double total;
+	double* runs;
+};
+
+struct CategoryStatistics stats[5];
 
 void startTimer() {
     double time = get_time();
     if(time > 0) startTime = time;
 }
 
-void endTimer(int category) {
+void endTimer(int run, int category) {
     double time = (get_time() - startTime);
     totalTimeTaken += time;
-    timeTaken[category] += time;
+    stats[category].total += time;
+    stats[category].runs[run] = time;
+    if(stats[category].max < time) stats[category].max = time;
+    if(stats[category].low > time) stats[category].low = time;
 }
 
 /**
@@ -80,14 +90,19 @@ void main(int argc, char* argv[]) {
     char* c[5] = {"File IO (Open)", "Lexer", "Parser", "Compiler", "File IO (Close)"};
     categories = c;
 
-    timeTaken = malloc(sizeof(double) * 5);
-
-    // Clear the stats
     for(int i = 0; i < 5; ++i) {
-	timeTaken[i] = 0;
+	stats[i].total = 0;
+	stats[i].max = 0;
+	stats[i].low = 1000000;
+	stats[i].runs = malloc(sizeof(double) * runs);
+
+	for(int ii = 0; ii < runs; ++ii) {
+		stats[i].runs[ii] = 0;
+	}
     }
 
     for(int i = 0; i < runs; ++i) {
+
         startTimer();
         FILE* fptr = fopen(argv[1], "r");
 
@@ -95,41 +110,84 @@ void main(int argc, char* argv[]) {
         int size = ftell(fptr);
         fseek(fptr, 0, SEEK_SET);
 
-        char* buff = (char*) malloc(size);
+        char* buff = (char*)malloc(size + 1);
+
         fread(buff, 1, size, fptr);
 	buff[size] = '\0';
         fclose(fptr);
 
-        endTimer(0);
+        endTimer(i, 0);
         startTimer();
 
         struct LexerResult result = runLexer(buff);
 
-        endTimer(1);
+	free(buff);
+
+        endTimer(i, 1);
 
         startTimer();
 
         struct ASTNode* node = runParser(result);
 	
-        endTimer(2);
+        endTimer(i, 2);
         startTimer();
 
         char* compiled = compile(node, "win");
 
-        endTimer(3);
+        endTimer(i, 3);
 		
         startTimer();
 	
         fptr = fopen("output.txt", "w");
 	fprintf(fptr, compiled);
+	fclose(fptr);
 
-        endTimer(4);
+        endTimer(i, 4);
+
+	free(compiled);
     }
 
     printf("========= Benchmarking Results =========\n");
     printf("Total time taken: %.3f micros, Average time per run: %.3f\n micros\n\n", totalTimeTaken, totalTimeTaken / runs);
     for(int i = 0; i < 5; ++i) {
-	printf("%s: total: %.3f microseconds, avg: %.3f microseconds (%.3f percent of overall)\n", categories[i], timeTaken[i], timeTaken[i] / runs, (timeTaken[i] / totalTimeTaken) * 100);
+	printf("Benchmarking Results of %s:\n", categories[i]);
+	printf("  Total time duration: %s%.2fus%s (%s%.1f%%%s over total running time)\n", TEXT_HCYAN, stats[i].total, RESET, TEXT_CYAN, (stats[i].total / totalTimeTaken) * 100, RESET);
+	printf("  Average: %s%.2fus%s\n", TEXT_HCYAN, stats[i].total / runs, RESET);
+	printf("  Range (%sFastest%s, %sLowest%s): %s%0.fus%s  ... %s%.2fus%s\n\n", TEXT_HGREEN, RESET, TEXT_HRED, RESET, TEXT_HGREEN, stats[i].low, RESET, TEXT_HRED, stats[i].max, RESET);
 	
+	double averages[10];
+	double highestAverage = 0;
+
+	for(int ii = 0; ii < 10; ++ii) {
+		averages[ii] = 0;
+	}
+
+	for(int ii = 0; ii < runs; ++ii) {
+		averages[ii / 10] += stats[i].runs[ii] / 10;
+	}
+
+	for(int ii = 0; ii < 10; ++ii) {
+		if(averages[ii] > highestAverage) highestAverage = averages[ii];
+	}	
+
+	char spacing[3];
+
+	for(int ii = 0; ii < 10; ++ii) {
+		spacing[0] = '\0';
+		if(ii == 0) strcat(spacing, "  \0");
+		else if(ii != 9) strcat(spacing, " \0");
+
+		int clean = (averages[ii] / highestAverage) * 25;
+
+		printf("  %d%% to %d%% Percentile:%s%s ", ii * 10, (ii + 1) * 10, spacing, TEXT_GRAY);
+		for(int c = 0; c < clean; ++c) {
+			printf("#");
+		}
+		printf("%s (%s%.2fus%s average)\n", RESET, TEXT_HCYAN, averages[ii], RESET);
+	}
+
+	double timeWithoutHighest = stats[i].total - highestAverage;
+	printf("\n  Total time duration without highest avg: %s%.1fus%s (%s%.1f%%%s over total running time)", TEXT_HCYAN, timeWithoutHighest, RESET, TEXT_CYAN, (timeWithoutHighest / totalTimeTaken) * 100, RESET);
+	printf("\n  Average without highest avg: %s%.2fus%s\n\n", TEXT_HCYAN, (timeWithoutHighest / runs), RESET);
     }
 }
