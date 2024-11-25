@@ -87,7 +87,13 @@ void main(int argc, char* argv[]) {
     char* c[5] = {"File IO (Open)", "Lexer", "Parser", "Compiler", "File IO (Close)"};
     categories = c;
 
-    stats = malloc(sizeof(CategoryStatistics) * 5);
+    stats = malloc(sizeof(struct CategoryStatistics) * 5);
+
+    for(int i = 0; i < 5; ++i) {
+	stats[i].total = 0;
+	stats[i].max = 0;
+	stats[i].low = 1000000;
+    }
 
     for(int i = 0; i < runs; ++i) {
         startTimer();
@@ -131,7 +137,8 @@ void main(int argc, char* argv[]) {
     printf("========= Benchmarking Results =========\n");
     printf("Total time taken: %.3f micros, Average time per run: %.3f\n micros\n\n", totalTimeTaken, totalTimeTaken / runs);
     for(int i = 0; i < 5; ++i) {
-	printf("%s: total: %.3f microseconds, avg: %.3f microseconds (%.3f percent of overall)\n", categories[i], stats[i].total, stats[i].total / runs, (stats[i].total / totalTimeTaken) * 100);
+	printf("Benchmarking Results of %s:\n", categories[i]);
+	printf("  Total time duration: %.2fus (%.1f percent over total running time)\n\n", stats[i].total, (stats[i].total / totalTimeTaken) * 100);
 	
     }
 }
