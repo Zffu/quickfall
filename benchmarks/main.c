@@ -186,7 +186,7 @@ void main(int argc, char* argv[]) {
 		printf("%s (%s%.2fus%s average)\n", RESET, TEXT_HCYAN, averages[ii], RESET);
 	}
 
-	double timeWithoutHighest = stats[i].total - highestAverage;
+	double timeWithoutHighest = stats[i].total - highestAverage * 10;
 	printf("\n  Total time duration without highest avg: %s%.1fus%s (%s%.1f%%%s over total running time)", TEXT_HCYAN, timeWithoutHighest, RESET, TEXT_CYAN, (timeWithoutHighest / totalTimeTaken) * 100, RESET);
 	printf("\n  Average without highest avg: %s%.2fus%s\n\n", TEXT_HCYAN, (timeWithoutHighest / runs), RESET);
     }
