@@ -149,5 +149,37 @@ void main(int argc, char* argv[]) {
 	printf("  Total time duration: %s%.2fus%s (%s%.1f%%%s over total running time)\n", TEXT_HCYAN, stats[i].total, RESET, TEXT_CYAN, (stats[i].total / totalTimeTaken) * 100, RESET);
 	printf("  Range (%sFastest%s, %sLowest%s): %s%0.fus%s  ... %s%.2fus%s\n\n", TEXT_HGREEN, RESET, TEXT_HRED, RESET, TEXT_HGREEN, stats[i].low, RESET, TEXT_HRED, stats[i].max, RESET);
 	
+	double* averages = malloc(sizeof(double) * 10);
+	double highestAverage = 0;
+
+	for(int ii = 0; ii < 10; ++ii) {
+		averages[ii] = 0;
+	}
+
+	for(int ii = 0; ii < runs; ++ii) {
+		averages[ii / 10] += stats[i].runs[ii] / 10;
+	}
+
+	for(int ii = 0; ii < 10; ++ii) {
+		if(averages[ii] > highestAverage) highestAverage = averages[ii];
+	}	
+
+	char* spacing = malloc(3);
+
+	for(int ii = 0; ii < 10; ++ii) {
+		spacing[0] = '\0';
+		if(ii == 0) strcat(spacing, "  \0");
+		else if(ii != 9) strcat(spacing, " \0");
+
+		printf("%d%% to %d%% Percentile:%s ", ii * 10, (ii + 1) * 10, spacing);
+		int clean = (averages[ii] / highestAverage) * 25;
+		for(int c = 0; c < clean; ++c) {
+			printf("#");
+		}
+		printf("\n");
+	}
+
+	printf("\n");
+
     }
 }
