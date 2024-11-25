@@ -26,6 +26,7 @@ char* compile(struct ASTNode* node, char* platform) {
     enum Platform p = platformFromString(platform);
 
     struct CompilingContext ctx;
+    ctx.section = 1;
 
     // Default size buffers for now, todo: use realloc for less memory usage.
     ctx.defaultSection = malloc(512);
@@ -39,44 +40,7 @@ char* compile(struct ASTNode* node, char* platform) {
     memset(ctx.main, 0, 1024);
     strcat(ctx.main, "\nmain:");
 
-    while(node->next != NULL) {
-        node = node->next;
-
-        if(node->type == AST_USE_STDL) {
-            char fileName[32] = "stdl/";
-
-            //
-            // todo: move stdl loading somewhere else
-            //
-
-            strcat(fileName, node->right->value);
-            strcat(fileName, ".qfall"); // Do not dynamically check the extension for now.
-
-            FILE* fptr = fopen(fileName, "r");
-
-            if(fptr == NULL) {
-                printf("Error: Couldn't import %s from the standart library! Are you sure it is correct?\n");
-                continue;
-            }
-
-
-            fseek(fptr, 0, SEEK_END);
-            int size = ftell(fptr);
-            fseek(fptr, 0, SEEK_SET);
-
-            char* buff = (char*) malloc(size);
-            fread(buff, 1, size, fptr);
-            fclose(fptr);
-
-            struct LexerResult result = runLexer(buff);
-            struct ASTNode* n = runParser(result);
-
-            win64(ctx, n, 0);
-        }
-        else {
-            win64(ctx, node, 0);
-        }
-    }
+    win64(ctx, node, 0); //todo: change this based on the platform
 
     char* buff = malloc(2048);
     memset(buff, 0, 2048);

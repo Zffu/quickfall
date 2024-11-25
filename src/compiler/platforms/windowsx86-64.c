@@ -7,6 +7,7 @@
 
 #include "../../parser/ast.h"
 #include "../compiler.h"
+#include "../stdl.h"
 
 /**
  * Gets the assembly output of the AST Node.
@@ -48,15 +49,14 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
             strcat(funcBuff, node->right->next->next->next->value);
         }
         else {
-            // If the function isn't an internal, jump to it.
-	
-	    if(node->right->next != NULL) { 
+            // If the function isn't an internal, jump to it!
+	    if(node->right->next != NULL) {
             	int argCount = 0;
             	while(node->right->next != NULL) {
 			node->right = node->right->next;
 
                 	char b[5] = {""};
-                	sprintf(b, "%d", ctx.section++ + 1);
+                	snprintf(b, 5, "%d", ctx.section++);
 
                 	strcat(ctx.sections, "\n.");
                 	strcat(ctx.sections, "LC");
@@ -67,7 +67,6 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
                 	strcat(ctx.sections, "\\0\"");
 
                 	strcat(funcBuff, "\n    leaq    .LC");
-
                 	strcat(funcBuff, b);
                 	strcat(funcBuff, "(%rip), %rax");
                 	strcat(funcBuff, "\n    movq %rax,");
@@ -103,13 +102,17 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
         win64(ctx, node->right, genericState); // Parses the AST_GENERIC Node.
         strcat(ctx.sections, "\n    ret\n");
     }
-    else if(node->type == AST_GENERIC || node->type == AST_FUNCTION_GENERIC) {
+    else if(node->type == AST_FUNCTION_GENERIC || node->type == AST_GENERIC) {
         struct ASTNode* n = node;
         while (n->next != NULL) {
             n = n->next;
 
             win64(ctx, n, (node->type == AST_GENERIC ? 0 : 1));
         }
+
+    }
+    else if(node->type == AST_USE_STDL) {
+	loadAndDump(ctx, node->right->value);
     }
     else {
         printf("Error: AST Node of type %d could not be converted to x64 assembly!\n", node->type);
