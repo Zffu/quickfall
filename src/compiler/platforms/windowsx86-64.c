@@ -7,6 +7,7 @@
 
 #include "../../parser/ast.h"
 #include "../compiler.h"
+#include "../stdl.h"
 
 /**
  * Gets the assembly output of the AST Node.
@@ -109,6 +110,9 @@ void win64(struct CompilingContext ctx, struct ASTNode* node, int genericState) 
 
             win64(ctx, n, (node->type == AST_GENERIC ? 0 : 1));
         }
+    }
+    else if(node->type == AST_USE_STDL) {
+	loadAndDump(ctx, node->right->value);
     }
     else {
         printf("Error: AST Node of type %d could not be converted to x64 assembly!\n", node->type);
