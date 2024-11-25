@@ -55,7 +55,7 @@ struct CategoryStatistics {
 	double* runs;
 };
 
-struct CategoryStatistics* stats;
+struct CategoryStatistics stats[5];
 
 void startTimer() {
     double time = get_time();
@@ -90,20 +90,19 @@ void main(int argc, char* argv[]) {
     char* c[5] = {"File IO (Open)", "Lexer", "Parser", "Compiler", "File IO (Close)"};
     categories = c;
 
-    stats = malloc(sizeof(struct CategoryStatistics) * 5);
-
     for(int i = 0; i < 5; ++i) {
 	stats[i].total = 0;
 	stats[i].max = 0;
 	stats[i].low = 1000000;
 	stats[i].runs = malloc(sizeof(double) * runs);
 
-	for(int ii = 0; ii < 100; ++ii) {
-		stats[i].runs[i] = 0;
+	for(int ii = 0; ii < runs; ++ii) {
+		stats[i].runs[ii] = 0;
 	}
     }
 
     for(int i = 0; i < runs; ++i) {
+
         startTimer();
         FILE* fptr = fopen(argv[1], "r");
 
@@ -111,7 +110,8 @@ void main(int argc, char* argv[]) {
         int size = ftell(fptr);
         fseek(fptr, 0, SEEK_SET);
 
-        char* buff = (char*) malloc(size + 1);
+        char* buff = (char*)malloc(size + 1);
+
         fread(buff, 1, size, fptr);
 	buff[size] = '\0';
         fclose(fptr);
@@ -120,6 +120,8 @@ void main(int argc, char* argv[]) {
         startTimer();
 
         struct LexerResult result = runLexer(buff);
+
+	free(buff);
 
         endTimer(i, 1);
 
@@ -138,8 +140,11 @@ void main(int argc, char* argv[]) {
 	
         fptr = fopen("output.txt", "w");
 	fprintf(fptr, compiled);
+	fclose(fptr);
 
         endTimer(i, 4);
+
+	free(compiled);
     }
 
     printf("========= Benchmarking Results =========\n");
@@ -150,7 +155,7 @@ void main(int argc, char* argv[]) {
 	printf("  Average: %s%.2fus%s\n", TEXT_HCYAN, stats[i].total / runs, RESET);
 	printf("  Range (%sFastest%s, %sLowest%s): %s%0.fus%s  ... %s%.2fus%s\n\n", TEXT_HGREEN, RESET, TEXT_HRED, RESET, TEXT_HGREEN, stats[i].low, RESET, TEXT_HRED, stats[i].max, RESET);
 	
-	double* averages = malloc(sizeof(double) * 10);
+	double averages[10];
 	double highestAverage = 0;
 
 	for(int ii = 0; ii < 10; ++ii) {
@@ -165,7 +170,7 @@ void main(int argc, char* argv[]) {
 		if(averages[ii] > highestAverage) highestAverage = averages[ii];
 	}	
 
-	char* spacing = malloc(3);
+	char spacing[3];
 
 	for(int ii = 0; ii < 10; ++ii) {
 		spacing[0] = '\0';
