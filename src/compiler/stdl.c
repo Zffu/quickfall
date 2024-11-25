@@ -31,8 +31,8 @@ void loadAndDump(struct CompilingContext ctx, char* component) {
 	}
 
 	fseek(fptr, 0, SEEK_END);
-	int size = ftell();
-	fseel(fptr, 0, SEEK_SET);
+	int size = ftell(fptr);
+	fseek(fptr, 0, SEEK_SET);
 
 	char* buff = malloc(size + 1);
 	buff[size] = '\0';
