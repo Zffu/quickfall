@@ -1,4 +1,4 @@
-/**
+**
  * The file of the Quickfall CLI.
  * A modern, fast and lightweight programming language.
  * Usage:

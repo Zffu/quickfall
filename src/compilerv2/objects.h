@@ -14,10 +14,6 @@ struct Variable {
 	byte type; // 0 = variable, 1 = Func argument, 2 = Function body argument
 };
 
-struct FunctionBody {
-	struct Variable* 
-};
-
 struct Function {
 	char* name;
 	struct Variable* variables;
