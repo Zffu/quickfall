@@ -1,0 +1,5 @@
+func sayHello(none bob) {
+    salloc(40);
+    call(printf);
+    sfree(40);
+}

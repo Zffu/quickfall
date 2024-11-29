@@ -14,6 +14,14 @@ struct Variable {
 	byte type; // 0 = variable, 1 = Func argument, 2 = Function body argument
 };
 
+<<<<<<< HEAD
+=======
+struct FunctionBody {
+	struct Variable* vars;
+    int varCount;
+};
+
+>>>>>>> b8de72a8cfe867e47214f59c63d4bebb1b977cd0
 struct Function {
 	char* name;
 	struct Variable* variables;

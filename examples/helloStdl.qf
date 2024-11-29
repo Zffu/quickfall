@@ -1,0 +1,3 @@
+use "hello"
+
+sayHello("Hello Bob\0")
