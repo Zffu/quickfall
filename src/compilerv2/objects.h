@@ -15,7 +15,8 @@ struct Variable {
 };
 
 struct FunctionBody {
-	struct Variable* 
+	struct Variable* vars;
+    int varCount;
 };
 
 struct Function {
