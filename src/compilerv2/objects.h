@@ -11,7 +11,7 @@ struct Variable {
 	char* name;
 	char* value;
 	char* type;
-	byte type; // 0 = variable, 1 = Func argument, 2 = Function body argument
+	unsigned char varType; // 0 = variable, 1 = Func argument, 2 = Function body argument
 };
 
 struct Function {
