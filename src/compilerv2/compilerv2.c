@@ -3,10 +3,13 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "./compilerv2.h"
 #include "./objects.h"
 #include "../parser/ast.h"
+#include "../utils/logging.h"
 
 struct Context parseContext(struct ASTNode* node) {
 	struct Context ctx = {0};
@@ -23,7 +26,30 @@ struct Context parseContext(struct ASTNode* node) {
 			case AST_VARIABLE_DEF:
 				ctx.variables[ctx.variableCount].name = node->left->value;
 				ctx.variables[ctx.variableCount].type = "none";
-				ctx.variables[ctx.variableCount].value = node->right->value;
+				
+				if(node->right->type == AST_VARIABLE_VALUE) {
+					ctx.variables[ctx.variableCount].value = node->right->value;
+				}
+				else if(node->right->type == AST_VARIABLE) {
+					if(node->right->value == ctx.variables[ctx.variableCount].name) {
+						printf("%sError: Cannot assign a variable's value to itself!\n", TEXT_HRED);
+						return NULL;
+					}
+
+					//todo: change this to an hashmap before pr finished.
+					
+					for(int i = 0; i < ctx.variableCount; ++i) {
+						if(strcmp(ctx.variables[i].name, node->right->value) == 0) {
+							ctx.variables[ctx.variableCount].value = ctx.variables[i].value;
+							break;
+						}
+					}
+				}
+				else {
+					printf("%sError: Dissallowed token type as a variable value!\n", TEXT_HRED);
+					return NULL;
+				}
+
 				ctx.variableCount++;
 				break;	
 			case AST_FUNCTION_DEF:
