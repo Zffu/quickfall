@@ -9,7 +9,7 @@
 #include "./compilerv2.h"
 #include "./objects.h"
 #include "../parser/ast.h"
-#include "../utils/logging.h"
+#include "../utils/logging.c"
 
 struct Context parseContext(struct ASTNode* node) {
 	struct Context ctx = {0};
