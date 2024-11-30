@@ -55,12 +55,14 @@ struct ASTNode* parseParameters(struct LexerResult result, int index) {
         if(!current->left) {
             current->left = createASTNode(AST_PARAM_TYPE);
             memcpy(current->left->value, result.tokens[index].value, strlen(result.tokens[index].value));
+            printf("Mode 2 left -> %s\n", current->left->value);
             mode = 1;
         }
         else if(!current->right) {
             current->right = createASTNode(AST_PARAM_NAME);
             memcpy(current->right->value, result.tokens[index].value, strlen(result.tokens[index].value));
             mode = 2;
+            printf("Mode 2 -> %s\n", current->right->value);
         }
     }
 

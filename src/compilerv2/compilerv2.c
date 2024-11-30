@@ -33,7 +33,7 @@ struct Context parseContext(struct ASTNode* node) {
 				else if(node->right->type == AST_VARIABLE) {
 					if(node->right->value == ctx.variables[ctx.variableCount].name) {
 						printf("%sError: Cannot assign a variable's value to itself!\n", TEXT_HRED);
-						return NULL;
+						return ctx;
 					}
 
 					//todo: change this to an hashmap before pr finished.
@@ -47,7 +47,7 @@ struct Context parseContext(struct ASTNode* node) {
 				}
 				else {
 					printf("%sError: Dissallowed token type as a variable value!\n", TEXT_HRED);
-					return NULL;
+					return ctx;
 				}
 
 				ctx.variableCount++;
