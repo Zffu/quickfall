@@ -8,6 +8,11 @@
 #include "../parser/ast.h"
 #include "./objects.h"
 
+enum Platform {
+	ATT_WINDOWS,
+	ATT_LINUX
+};
+
 /**
  * A context is the less abstract way Quickfall represents the code before converting it to assembly.
  */
