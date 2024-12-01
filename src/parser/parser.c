@@ -23,51 +23,42 @@ struct ASTNode* parseParameters(struct LexerResult result, int index) {
 
     for(; index < result.size + 1; ++index) {
         struct Token t = result.tokens[index];
-
-        if(t.type == PAREN_CLOSE) {
-            root->end = index;
-            return root;
-        }
-
-        if(t.type != COMMA && t.type != KEYWORD) {
-            printf("Error: Parameters must be literals! Got %d", t.type);
-            return NULL;
-        }
-
-        if(t.type == COMMA) {
-            if(mode != 2) {
-                printf("Error: Parameters were not passed correctly!\n");
-                return NULL;
-            }
-
-            struct ASTNode* node = createASTNode(AST_PARAM);
-            current->next = node;
-            current = node;
-        }
-
-        if(!root) {
-            root = createASTNode(AST_PARAM);
-            current = root;
-        }
-
-        root->end = index;
-
-        if(!current->left) {
-            current->left = createASTNode(AST_PARAM_TYPE);
-            memcpy(current->left->value, result.tokens[index].value, strlen(result.tokens[index].value));
-            printf("Mode 2 left -> %s\n", current->left->value);
-            mode = 1;
-        }
-        else if(!current->right) {
-            current->right = createASTNode(AST_PARAM_NAME);
-            memcpy(current->right->value, result.tokens[index].value, strlen(result.tokens[index].value));
-            mode = 2;
-            printf("Mode 2 -> %s\n", current->right->value);
-        }
+	
+	switch (t.type) {
+		case COMMA:
+			if (mode == 0) {
+				printf("Error: Arguments aren't passed properly!\n");
+				return NULL;
+			}
+			mode = 0;
+			current->next = createASTNode(AST_PARAM);
+			current = current->next;
+			break;
+		case NONE:
+		case KEYWORD:
+			if(mode >= 2) {
+				printf("Error: Arguments aren't passed properly!\n");
+				return NULL;
+			}
+			if(result.tokens[index + 1].type == NONE || result.tokens[index + 1].type == KEYWORD) {
+				current->right = createASTNode(AST_PARAM_TYPE);
+				memcpy(current->right->value, t.value, strlen(t.value));
+			}
+			else {
+				current->left = createASTNode(AST_PARAM_NAME);
+				memcpy(current->left->value, t.value, strlen(t.value));
+			}
+			mode++;
+			break;
+		case PAREN_CLOSE:
+			return root;
+		default:
+			printf("Didn't except token %d in arguments!\n", t.type);
+	}
     }
 
-    printf("Error: The paren wasn't closed!\n");
-    return root;
+    printf("Error: The arguments paren wasn't closed!\n");
+    return NULL;
 }
 
 /**
