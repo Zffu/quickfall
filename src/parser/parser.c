@@ -24,6 +24,8 @@ struct ASTNode* parseParameters(struct LexerResult result, int index) {
     for(; index < result.size + 1; ++index) {
         struct Token t = result.tokens[index];
 	
+	root->end = index;
+
 	switch (t.type) {
 		case COMMA:
 			if (mode == 0) {
@@ -41,10 +43,12 @@ struct ASTNode* parseParameters(struct LexerResult result, int index) {
 				return NULL;
 			}
 			if(result.tokens[index + 1].type == NONE || result.tokens[index + 1].type == KEYWORD) {
+				printf("Passed type %s\n", t.value);
 				current->right = createASTNode(AST_PARAM_TYPE);
 				memcpy(current->right->value, t.value, strlen(t.value));
 			}
 			else {
+				printf("Passed name %s\n", t.value);
 				current->left = createASTNode(AST_PARAM_NAME);
 				memcpy(current->left->value, t.value, strlen(t.value));
 			}
