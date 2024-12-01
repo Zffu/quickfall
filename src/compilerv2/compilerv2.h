@@ -28,4 +28,6 @@ struct Context {
  */
 struct Context parseContext(struct ASTNode* node);
 
+char* compileV2(struct Context context);
+
 #endif

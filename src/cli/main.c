@@ -114,6 +114,17 @@ int main(int argc, char* argv[]) {
 
 			struct Context ctx = parseContext(root);
 
+			char* output = compileV2(ctx);
+
+			if(output == NULL) {
+				printf("Error: the compiled output is null! Something went wrong!\n");
+				return -1;
+			}
+
+			fptr = fopen(outputFile, "w");
+			fprintf(fptr, output);
+			fclose(fptr);
+
 			break;
 		case 'v':
 			if(strlen(argv[1]) > 1 && strcmp(argv[1], "version") != 0) {
