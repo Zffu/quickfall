@@ -71,6 +71,9 @@ prepare_build:
 	@echo [INFO] Using "${COMPILER}" as a compiler!
 	@echo [INFO] Detected current operating system as ${DETECTED_OS}
 	$(CHECK_COMMANDS)
+	@echo [INFO] Clearing old builds
+	$(RM) build
+	$(RM) $(TARGET)
 	@echo [INFO] Starting building logic
 
 $(TARGET):
