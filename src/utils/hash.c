@@ -2,17 +2,14 @@
  * Hashing related utilities.
  */
 
-/**
- * Hashes a string.
- */
-unsigned int hashstr(char* str) {
-	unsigned int result = 5381;
-	unsigned char* p;
+#include <stdio.h>
 
-	p = (unsigned char *)str;
+unsigned int hashstr(char* str) {
+	unsigned int result = 0;
+	unsigned char* p = (unsigned char*) str;
 
 	while(*p != '\0') {
-		result = (result << 5) + result + *p;
+		result = ((*p - 97)  << 5) + result + 1;
 		++p;
 	}
 
