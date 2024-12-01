@@ -5,6 +5,8 @@
 #include "../lexer/tokens.h"
 #include "../lexer/lexer.h"
 #include "./ast.h"
+#include "../utils/logging.c"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -159,6 +161,20 @@ struct ASTNode* parseVariableDefinition(struct LexerResult result, int index) {
     memcpy(node->left->value, result.tokens[index].value, strlen(result.tokens[index].value));
 
     struct Token val = result.tokens[index + 2];
+
+    switch(val.type) {
+	case NUMBER:
+		node->value[0] = 'n';
+		break;
+	case STRING:
+		node->value[0] = 's';
+		break;
+	case BOOLEAN_VALUE:
+		node->value[0] = 'b';
+		break;
+	default:
+		printf("%sWarning: unsupported variable value type! Compiling of this variable will be ignored!%s\n", TEXT_YELLOW, RESET); // This warning will be here until there is no unsupported types
+    }
 
     if(val.type != KEYWORD && val.type != NUMBER && val.type != STRING && val.type != BOOLEAN_VALUE) {
         printf("Error: Disallowed token as variable value: %d\n", val.type);
