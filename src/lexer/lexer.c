@@ -112,7 +112,10 @@ struct LexerResult runLexer(char string[]) {
             case ';': pushToken(&result, SEMICOLON); break;
             case ',': pushToken(&result, COMMA); break;
             case '=': pushToken(&result, DECLARE); break;
-	    case '?': pushToken(&result, NONE); break;
+	    case '?':
+		pushToken(&result, NONE); 
+		result.tokens[result.size - 1].value[0] = '?';	
+		break;
         }
     }
 
