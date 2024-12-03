@@ -89,7 +89,7 @@ struct Context parseContext(struct ASTNode* node) {
 
 				func->body = node->right;
 
-				int hash = hashstr(func->name);
+				hash = hashstr(func->name);
 
 				if(hashGet(ctx.functionHashMap, hash) != NULL) {
 					printf("%sError: Function %s is already defined!%s\n", TEXT_HRED, func->name, RESET);
