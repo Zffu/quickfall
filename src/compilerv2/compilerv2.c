@@ -59,9 +59,16 @@ struct Context parseContext(struct ASTNode* node) {
 					printf("%sError: Invalid token type as variable value!%s\n", TEXT_HRED, RESET);
 				}
 
+				int hash = hashstr(node->left->value);
+
+				if(hashGet(ctx.variableHashMap, hash) != NULL) {
+					printf("%sError: Variable %s is already defined!%s\n", TEXT_HRED, var->name, RESET);
+					return ctx;
+				}
+
 				ctx.variables[ctx.variableCount] = var;
 
-				hashPut(ctx.variableHashMap, hashstr(node->left->value), var);
+				hashPut(ctx.variableHashMap, hash, var);
 
 				ctx.variableCount++;
 				break;	
