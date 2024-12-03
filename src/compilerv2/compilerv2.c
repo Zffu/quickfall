@@ -69,6 +69,7 @@ struct Context parseContext(struct ASTNode* node) {
 				struct Function* func = malloc(sizeof(struct Function));
 
 				func->name = node->left->left->value;
+
 				while(node->left->right->next != NULL) {
 					node->left->right = node->left->right->next;
 
@@ -83,7 +84,7 @@ struct Context parseContext(struct ASTNode* node) {
 
 				ctx.functions[ctx.functionCount] = func;
 
-				hashPut(ctx.functionHashmap, hashstr(func->name), func);
+				hashPut(ctx.functionHashMap, hashstr(func->name), func);
 
 				ctx.functionCount++;
 				break;
@@ -116,13 +117,13 @@ char* compileV2(struct Context context) {
 	strcat(firstSection, ".LC0:\n    .globl  main");
 
 	for(int i = 0; i < context.variableCount; ++i) {
-		if(context.variables[i].type[0] == 's') {
+		if(context.variables[i]->type[0] == 's') {
 			if(sectionIndex == 0) {
 				strcat(firstSection, "\n    ");
 				strcat(firstSection, SECTION_TYPES[0]);
 				strcat(firstSection, "  ");
 				strcat(firstSection, "\"");
-				strcat(firstSection, context.variables[i].value);
+				strcat(firstSection, context.variables[i]->value);
 				strcat(firstSection, "\"");
 			}
 			else {
@@ -136,16 +137,16 @@ char* compileV2(struct Context context) {
 				strcat(sections, SECTION_TYPES[0]);
 				strcat(sections, "  ");
 				strcat(sections, "\"");
-				strcat(sections, context.variables[i].value);
+				strcat(sections, context.variables[i]->value);
 				strcat(sections, "\"");
 			}
 			sectionIndex++;
 		}
-		else if(context.variables[i].type[0] = 'n') {
+		else if(context.variables[i]->type[0] = 'n') {
 			stackSize += 4;
 
 			strcat(main, "\n    movq    $");
-			strcat(main, context.variables[i].value);
+			strcat(main, context.variables[i]->value);
 			strcat(main, ", -");
 
 			char sI[5];
