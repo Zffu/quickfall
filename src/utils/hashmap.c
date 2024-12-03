@@ -4,17 +4,7 @@
 
 #include <stdlib.h>
 
-struct Bucket {
-	void** values;
-	int bucketSize;
-};
-
-struct Hashmap {
-	int bucketSize;
-	int maxBucketIndex;
-
-	struct Bucket** buckets;
-};
+#include "./hashmap.h"
 
 struct Hashmap* createHashmap(int bucketSize, int maxBucketIndex) {
 	struct Hashmap* map = malloc(sizeof(struct Hashmap));
