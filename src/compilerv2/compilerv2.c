@@ -14,17 +14,31 @@
 #include "./att/att-win.h"
 #include "./att/att-linux.h"
 
+#include "../utils/hashmap.h"
+#include "../utils/hash.h"
+
 /**
  * Assembly format defintions. Will be changed by the architure.
  */
 char** ARGUMENT_REGISTRIES = NULL;
 char** SECTION_TYPES = NULL;
 
+/**
+ * The maximum hash the hashmaps can store.
+ */
+#define MAX_HASH_CAPACITY 256000
+
 struct Context parseContext(struct ASTNode* node) {
 	struct Context ctx = {0};
-	
+
+	int* ptr = NULL;
+	int ptrSize = sizeof(ptr); //Allows to know the pointer size as it varies between architectures
+
 	ctx.variables = malloc(sizeof(struct Variable) * 50);
 	ctx.functions = malloc(sizeof(struct Function) * 50);
+
+	ctx.variableHashMap = createHashmap(512, 500);
+	ctx.functionHashMap = createHashmap(512, 500);
 
 	ctx.variableCount = 0;
 	ctx.functionCount = 0;
@@ -43,6 +57,10 @@ struct Context parseContext(struct ASTNode* node) {
 					printf("%sError: Invalid token type as a variable value!\n", TEXT_HRED);
 					return ctx;
 				}
+
+				struct Variable* ptr = NULL;
+
+				hashPut(ctx.variableHashMap, hashstr(node->left->value), ptr);
 
 				ctx.variableCount++;
 				break;	

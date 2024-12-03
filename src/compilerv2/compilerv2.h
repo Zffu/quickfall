@@ -5,6 +5,7 @@
 #ifndef COMPILER_2_H
 #define COMPILER_2_H
 
+#include "../utils/hashmap.h"
 #include "../parser/ast.h"
 #include "./objects.h"
 
@@ -21,6 +22,10 @@ struct Context {
 	struct Function* functions;
 	int variableCount;
 	int functionCount;
+
+	// Hashmaps
+	struct Hashmap* variableHashMap;
+	struct Hashmap* functionHashMap;
 };
 
 /**
