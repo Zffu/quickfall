@@ -18,8 +18,8 @@ enum Platform {
  * A context is the less abstract way Quickfall represents the code before converting it to assembly.
  */
 struct Context {
-	struct Variable* variables;
-	struct Function* functions;
+	struct Variable** variables;
+	struct Function** functions;
 	int variableCount;
 	int functionCount;
 

@@ -34,8 +34,8 @@ struct Context parseContext(struct ASTNode* node) {
 	int* ptr = NULL;
 	int ptrSize = sizeof(ptr); //Allows to know the pointer size as it varies between architectures
 
-	ctx.variables = malloc(sizeof(struct Variable) * 50);
-	ctx.functions = malloc(sizeof(struct Function) * 50);
+	ctx.variables = malloc(sizeof(struct Variable*) * 50);
+	ctx.functions = malloc(sizeof(struct Function*) * 50);
 
 	ctx.variableHashMap = createHashmap(512, 500);
 	ctx.functionHashMap = createHashmap(512, 500);
@@ -47,36 +47,42 @@ struct Context parseContext(struct ASTNode* node) {
 		node = node->next;
 		switch (node->type) {
 			case AST_VARIABLE_DEF:
-				ctx.variables[ctx.variableCount].name = node->left->value;
-				ctx.variables[ctx.variableCount].type = node->value;
-				
+				struct Variable* var = malloc(sizeof(struct Variable));
+
+				var->name = node->left->value;
+				var->type = node->value;
+
 				if(node->right->type == AST_VARIABLE_VALUE) {
-					ctx.variables[ctx.variableCount].value = node->right->value;
+					var->value = node->right->value;
 				}
 				else {
-					printf("%sError: Invalid token type as a variable value!\n", TEXT_HRED);
-					return ctx;
+					printf("%sError: Invalid token type as variable value!%s\n", TEXT_HRED, RESET);
 				}
 
-				struct Variable* ptr = NULL;
+				ctx.variables[ctx.variableCount] = var;
 
-				hashPut(ctx.variableHashMap, hashstr(node->left->value), ptr);
+				hashPut(ctx.variableHashMap, hashstr(node->left->value), var);
 
 				ctx.variableCount++;
 				break;	
 			case AST_FUNCTION_DEF:
-				ctx.functions[ctx.functionCount].name = node->left->left->value;
+				struct Function* func = malloc(sizeof(struct Function));
+
+				func->name = node->left->left->value;
 				while(node->left->right->next != NULL) {
 					node->left->right = node->left->right->next;
 
-					int c = ctx.functions[ctx.functionCount].variableCount;
+					int c = func->variableCount;
 
-					ctx.functions[ctx.functionCount].variables[c].name = node->left->right->right->value;
-					ctx.functions[ctx.functionCount].variables[c].type = node->left->right->left->value;
-					ctx.functions[ctx.functionCount].variableCount++;
+					func->variables[c].name = node->left->right->right->value;
+					func->variables[c].type = node->left->right->left->value;
+					func->variableCount++;
 				}
 
-				ctx.functions[ctx.functionCount].body = node->right;
+				func->body = node->right;
+
+				ctx.functions[ctx.functionCount] = func;
+
 				ctx.functionCount++;
 				break;
 		}
