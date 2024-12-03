@@ -31,9 +31,6 @@ char** SECTION_TYPES = NULL;
 struct Context parseContext(struct ASTNode* node) {
 	struct Context ctx = {0};
 
-	int* ptr = NULL;
-	int ptrSize = sizeof(ptr); //Allows to know the pointer size as it varies between architectures
-
 	ctx.variables = malloc(sizeof(struct Variable*) * 50);
 	ctx.functions = malloc(sizeof(struct Function*) * 50);
 
