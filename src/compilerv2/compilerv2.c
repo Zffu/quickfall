@@ -83,6 +83,8 @@ struct Context parseContext(struct ASTNode* node) {
 
 				ctx.functions[ctx.functionCount] = func;
 
+				hashPut(ctx.functionHashmap, hashstr(func->name), func);
+
 				ctx.functionCount++;
 				break;
 		}
