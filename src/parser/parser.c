@@ -5,6 +5,8 @@
 #include "../lexer/tokens.h"
 #include "../lexer/lexer.h"
 #include "./ast.h"
+#include "../utils/logging.c"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -23,49 +25,46 @@ struct ASTNode* parseParameters(struct LexerResult result, int index) {
 
     for(; index < result.size + 1; ++index) {
         struct Token t = result.tokens[index];
+	
+	root->end = index;
 
-        if(t.type == PAREN_CLOSE) {
-            root->end = index;
-            return root;
-        }
-
-        if(t.type != COMMA && t.type != KEYWORD) {
-            printf("Error: Parameters must be literals! Got %d", t.type);
-            return NULL;
-        }
-
-        if(t.type == COMMA) {
-            if(mode != 2) {
-                printf("Error: Parameters were not passed correctly!\n");
-                return NULL;
-            }
-
-            struct ASTNode* node = createASTNode(AST_PARAM);
-            current->next = node;
-            current = node;
-        }
-
-        if(!root) {
-            root = createASTNode(AST_PARAM);
-            current = root;
-        }
-
-        root->end = index;
-
-        if(!current->left) {
-            current->left = createASTNode(AST_PARAM_TYPE);
-            memcpy(current->left->value, result.tokens[index].value, strlen(result.tokens[index].value));
-            mode = 1;
-        }
-        else if(!current->right) {
-            current->right = createASTNode(AST_PARAM_NAME);
-            memcpy(current->right->value, result.tokens[index].value, strlen(result.tokens[index].value));
-            mode = 2;
-        }
+	switch (t.type) {
+		case COMMA:
+			if (mode == 0) {
+				printf("Error: Arguments aren't passed properly!\n");
+				return NULL;
+			}
+			mode = 0;
+			current->next = createASTNode(AST_PARAM);
+			current = current->next;
+			break;
+		case NONE:
+		case KEYWORD:
+			if(mode >= 2) {
+				printf("Error: Arguments aren't passed properly!\n");
+				return NULL;
+			}
+			if(result.tokens[index + 1].type == NONE || result.tokens[index + 1].type == KEYWORD) {
+				printf("Passed type %s\n", t.value);
+				current->right = createASTNode(AST_PARAM_TYPE);
+				memcpy(current->right->value, t.value, strlen(t.value));
+			}
+			else {
+				printf("Passed name %s\n", t.value);
+				current->left = createASTNode(AST_PARAM_NAME);
+				memcpy(current->left->value, t.value, strlen(t.value));
+			}
+			mode++;
+			break;
+		case PAREN_CLOSE:
+			return root;
+		default:
+			printf("Didn't except token %d in arguments!\n", t.type);
+	}
     }
 
-    printf("Error: The paren wasn't closed!\n");
-    return root;
+    printf("Error: The arguments paren wasn't closed!\n");
+    return NULL;
 }
 
 /**
@@ -162,6 +161,20 @@ struct ASTNode* parseVariableDefinition(struct LexerResult result, int index) {
     memcpy(node->left->value, result.tokens[index].value, strlen(result.tokens[index].value));
 
     struct Token val = result.tokens[index + 2];
+
+    switch(val.type) {
+	case NUMBER:
+		node->value[0] = 'n';
+		break;
+	case STRING:
+		node->value[0] = 's';
+		break;
+	case BOOLEAN_VALUE:
+		node->value[0] = 'b';
+		break;
+	default:
+		printf("%sWarning: unsupported variable value type! Compiling of this variable will be ignored!%s\n", TEXT_YELLOW, RESET); // This warning will be here until there is no unsupported types
+    }
 
     if(val.type != KEYWORD && val.type != NUMBER && val.type != STRING && val.type != BOOLEAN_VALUE) {
         printf("Error: Disallowed token as variable value: %d\n", val.type);

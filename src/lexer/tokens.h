@@ -22,7 +22,8 @@ enum TokenType {
     SEMICOLON = 15,
     COMMA = 16,
     DECLARE = 17,
-    USE = 18
+    USE = 18,
+    NONE = 19
 };
 
 struct KeywordResult {

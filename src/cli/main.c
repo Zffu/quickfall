@@ -1,4 +1,4 @@
-/**
+/*
  * The file of the Quickfall CLI.
  * A modern, fast and lightweight programming language.
  * Usage:
@@ -13,6 +13,7 @@
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
 #include "../compiler/compiler.h"
+#include "../compilerv2/compilerv2.h"
 
 #include "../utils/logging.c"
 
@@ -111,17 +112,18 @@ int main(int argc, char* argv[]) {
 			struct LexerResult result = runLexer(buff);
 			struct ASTNode* root = runParser(result);
 
-			char* output = compile(root, "win"); // todo: change the platform.
-			
+			struct Context ctx = parseContext(root);
+
+			char* output = compileV2(ctx);
+
 			if(output == NULL) {
-				printf("%sError: Compiling failed! Coudln't gather the output!%s\n", TEXT_RED, RESET);
+				printf("Error: the compiled output is null! Something went wrong!\n");
 				return -1;
-			}	
+			}
 
 			fptr = fopen(outputFile, "w");
 			fprintf(fptr, output);
 			fclose(fptr);
-
 
 			break;
 		case 'v':
