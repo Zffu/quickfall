@@ -74,15 +74,17 @@ struct Context parseContext(struct ASTNode* node) {
 
 				func->name = node->left->left->value;
 
+    int c = 0;
+ 
 				while(node->left->right->next != NULL) {
 					node->left->right = node->left->right->next;
 
-					int c = func->variableCount;
-
 					func->variables[c].name = node->left->right->right->value;
 					func->variables[c].type = node->left->right->left->value;
-					func->variableCount++;
+					c++;
 				}
+				
+				func->variableCount = c;
 
 				func->body = node->right;
 
@@ -153,7 +155,7 @@ char* compileV2(struct Context context) {
 			}
 			sectionIndex++;
 		}
-		else if(context.variables[i]->type[0] = 'n') {
+		else if(context.variables[i]->type[0] == 'n') {
 			stackSize += 4;
 
 			strcat(main, "\n    movq    $");
