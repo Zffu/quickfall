@@ -26,4 +26,10 @@ typedef struct ASTNode {
 
 } AST_NODE;
 
+/**
+ * Creates a new AST Node.
+ * @param type the AST type of the node.
+ */
+AST_NODE* createASTNode(enum ASTNodeType type);
+
 #endif
