@@ -9,7 +9,9 @@
  * The type of AST Node(s).
  */
 enum ASTNodeType {
-
+	AST_TYPE, // Represents a datatype precision in an AST Node.
+	AST_VARIABLE_NAME, // Represents a variable / parameter name precision in an AST Node.
+	AST_PARAMETER // A function parameter AST Node, used in function declaration.
 }
 
 /**
