@@ -12,6 +12,7 @@ AST_NODE* parseVariableValue(struct LexerResult result, int index) {
 
 	if(t.type == NUMBER || t.type == STRING || t.type == BOOLEAN_VALUE) {
 		AST_NODE* node = createASTNode(AST_VARIABLE_VALUE);
+		node->endingIndex = index + 1;
 		node->left = createASTNode(AST_TYPE);
 
 		switch(t.type) {
@@ -32,6 +33,7 @@ AST_NODE* parseVariableValue(struct LexerResult result, int index) {
 
 	if(t.type == KEYWORD) {
 		AST_NODE* node = createASTNode(AST_VARIABLE_REFERENCE);
+		node->endingIndex = index + 1;
 		node->value = t.value;
 
 		return node;
