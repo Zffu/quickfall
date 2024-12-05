@@ -2,6 +2,8 @@
  * Function-related AST parsing.
  */
 
+#include "./variables.h"
+
 #include "../ast.h"
 #include "../../utils/logging.h"
 
@@ -60,4 +62,33 @@ AST_NODE* parseParameters(struct LexerResult result, int index) {
 
 		}
 	}
+}
+
+AST_NODE* parseArguments(struct LexerResult result, int index) {
+	AST_NODE* root = NULL;
+	AST_NODE* current = root;
+
+	for(; index < result.size + 1; ++index) {
+		struct Token t = result.tokens[index];
+
+		if(t.type == PAREN_CLOSE) {
+			return root;
+		}
+
+		AST_NODE* arg = parseVariableValue(result, index);
+		
+		if(arg == NULL) return NULL;
+
+		index = arg->endingIndex;
+
+		if(root == NULL) {
+			root = arg;
+			current = root;
+		}
+		else {
+			current->next = arg;	
+		}
+	}
+
+	return NULL;
 }
