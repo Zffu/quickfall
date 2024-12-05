@@ -50,7 +50,10 @@ AST_NODE* parseParameters(struct LexerResult result, int index) {
 				stack++;
 				break;
 			case PAREN_CLOSE:
-				if(stack != 0) return root;
+				if(stack != 0) {
+					root->endingIndex = index;
+					return root;
+				}
 				return NULL;
 			default:
 				return NULL;
