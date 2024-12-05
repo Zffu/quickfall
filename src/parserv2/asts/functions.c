@@ -64,6 +64,11 @@ AST_NODE* parseParameters(struct LexerResult result, int index) {
 	}
 }
 
+/**
+ * Parses the arguments passed during a function call (for example).
+ * @param result the result of the lexer.
+ * @param index the starting index of the parsing.
+ */
 AST_NODE* parseArguments(struct LexerResult result, int index) {
 	AST_NODE* root = NULL;
 	AST_NODE* current = root;
