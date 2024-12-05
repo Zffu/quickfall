@@ -4,8 +4,10 @@
 
 #include "./variables.h"
 
+#include "../parser.h"
 #include "../ast.h"
-#include "../../utils/logging.h"
+
+#include "../../lexer/lexer.h"
 
 /**
  * Parse the parameters from a function definition (for example).
@@ -96,4 +98,42 @@ AST_NODE* parseArguments(struct LexerResult result, int index) {
 	}
 
 	return NULL;
+}
+
+AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index) {
+
+	AST_NODE* node = createASTNode(AST_FUNCTION_DECLARATION);
+	node->left = createASTNode(AST_FUNCTION_HEADER);
+
+	if(result.tokens[index].type != KEYWORD) {
+		return NULL;
+	}
+
+	int off = 1;
+
+	switch(result.tokens[index + 1].type) {
+		case KEYWORD:
+			node->left->value = result.tokens[index].value;
+			node->left->right = createASTNode(AST_VARIABLE_NAME);
+			node->left->right->value = result.tokens[index + 1].value;
+			++off;
+			break;
+		case PAREN_OPEN:
+			node->left->value = "void";
+			node->left->right = createASTNode(AST_VARIABLE_NAME);
+			node->left->right->value = result.tokens[index].value;
+			break;
+		default:
+			return NULL;
+	}
+
+	AST_NODE* params = parseParameters(result, index + off);
+
+	if(params == NULL) return NULL;
+
+	node->left->left = params;
+
+	node->right = parseNodes(result, params->endingIndex);
+
+	return node;
 }

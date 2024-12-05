@@ -15,23 +15,28 @@ enum ASTNodeType {
 
 	AST_VARIABLE_REFERENCE,
 
+	AST_FUNCTION_DECLARATION,
+	AST_FUNCTION_HEADER,
+
 	AST_PARAMETER // A function parameter AST Node, used in function declaration.
-}
+};
 
 /**
  * An AST Node. Has a tree-ish structure.
  */
-typedef struct ASTNode {
+struct ASTNode {
 
-	AST_NODE* left;
-	AST_NODE* right;
-	AST_NODE* next;
+	struct ASTNode* left;
+	struct ASTNode* right;
+	struct ASTNode* next;
 
 	enum ASTNodeType type;
 	char* value;
 	int endingIndex; // The index which the parsing ended
 
-} AST_NODE;
+};
+
+typedef struct ASTNode AST_NODE;
 
 /**
  * Creates a new AST Node.

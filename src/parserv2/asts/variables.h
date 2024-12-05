@@ -4,6 +4,8 @@
 
 #include "../ast.h"
 
+#include "../../lexer/lexer.h"
+
 #ifndef AST_VARIABLES_H
 #define AST_VARIABLES_H
 
