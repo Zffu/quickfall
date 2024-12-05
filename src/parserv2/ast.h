@@ -13,6 +13,8 @@ enum ASTNodeType {
 	AST_VARIABLE_NAME, // Represents a variable / parameter name precision in an AST Node.
 	AST_VARIABLE_VALUE,
 
+	AST_VARIABLE_REFERENCE,
+
 	AST_PARAMETER // A function parameter AST Node, used in function declaration.
 }
 
@@ -27,6 +29,7 @@ typedef struct ASTNode {
 
 	enum ASTNodeType type;
 	char* value;
+	int endingIndex; // The index which the parsing ended
 
 } AST_NODE;
 
