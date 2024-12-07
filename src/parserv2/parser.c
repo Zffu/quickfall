@@ -16,13 +16,13 @@ AST_NODE* parseNodes(struct LexerResult result, int index, enum ASTNodeType type
 	AST_NODE* root = createASTNode(type);
 	AST_NODE* current = root;
 
-	for(; index <= result.size; ++i) {
+	for(; index <= result.size; ++index) {
 		struct Token t = result.tokens[index];
 
 		switch(t.type) {
-			case FUNC:
+			case FUNCTION:
 				AST_NODE* node = parseFunctionDeclaration(result, index);
-				if(node != null) {
+				if(node != NULL) {
 					current->next = node;
 					current = node;
 					index = node->endingIndex;

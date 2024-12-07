@@ -133,7 +133,7 @@ AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index) {
 
 	node->left->left = params;
 
-	node->right = parseNodes(result, params->endingIndex);
+	node->right = parseNodes(result, params->endingIndex, AST_ROOT);
 
 	return node;
 }
