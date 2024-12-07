@@ -13,6 +13,6 @@
  * @param result the LexerResult provided by the lexer.
  * @param index the starting index.
  */
-AST_NODE* parseNodes(struct LexerResult result, int index);
+AST_NODE* parseNodes(struct LexerResult result, int index, enum ASTNodeType);
 
 #endif
