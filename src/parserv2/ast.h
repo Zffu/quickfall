@@ -9,6 +9,9 @@
  * The type of AST Node(s).
  */
 enum ASTNodeType {
+
+	AST_ROOT, // A root of an AST tree, can either represent the first node of the tree or a function body.
+
 	AST_TYPE, // Represents a datatype precision in an AST Node.
 	AST_VARIABLE_NAME, // Represents a variable / parameter name precision in an AST Node.
 	AST_VARIABLE_VALUE,
