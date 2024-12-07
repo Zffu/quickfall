@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "./compilerv2.h"
+#include "./compiler.h"
 #include "./objects.h"
 #include "../parser/ast.h"
 #include "../utils/logging.c"
@@ -40,70 +40,8 @@ struct Context parseContext(struct ASTNode* node) {
 	ctx.variableCount = 0;
 	ctx.functionCount = 0;
 
-	while(node->next != NULL) {
-		node = node->next;
-		switch (node->type) {
-			case AST_VARIABLE_DEF:
-				struct Variable* var = malloc(sizeof(struct Variable));
-
-				var->name = node->left->value;
-				var->type = node->value;
-
-				if(node->right->type == AST_VARIABLE_VALUE) {
-					var->value = node->right->value;
-				}
-				else {
-					printf("%sError: Invalid token type as variable value!%s\n", TEXT_HRED, RESET);
-				}
-
-				int hash = hashstr(node->left->value);
-
-				if(hashGet(ctx.variableHashMap, hash) != NULL) {
-					printf("%sError: Variable %s is already defined!%s\n", TEXT_HRED, var->name, RESET);
-					return ctx;
-				}
-
-				ctx.variables[ctx.variableCount] = var;
-
-				hashPut(ctx.variableHashMap, hash, var);
-
-				ctx.variableCount++;
-				break;	
-			case AST_FUNCTION_DEF:
-				struct Function* func = malloc(sizeof(struct Function));
-
-				func->name = node->left->left->value;
-
-    int c = 0;
- 
-				while(node->left->right->next != NULL) {
-					node->left->right = node->left->right->next;
-
-					func->variables[c].name = node->left->right->right->value;
-					func->variables[c].type = node->left->right->left->value;
-					c++;
-				}
-				
-				func->variableCount = c;
-
-				func->body = node->right;
-
-				hash = hashstr(func->name);
-
-				if(hashGet(ctx.functionHashMap, hash) != NULL) {
-					printf("%sError: Function %s is already defined!%s\n", TEXT_HRED, func->name, RESET);
-					return ctx;
-				}
-
-				ctx.functions[ctx.functionCount] = func;
-
-				hashPut(ctx.functionHashMap, hash, func);
-
-				ctx.functionCount++;
-				break;
-		}
-	}
-
+	
+			
 	return ctx;
 
 }
