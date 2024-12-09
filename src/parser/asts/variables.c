@@ -39,3 +39,7 @@ AST_NODE* parseVariableValue(struct LexerResult result, int index) {
 		return node;
 	}
 }
+
+AST_NODE* parseVariableDeclaration(struct LexerResult result, int index) {
+	AST_NODE* node = createASTNode(AST_VARIABLE_
+}
