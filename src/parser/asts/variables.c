@@ -40,6 +40,25 @@ AST_NODE* parseVariableValue(struct LexerResult result, int index) {
 	}
 }
 
+/**
+ * Parses a variable declaration.
+ * @param result the lexer result.
+ * @param index the starting index.
+ */
 AST_NODE* parseVariableDeclaration(struct LexerResult result, int index) {
-	AST_NODE* node = createASTNode(AST_VARIABLE_
+	AST_NODE* node = createASTNode(AST_VARIABLE_DECLARATION);
+
+	if(result.tokens[index].type == VAR) {
+		node->value = "none";	
+	}
+	else {
+		node->value = result.tokens[index].value;
+	}
+
+	node->left = createASTNode(AST_VARIABLE_NAME);
+	node->left->value = result.tokens[index + 1].value;
+
+	node->right = parseVariableValue(result, index + 2);
+
+	return node;
 }
