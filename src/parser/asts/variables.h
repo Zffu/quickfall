@@ -16,4 +16,11 @@
  */
 AST_NODE* parseVariableValue(struct LexerResult result, int index);
 
+/**
+ * Parses a variable declaration.
+ * @param result the lexer result.
+ * @param index the starting index.
+ */
+AST_NODE* parseVariableDeclaration(struct LexerResult result, int index);
+
 #endif
