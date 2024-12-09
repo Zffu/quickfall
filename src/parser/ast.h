@@ -21,6 +21,8 @@ enum ASTNodeType {
 
 	AST_FUNCTION_DECLARATION,
 	AST_FUNCTION_HEADER,
+	
+	AST_MATH_OPERATION,
 
 	AST_PARAMETER // A function parameter AST Node, used in function declaration.
 };
