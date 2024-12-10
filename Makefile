@@ -59,8 +59,8 @@ TEST_TARGET = test$(TARGET_EXTENSION)
 #
 
 # The sources that are going to be compiled in normal mode.
-SOURCES = $(wildcard ${SRC_DIR}/**/*.c) $(wildcard ${SRC_DIR}/**/**/*.c)
-SOURCES = $(subst src/cli/main.c,,${SOURCES})
+SRCS = $(wildcard ${SRC_DIR}/**/*.c) $(wildcard ${SRC_DIR}/**/**/*.c)
+SOURCES = $(subst src/cli/main.c,,${SRCS})
 
 BENCH_SOURCES = ${SOURCES} $(wildcard ${BENCH_SRC_DIR}/**/*.c)
 
@@ -79,6 +79,8 @@ prepare_build:
 	@echo [INFO] Clearing old builds
 	$(RM) build
 	$(RM) $(TARGET)
+	$(RM) $(TEST_TARGET)
+	$(RM) $(BENCH_TARGET)
 	@echo [INFO] Starting building logic
 
 $(TARGET):
