@@ -1,25 +1,38 @@
 /**
- * The main compiler file of Quickfall.
+ * The compiler of Quickfall.
  */
 
-#ifndef COMPILER_H
-#define COMPILER_H
+#ifndef COMPILER_2_H
+#define COMPILER_2_H
 
+#include "../utils/hashmap.h"
 #include "../parser/ast.h"
+#include "./objects.h"
 
-/**
- * The object that gets passed trough the compiling functions.
- */
-struct CompilingContext {
-    char* defaultSection; // the default (.LC0 in x64) section, is used to store variables for now.
-    char* sections; // the additional sections generated.
-    char* main; // the main function.
-    int section; // the current section index.
+enum Platform {
+	ATT_WINDOWS,
+	ATT_LINUX
 };
 
 /**
- * Compiles the AST node tree into Assembly.
+ * A context is the less abstract way Quickfall represents the code before converting it to assembly.
  */
-char* compile(struct ASTNode* node, char* platform);
+struct Context {
+	struct Variable** variables;
+	struct Function** functions;
+	int variableCount;
+	int functionCount;
+
+	// Hashmaps
+	struct Hashmap* variableHashMap;
+	struct Hashmap* functionHashMap;
+};
+
+/**
+ * Parses the AST tree into a context.
+ */
+struct Context parseContext(struct ASTNode* node);
+
+char* compileV2(struct Context context);
 
 #endif

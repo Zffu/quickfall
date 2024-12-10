@@ -2,53 +2,136 @@
  * The compiler of Quickfall.
  */
 
-#include <string.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "./compiler.h"
+#include "./objects.h"
 #include "../parser/ast.h"
-#include "../parser/parser.h"
-#include "../lexer/lexer.h"
+#include "../utils/logging.c"
 
-#include "./platforms/linux.h"
-#include "./platforms/windowsx86-64.h"
+#include "./att/att-win.h"
+#include "./att/att-linux.h"
 
-enum Platform {
-    WINDOWS,
-    LINUX
-};
+#include "../utils/hashmap.h"
+#include "../utils/hash.h"
 
-enum Platform platformFromString(char* platform) {
-    if(strcmp(platform, "win")) return WINDOWS;
-    else LINUX;
+/**
+ * Assembly format defintions. Will be changed by the architure.
+ */
+char** ARGUMENT_REGISTRIES = NULL;
+char** SECTION_TYPES = NULL;
+
+/**
+ * The maximum hash the hashmaps can store.
+ */
+#define MAX_HASH_CAPACITY 256000
+
+struct Context parseContext(struct ASTNode* node) {
+	struct Context ctx = {0};
+
+	ctx.variables = malloc(sizeof(struct Variable*) * 50);
+	ctx.functions = malloc(sizeof(struct Function*) * 50);
+
+	ctx.variableHashMap = createHashmap(512, 500);
+	ctx.functionHashMap = createHashmap(512, 500);
+
+	ctx.variableCount = 0;
+	ctx.functionCount = 0;
+
+	
+			
+	return ctx;
+
 }
 
-char* compile(struct ASTNode* node, char* platform) {
-    enum Platform p = platformFromString(platform);
+/**
+ * Compiles the context down to assembly.
+ */
+char* compileV2(struct Context context) {
+	char* firstSection = malloc(1024);
+	char* sections = malloc(1024);
+	char* main = malloc(1024);
 
-    struct CompilingContext ctx;
-    ctx.section = 1;
+	firstSection[0] = '\0';
+	sections[0] = '\0';
+	main[0] = '\0';
 
-    // Default size buffers for now, todo: use realloc for less memory usage.
-    ctx.defaultSection = malloc(512);
-    memset(ctx.defaultSection, 0, 512);
-    strcat(ctx.defaultSection, WIN_64_DEFAULT_SECTION); // Change this based on the platform
+	int sectionIndex = 0;
+	int stackSize = 0;
 
-    ctx.sections = malloc(1024);
-    memset(ctx.sections, 0, 1024);
+	// Platform def
+	ARGUMENT_REGISTRIES = ATTWIN_ARGUMENT_REGISTRIES;
+	SECTION_TYPES = ATTWIN_SECTION_TYPES;
 
-    ctx.main = malloc(1024);
-    memset(ctx.main, 0, 1024);
-    strcat(ctx.main, "\nmain:");
+	strcat(firstSection, ".LC0:\n    .globl  main");
 
-    win64(ctx, node, 0); //todo: change this based on the platform
+	for(int i = 0; i < context.variableCount; ++i) {
+		if(context.variables[i]->type[0] == 's') {
+			if(sectionIndex == 0) {
+				strcat(firstSection, "\n    ");
+				strcat(firstSection, SECTION_TYPES[0]);
+				strcat(firstSection, "  ");
+				strcat(firstSection, "\"");
+				strcat(firstSection, context.variables[i]->value);
+				strcat(firstSection, "\"");
+			}
+			else {
+				strcat(sections, ".LC");
 
-    char* buff = malloc(2048);
-    memset(buff, 0, 2048);
+				char secI[5];
+				snprintf(secI, 5, "%d", sectionIndex);
 
-    strcat(buff, ctx.defaultSection);
-    strcat(buff, ctx.sections);
-    strcat(buff, ctx.main);
-    strcat(buff, "\n    ret\n");
+				strcat(sections, secI);
+				strcat(sections, ":\n    ");
+				strcat(sections, SECTION_TYPES[0]);
+				strcat(sections, "  ");
+				strcat(sections, "\"");
+				strcat(sections, context.variables[i]->value);
+				strcat(sections, "\"");
+			}
+			sectionIndex++;
+		}
+		else if(context.variables[i]->type[0] == 'n') {
+			stackSize += 4;
 
-    return buff;
+			strcat(main, "\n    movq    $");
+			strcat(main, context.variables[i]->value);
+			strcat(main, ", -");
+
+			char sI[5];
+			snprintf(sI, 5, "%d", stackSize);
+
+			strcat(main, sI);
+			strcat(main, "(%rsp)");
+		}
+	}
+
+	char* buff = malloc(1024);
+	
+	buff[0] = '\0';
+
+	strcat(buff, firstSection);
+	strcat(buff, sections);
+	strcat(buff, "\n\nmain:");
+
+	char size[5];
+	snprintf(size, 5, "%d", stackSize);
+
+	if(stackSize > 0) {
+		strcat(buff, "\n    subq    $");
+		strcat(buff, size);
+		strcat(buff, ", %rsp");
+	}
+
+	strcat(buff, main);
+
+	if(stackSize > 0) {
+		strcat(buff, "\n    addq    $");
+		strcat(buff, size);
+		strcat(buff, ", %rsp");
+	}
+
+	return buff;
 }

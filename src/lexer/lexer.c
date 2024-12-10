@@ -92,7 +92,9 @@ struct LexerResult runLexer(char string[]) {
                 token.type = NU;
             } else if(strcmp(word, "use") == 0) {
                 token.type = USE;
-            } 
+            } else if(strcmp(word, "var") == 0) {
+		token.type = VAR;
+	    }
             else {
                 token.type = KEYWORD;
             }
@@ -115,6 +117,13 @@ struct LexerResult runLexer(char string[]) {
 	    case '?':
 		pushToken(&result, NONE); 
 		result.tokens[result.size - 1].value[0] = '?';	
+		break;
+	    case '+':
+	    case '-':
+	    case '/':
+	    case '*':
+		pushToken(&result, MATH_OP);
+		result.tokens[result.size - 1].value[0] = c;
 		break;
         }
     }

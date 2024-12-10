@@ -50,13 +50,17 @@ TARGET = quickfall$(TARGET_EXTENSION)
 # The target of a bench mode compiling.
 BENCH_TARGET = bench$(TARGET_EXTENSION)
 
+# The target of a testing mode compiling.
+TEST_TARGET = test$(TARGET_EXTENSION)
+
 
 #
 # Building variables
 #
 
 # The sources that are going to be compiled in normal mode.
-SOURCES = $(wildcard ${SRC_DIR}/**/*.c) $(wildcard ${SRC_DIR}/**/**/*.c)
+SRCS = $(wildcard ${SRC_DIR}/**/*.c) $(wildcard ${SRC_DIR}/**/**/*.c)
+SOURCES = $(subst src/cli/main.c,,${SRCS})
 
 BENCH_SOURCES = ${SOURCES} $(wildcard ${BENCH_SRC_DIR}/**/*.c)
 
@@ -66,6 +70,7 @@ BENCH_SOURCES = ${SOURCES} $(wildcard ${BENCH_SRC_DIR}/**/*.c)
 
 all: prepare_build $(TARGET)
 bench: prepare_build $(BENCH_TARGET)
+test: prepare_build $(TEST_TARGET)
 
 prepare_build:
 	@echo [INFO] Using "${COMPILER}" as a compiler!
@@ -74,8 +79,16 @@ prepare_build:
 	@echo [INFO] Clearing old builds
 	$(RM) build
 	$(RM) $(TARGET)
+	$(RM) $(TEST_TARGET)
+	$(RM) $(BENCH_TARGET)
 	@echo [INFO] Starting building logic
 
 $(TARGET):
-	$(COMPILER) $(FLAGS) $(SOURCES) -o $(TARGET)
+	$(COMPILER) $(FLAGS) $(SOURCES) src/cli/main.c -o $(TARGET)
+
+$(BENCH_TARGET):
+	$(COMPILER) $(FLAGS) $(SOURCES) benchmarks/main.c -o $(BENCH_TARGET)
+
+$(TEST_TARGET):
+	$(COMPILER) $(FLAGS) $(SOURCES) tests/parser.c -o $(TEST_TARGET)
 

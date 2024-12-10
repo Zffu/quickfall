@@ -2,14 +2,18 @@
  * The parser of Quickfall.
  */
 
-#ifndef PARSER_H
-#define PARSER_H
-
 #include "../lexer/lexer.h"
+#include "./ast.h"
+
+#ifndef PARSER_2_H
+#define PARSER_2_H
 
 /**
- * Runs the parser
+ * Parses the lexer tokens into nodes starting from the index.
+ * @param result the LexerResult provided by the lexer.
+ * @param index the starting index.
+ * @param type the AST node type to return.
  */
-struct ASTNode* runParser(struct LexerResult result);
+AST_NODE* parseNodes(struct LexerResult result, int index, enum ASTNodeType type);
 
 #endif

@@ -1,19 +1,22 @@
+/**
+ * The AST Nodes in Quickfall.
+ */
+
 #include <stdlib.h>
-#include <string.h>
+
 #include "./ast.h"
 
 /**
- * Creates an AST node.
+ * Creates a new AST Node.
+ * @param type the AST type of the node.
  */
-struct ASTNode* createASTNode(enum ASTNodeType type) {
-    struct ASTNode* node = malloc(sizeof(struct ASTNode));
-    node->left = NULL;
-    node->right = NULL;
-    node->next = NULL;
-    node->type = type;
-    node->end = 0;
+AST_NODE* createASTNode(enum ASTNodeType type) {
+	AST_NODE* node = malloc(sizeof(AST_NODE));
 
-    memset(node->value, 0, sizeof(node->value));
+	node->type = type;
+	node->left = NULL;
+	node->right = NULL;
+	node->next = NULL;
 
-    return node;
+	return node;
 }

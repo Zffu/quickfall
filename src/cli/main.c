@@ -13,7 +13,6 @@
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
 #include "../compiler/compiler.h"
-#include "../compilerv2/compilerv2.h"
 
 #include "../utils/logging.c"
 
@@ -110,7 +109,7 @@ int main(int argc, char* argv[]) {
 			fclose(fptr);
 
 			struct LexerResult result = runLexer(buff);
-			struct ASTNode* root = runParser(result);
+			struct ASTNode* root = parseNodes(result, 0, AST_ROOT);
 
 			struct Context ctx = parseContext(root);
 
