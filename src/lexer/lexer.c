@@ -116,6 +116,13 @@ struct LexerResult runLexer(char string[]) {
 		pushToken(&result, NONE); 
 		result.tokens[result.size - 1].value[0] = '?';	
 		break;
+	    case '+':
+	    case '-':
+	    case '/':
+	    case '*':
+		pushToken(&result, MATH_OP);
+		result.tokens[result.size - 1].value[0] = c;
+		break;
         }
     }
 
