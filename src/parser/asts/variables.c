@@ -14,7 +14,7 @@ AST_NODE* parseVariableValue(struct LexerResult result, int index) {
 
 	if(t.type == NUMBER || t.type == STRING || t.type == BOOLEAN_VALUE) {
 		AST_NODE* node = createASTNode(AST_VARIABLE_VALUE);
-		node->endingIndex = index + 1;
+		node->endingIndex = index;
 		node->left = createASTNode(AST_TYPE);
 
 		switch(t.type) {
@@ -63,7 +63,7 @@ AST_NODE* parseVariableDeclaration(struct LexerResult result, int index) {
 	node->left = createASTNode(AST_VARIABLE_NAME);
 	node->left->value = result.tokens[index + 1].value;
 
-	node->right = parseVariableValue(result, index + 2);
+	node->right = parseVariableValue(result, index + 3);
 
 	if(node->right != NULL) node->endingIndex = node->right->endingIndex;
 	else node->endingIndex = index + 2;
