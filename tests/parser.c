@@ -37,12 +37,27 @@ int main(int argc, char* argv[]) {
 
 	struct LexerResult result = runLexer(buff);
 	struct ASTNode* root = parseNodes(result, 0, AST_ROOT);
+
+	dumpASTTree(root, 0);
 }
 
-void dumpASTTree(AST_NODE* root, int depth) {
-	if(root->left != NULL) dumpASTTree(root->left, depth + 1);
-	if(root->right != NULL) dumpASTTree(root->right, depth + 1);
-	if(root->next != NULL) dumpASTTree(root->next, depth);
+char* debug[12] = {"Root", "Type Node", "Variable Name", "Variable Value", "Variable Declaration", "Variable Reference", "Function Declaration", "Function Header", "Math Operator", "Math Operation", "Math Operation Header", "Parameter"};
 
-	printf("AST t: %d, v: %s\n", root->type, root->value);
+void dumpASTTree(struct ASTNode* node, int depth) {
+    for(int i = 0; i < depth; ++i) {
+        printf("  ");
+    }
+    printf("AST Node of type (%d)\n", node->type);
+    
+    if(node->left != NULL) {
+        dumpASTTree(node->left, depth + 1);
+    }
+
+    if(node->right != NULL) {
+        dumpASTTree(node->right, depth + 1);
+    }
+
+    if(node->next != NULL) {
+        dumpASTTree(node->next, depth);
+    }
 }

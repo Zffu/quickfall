@@ -92,7 +92,9 @@ struct LexerResult runLexer(char string[]) {
                 token.type = NU;
             } else if(strcmp(word, "use") == 0) {
                 token.type = USE;
-            } 
+            } else if(strcmp(word, "var") == 0) {
+		token.type = VAR;
+	    }
             else {
                 token.type = KEYWORD;
             }

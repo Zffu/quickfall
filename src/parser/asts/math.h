@@ -2,7 +2,7 @@
  * Math ASTs for the Quickfall parser.
  */
 
-#include "../../ast.h"
+#include "../ast.h"
 
 /**
  * Parses the mathematical operation.

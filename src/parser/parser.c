@@ -2,9 +2,12 @@
  * The parser of Quickfall.
  */
 
+#include <stdio.h>
+
 #include "../lexer/lexer.h"
 #include "./ast.h"
 
+#include "./asts/variables.h"
 #include "./asts/functions.h"
 
 /**
@@ -19,15 +22,25 @@ AST_NODE* parseNodes(struct LexerResult result, int index, enum ASTNodeType type
 	for(; index <= result.size; ++index) {
 		struct Token t = result.tokens[index];
 
+		AST_NODE* node = NULL;
+
 		switch(t.type) {
 			case FUNCTION:
-				AST_NODE* node = parseFunctionDeclaration(result, index);
+				node = parseFunctionDeclaration(result, index);
 				if(node != NULL) {
 					current->next = node;
 					current = node;
 					index = node->endingIndex;
 				}
 
+				break;
+			case VAR:
+				node = parseVariableDeclaration(result, index);
+				if(node != NULL) {
+					current->next = node;
+					current = node;
+					index = node->endingIndex;
+				}
 				break;
 				
 		}

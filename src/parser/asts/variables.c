@@ -5,6 +5,8 @@
 #include "../../lexer/lexer.h"
 #include "../../lexer/tokens.h"
 
+#include "./math.h"
+
 #include "../ast.h"
 
 AST_NODE* parseVariableValue(struct LexerResult result, int index) {
@@ -17,8 +19,10 @@ AST_NODE* parseVariableValue(struct LexerResult result, int index) {
 
 		switch(t.type) {
 			case NUMBER:
+				if(result.size >= index + 1 && result.tokens[index + 1].type == MATH_OP) return parseMathematicalOpNode(result, index);
+
 				node->left->value = "n";
-				break;
+					
 			case STRING:
 				node->left->value = "s";
 				break;
@@ -38,6 +42,7 @@ AST_NODE* parseVariableValue(struct LexerResult result, int index) {
 
 		return node;
 	}
+
 }
 
 /**
@@ -59,6 +64,9 @@ AST_NODE* parseVariableDeclaration(struct LexerResult result, int index) {
 	node->left->value = result.tokens[index + 1].value;
 
 	node->right = parseVariableValue(result, index + 2);
+
+	if(node->right != NULL) node->endingIndex = node->right->endingIndex;
+	else node->endingIndex = index + 2;
 
 	return node;
 }
