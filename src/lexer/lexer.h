@@ -9,7 +9,7 @@
  */
 struct Token {
     enum TokenType type;
-    char value[32];  // Using 32 as longestKeywordSize
+    char* value;
 };
 
 /**
@@ -17,7 +17,7 @@ struct Token {
  */
 struct LexerResult {
     int size;
-    struct Token tokens[1024];
+    struct Token* tokens;
 };
 
 /**
