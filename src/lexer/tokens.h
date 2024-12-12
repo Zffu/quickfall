@@ -27,13 +27,4 @@ enum TokenType {
     MATH_OP
 };
 
-struct KeywordResult {
-    int count;
-    char* keywords[10];
-    enum TokenType types[10];
-};
-
-void initKeywords();
-struct KeywordResult getKeywords(char start);
-
 #endif
