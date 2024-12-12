@@ -7,16 +7,10 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "./lexer.h"
 #include "./tokens.h"
-#include "../utils/hashes.h"
 
-/**
- * The result of the lexer execution.
- */
-struct LexerResult {
-    int size;
-    struct Token tokens[1024];
-};
+#include "../utils/hashes.h"
 
 /**
  * Sets the token type of the currently selected token in the LexerResult with the provided token type.
@@ -43,10 +37,18 @@ struct LexerResult runLexer(char string[]) {
             continue;
         } else if (isdigit(c)) {
             int numLen = 0;
-            char numStr[32] = {0};
+	    int maxLen = 32;
+
+	    char* numStr = malloc(maxLen);
             
             while (i < len && (isdigit(string[i]) || string[i] == '.')) {
                 numStr[numLen++] = string[i++];
+
+		if(numLen >= maxLen) {
+			maxLen = maxLen * 1.25;
+			numStr = realloc(numStr, maxLen);
+		}
+
             }
             i--;
             
@@ -58,11 +60,18 @@ struct LexerResult runLexer(char string[]) {
             continue;
         } else if (c == '"') {
             int numLen = 0;
-            char strValue[longestKeywordSize] = {0};
+	    int maxLen = 32;
+
+            char* strValue = malloc(maxLen);
             i++;
             
             while (i < len && string[i] != '"') {
                 strValue[numLen++] = string[i++];
+
+		if(numLen > maxLen) {
+			maxLen = maxLen * 1.25;
+			strValue = realloc(strValue, maxLen);
+		}
             }
             
             struct Token token;
@@ -73,10 +82,18 @@ struct LexerResult runLexer(char string[]) {
             continue;
         } else if (isalpha(c)) {
             int wordLen = 0;
-            char word[longestKeywordSize] = {0};
+	    int maxLen = 32;
+
+            char* word = malloc(maxLen);
             
             while (i < len && (isalnum(string[i]) || string[i] == '_')) {
                 word[wordLen++] = string[i++];
+
+		if(wordLen >= maxLen) {
+			maxLen = maxLen * 1.25;
+			word = realloc(word, maxLen);
+		}
+	
             }
             i--;
             

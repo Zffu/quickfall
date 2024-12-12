@@ -5,14 +5,6 @@
 #include "./tokens.h"
 
 /**
- * Represents a single token from lexical analysis
- */
-struct Token {
-    enum TokenType type;
-    char* value;
-};
-
-/**
  * Contains the results of lexical analysis
  */
 struct LexerResult {
