@@ -5,26 +5,26 @@
 #define smallestKeywordSize 4
 
 enum TokenType {
-    FUNCTION = 1,
-    RETURN = 2,
-    VAR = 3,
-    BRACKETS_OPEN = 4,
-    BRACKETS_CLOSE = 5,
-    PAREN_OPEN = 6,
-    PAREN_CLOSE = 7,
-    ARRAY_OPEN = 8,
-    ARRAY_CLOSE = 9,
-    NUMBER = 10,
-    STRING = 11,
-    BOOLEAN_VALUE = 12,
-    NU = 13,
-    KEYWORD = 14,
-    SEMICOLON = 15,
-    COMMA = 16,
-    DECLARE = 17,
-    USE = 18,
-    NONE = 19,
-    MATH_OP = 20
+    FUNCTION,
+    RETURN,
+    VAR,
+    BRACKETS_OPEN,
+    BRACKETS_CLOSE,
+    PAREN_OPEN,
+    PAREN_CLOSE,
+    ARRAY_OPEN,
+    ARRAY_CLOSE,
+    NUMBER,
+    STRING,
+    BOOLEAN_VALUE,
+    NU,
+    KEYWORD,
+    SEMICOLON,
+    COMMA,
+    DECLARE,
+    USE,
+    NONE,
+    MATH_OP
 };
 
 struct KeywordResult {
