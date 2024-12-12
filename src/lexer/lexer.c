@@ -26,7 +26,6 @@ struct LexerResult runLexer(char* string) {
 
 	result.tokens = malloc(sizeof(struct Token) * 1024);
 
-	int i = 0;
 	char c;
 
 	while(c = *string++) {
@@ -45,9 +44,54 @@ struct LexerResult runLexer(char* string) {
 
 				c = *string++;
 			}
-		}
 
-		++i;
+			pushToken(&result, NUMBER);
+			result.tokens[result.size].value = buff;
+
+		} else if (c == '\"') {
+			int strLen = 0;
+
+			while(c != '\"') {
+				buff[strLen] = c;
+				strLen++;
+
+				c = *string++;
+			}
+
+			pushToken(&result, STRING);
+			result.tokens[result.size].value = buff;
+
+		} else if(isalpha(c)) {
+			int keywordLen = 0;
+			
+			while(isalpha(c)) {
+				buff[keywordLen] = c;
+				keywordLen++;
+
+				c = *string++;
+			}
+
+			if(strcmp(word, "func") == 0) {
+				pushToken(&result, FUNCTION);
+			}
+			else if(strcmp(word, "true") == 0 || strcmp(word, "false") == 0) {
+				pushToken(&result, BOOLEAN_VALUE);
+				result.tokens[result.size].value = word;
+			}
+			else if(strcmp(word, "null") == 0) {
+				pushToken(&result, NU);
+			}
+			else if(strcmp(word, "use") == 0) {
+				pushToken(&result, USE);
+			}
+			else if(strcmp(word, "var") == 0) {
+				pushToken(&result, VAR);
+			}
+			else {
+				pushToken(&result, KEYWORD);
+				result.tokens[result.size].value = buff;
+			}
+		}
 	}
 
 	return result;
