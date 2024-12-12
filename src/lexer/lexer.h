@@ -5,26 +5,18 @@
 #include "./tokens.h"
 
 /**
- * Represents a single token from lexical analysis
- */
-struct Token {
-    enum TokenType type;
-    char value[32];  // Using 32 as longestKeywordSize
-};
-
-/**
  * Contains the results of lexical analysis
  */
 struct LexerResult {
     int size;
-    struct Token tokens[1024];
+    struct Token* tokens;
 };
 
 /**
  * Performs lexical analysis on an input string
  * Returns a LexerResult containing the tokens
  */
-struct LexerResult runLexer(const char* input);
+struct LexerResult runLexer(char* input);
 
 /**
  * Adds a token to the LexerResult
