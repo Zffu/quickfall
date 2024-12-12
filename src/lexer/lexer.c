@@ -3,18 +3,12 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
 #include "./tokens.h"
 #include "../utils/hashes.h"
-
-/**
- * A token that was parsed by the Lexer.
- */
-struct Token {
-    int type;
-    char value[longestKeywordSize];  // Increased size to handle longer values like numbers
-};
 
 /**
  * The result of the lexer execution.
@@ -38,6 +32,8 @@ void pushToken(struct LexerResult* result, enum TokenType type) {
 struct LexerResult runLexer(char string[]) {
     struct LexerResult result;
     result.size = 0;
+
+    result->tokens = malloc(sizeof(struct Token) * 1024);
     
     const int len = strlen(string);
     for(int i = 0; i < len; ++i) {
@@ -56,7 +52,8 @@ struct LexerResult runLexer(char string[]) {
             
             struct Token token;
             token.type = NUMBER;
-            strncpy(token.value, numStr, sizeof(token.value) - 1);
+	    token.value = numStr;
+
             result.tokens[result.size++] = token;
             continue;
         } else if (c == '"') {
@@ -70,7 +67,8 @@ struct LexerResult runLexer(char string[]) {
             
             struct Token token;
             token.type = STRING;
-            strncpy(token.value, strValue, sizeof(token.value) - 1);
+	    token.value = strValue;
+
             result.tokens[result.size++] = token;
             continue;
         } else if (isalpha(c)) {
@@ -99,7 +97,7 @@ struct LexerResult runLexer(char string[]) {
                 token.type = KEYWORD;
             }
             
-            strncpy(token.value, word, sizeof(token.value) - 1);
+	    token.value = word;
             result.tokens[result.size++] = token;
             continue;
         }
