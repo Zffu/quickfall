@@ -20,14 +20,47 @@ void pushToken(struct LexerResult* result, enum TokenType type) {
     result->size++;
 }
 
+struct LexerResult runLexer(char* string) {
+	struct LexerResult result;
+	result.size = 0;
+
+	result.tokens = malloc(sizeof(struct Token) * 1024);
+
+	int i = 0;
+	char c;
+
+	while(c = *string++) {
+
+		int buffLen = 32;
+		char* buff = malloc(buffLen);
+
+		if(c == ' ' || c == '\t' || c == '\n') {
+			continue;
+		} else if (isdigit(c)) {
+			int numLen = 0;
+
+			while(isdigit(c)) {
+				buff[numLen] = c;
+				numLen++;
+
+				c = *string++;
+			}
+		}
+
+		++i;
+	}
+
+	return result;
+}
+
 /**
  * Runs the lexer on the provided string and returns the parsed tokens.
  */
-struct LexerResult runLexer(char string[]) {
+struct LexerResult runLexer0(char string[]) {
     struct LexerResult result;
     result.size = 0;
 
-    result->tokens = malloc(sizeof(struct Token) * 1024);
+    result.tokens = malloc(sizeof(struct Token) * 1024);
     
     const int len = strlen(string);
     for(int i = 0; i < len; ++i) {

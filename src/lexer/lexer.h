@@ -16,7 +16,7 @@ struct LexerResult {
  * Performs lexical analysis on an input string
  * Returns a LexerResult containing the tokens
  */
-struct LexerResult runLexer(const char* input);
+struct LexerResult runLexer(char* input);
 
 /**
  * Adds a token to the LexerResult
