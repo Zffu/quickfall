@@ -127,12 +127,13 @@ void main(int argc, char* argv[]) {
 
         startTimer();
 
-        struct ASTNode* node = runParser(result);
+        AST_NODE* node = parseNodes(result, 0, AST_ROOT);
 	
         endTimer(i, 2);
         startTimer();
 
-        char* compiled = compile(node, "win");
+        struct Context ctx = parseContext(node);
+	char* compiled = compileV2(ctx);
 
         endTimer(i, 3);
 		
