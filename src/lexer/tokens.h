@@ -1,9 +1,6 @@
 #ifndef TOKENS_H
 #define TOKENS_H
 
-#define longestKeywordSize 32
-#define smallestKeywordSize 4
-
 enum TokenType {
     FUNCTION,
     RETURN,
