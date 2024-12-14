@@ -44,7 +44,15 @@ AST_NODE* parseNodes(struct LexerResult result, int index, enum ASTNodeType type
 					index = node->endingIndex;
 				}
 				break;
-				
+			case ASM_FUNCTION:
+				node = parseASMFunctionDeclaration(result, index);
+				if(node != NULL) {
+					current->next = node;
+					current = node;
+					index = node->endingIndex;
+				}
+				break;
+
 		}
 	}
 

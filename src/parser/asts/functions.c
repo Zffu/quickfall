@@ -2,6 +2,8 @@
  * Function-related AST parsing.
  */
 
+#include <stdlib.h>
+
 #include "./variables.h"
 
 #include "../parser.h"
@@ -9,6 +11,8 @@
 
 #include "../../lexer/tokens.h"
 #include "../../lexer/lexer.h"
+
+#include "../../utils/logging.c"
 
 /**
  * Parse the parameters from a function definition (for example).
@@ -168,7 +172,6 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 		}
 
 		if(t.type != STRING) {
-			logError("Disallowed token type in Assembly function! Only allows string!\n");
 			return NULL;
 		}
 
