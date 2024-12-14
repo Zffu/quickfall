@@ -7,6 +7,7 @@
 #include "../parser.h"
 #include "../ast.h"
 
+#include "../../lexer/tokens.h"
 #include "../../lexer/lexer.h"
 
 /**

@@ -4,7 +4,9 @@
 
 #include <stdio.h>
 
+#include "../lexer/tokens.h"
 #include "../lexer/lexer.h"
+
 #include "./ast.h"
 
 #include "./asts/variables.h"
