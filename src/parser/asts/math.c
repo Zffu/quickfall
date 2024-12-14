@@ -4,6 +4,8 @@
 
 #include <stdlib.h>
 
+#include "../../lexer/lexer.h"
+
 #include "../ast.h"
 #include "./variables.h"
 

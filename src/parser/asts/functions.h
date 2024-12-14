@@ -2,6 +2,8 @@
  * Function-related AST parsing.
  */
 
+#include "../../lexer/lexer.h"
+
 #include "../ast.h"
 
 #ifndef AST_FUNC_H
