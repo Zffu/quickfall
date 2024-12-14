@@ -30,4 +30,11 @@ AST_NODE* parseArguments(struct LexerResult result, int index);
  */
 AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index);
 
+/**
+ * Parses an ASM function declaration.
+ * @param result the lexer result.
+ * @param index the starting index of the parsing.
+ */
+AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index); 
+
 #endif
