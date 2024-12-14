@@ -2,6 +2,7 @@
 #define TOKENS_H
 
 enum TokenType {
+    ASM_FUNCTION,
     FUNCTION,
     RETURN,
     VAR,

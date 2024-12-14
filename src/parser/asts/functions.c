@@ -2,6 +2,8 @@
  * Function-related AST parsing.
  */
 
+#include <stdlib.h>
+
 #include "./variables.h"
 
 #include "../parser.h"
@@ -9,6 +11,8 @@
 
 #include "../../lexer/tokens.h"
 #include "../../lexer/lexer.h"
+
+#include "../../utils/logging.c"
 
 /**
  * Parse the parameters from a function definition (for example).
@@ -136,5 +140,55 @@ AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index) {
 
 	node->right = parseNodes(result, params->endingIndex, AST_ROOT);
 
+	return node;
+}
+
+AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
+	AST_NODE* node = createASTNode(AST_ASM_FUNCTION_DECLARATION);
+	
+	node->left = createASTNode(AST_FUNCTION_HEADER);
+	
+	if(result.tokens[index].type != KEYWORD) {
+		return NULL;
+	}
+
+	AST_NODE* params = parseParameters(result, index + 1);
+
+	if(params == NULL) return NULL;
+
+	node->left->left = params;
+
+	index = params->endingIndex;
+
+	int buffSize = 32;
+	int buffIndex = 0;
+	char* buff = malloc(buffSize);
+
+	for(; index <= result.size; ++index) {
+		struct Token t = result.tokens[index];
+
+		if(t.type == BRACKETS_CLOSE) {
+			break;
+		}
+
+		if(t.type != STRING) {
+			return NULL;
+		}
+
+		char c;
+		while(c = *t.value++) {
+			buff[buffIndex] = c;
+			buffIndex++;
+
+			if(buffIndex >= buffSize) {
+				buffSize *= 1.5;
+				buff = realloc(buff, buffSize);
+			}
+		}
+	}
+
+	buff[buffIndex] = '\0';
+
+	node->value = buff;
 	return node;
 }
