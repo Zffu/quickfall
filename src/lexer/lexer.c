@@ -74,7 +74,7 @@ struct LexerResult runLexer(char* string) {
 			if(strcmp(buff, "func") == 0) {
 				pushToken(&result, FUNCTION);
 			}
-			else if(strcmp(buff, "asmf" == 0) {
+			else if(strcmp(buff, "asmf") == 0) {
 				pushToken(&result, ASM_FUNCTION);
 			}
 			else if(strcmp(buff, "true") == 0 || strcmp(buff, "false") == 0) {
