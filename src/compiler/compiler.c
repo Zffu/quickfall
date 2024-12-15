@@ -2,17 +2,24 @@
  * The compiler of Quickfall.
  */
 
+#include <stdlib.h>
+
 #include "./compiler.h"
 #include "./ir.h"
 
 #include "../parser/ast.h"
+
+#include "../utils/hashmap.h"
 
 /**
  * Parses the AST tree into a context.
  * @param tree the AST tree.
  */
 IR_CTX* makeContext(AST_NODE* tree) {
-	
+	IR_CTX* ctx = malloc(sizeof(IR_CTX));
+
+	ctx->nodeIndex = 0;
+	ctx->nodeHashmap = createHashmap(512,200);
 }
 
 /**
