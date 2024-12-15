@@ -2,6 +2,8 @@
  * The compiler's internal IR.
  */
 
+#include "../parser/ast.h"
+
 #include "../utils/hashmap.h"
 
 #ifndef IR_H

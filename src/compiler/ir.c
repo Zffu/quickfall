@@ -4,6 +4,8 @@
 
 #include <stdlib.h>
 
+#include "./ir.h"
+
 #include "../utils/hashmap.h"
 
 /**
@@ -20,7 +22,7 @@ IR_NODE* createIRNode(IR_TYPE type, char* nodeName) {
 	node->variableIndex = 0;
 
 	if(type == IR_FUNCTION) {
-		node->variableHashmap = createHashmap(512, 50);
+		node->variableMap = createHashmap(512, 50);
 	}
 
 	return node;
