@@ -13,7 +13,7 @@
  * @param type the IR type of the node.
  * @param nodeName the name of the IR node.
  */
-IR_NODE* createIRNode(IR_TYPE type, char* nodeName) {
+inline IR_NODE* createIRNode(IR_TYPE type, char* nodeName) {
 	IR_NODE* node = malloc(sizeof(IR_NODE));
 	
 	node->nodeType = type;
