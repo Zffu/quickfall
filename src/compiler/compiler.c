@@ -29,8 +29,14 @@ IR_CTX* makeContext(AST_NODE* tree) {
 
 		switch(tree->type) {
 			case AST_VARIABLE_DECLARATION:
+				IR_NODE* node = createIRNode(IR_VARIABLE, tree->left->value);
 
-				
+				node->type = tree->value;
+
+				if(tree->right != NULL && tree->right->value) node->value = tree->right->value;
+
+				ctx->nodes[ctx->nodeIndex] = node;
+				ctx->nodeIndex++;
 
 				if(ctx->nodeIndex > buffSize) {
 					buffSize = buffSize * 1.5;
