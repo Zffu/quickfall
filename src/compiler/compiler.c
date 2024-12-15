@@ -34,8 +34,7 @@ struct Context parseContext(struct ASTNode* node) {
 	ctx.variables = malloc(sizeof(struct Variable*) * 50);
 	ctx.functions = malloc(sizeof(struct Function*) * 50);
 
-	ctx.variableHashMap = createHashmap(512, 500);
-	ctx.functionHashMap = createHashmap(512, 500);
+	ctx.hashMap = createHashmap(512, 500);
 
 	ctx.variableCount = 0;
 	ctx.functionCount = 0;
