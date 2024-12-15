@@ -18,8 +18,26 @@
 IR_CTX* makeContext(AST_NODE* tree) {
 	IR_CTX* ctx = malloc(sizeof(IR_CTX));
 
+	int buffSize = 32;
+	ctx->nodes = malloc(sizeof(IR_NODE) * 32);
+
 	ctx->nodeIndex = 0;
 	ctx->nodeHashmap = createHashmap(512,200);
+
+	while(tree->next != NULL) {
+		tree = tree->next;
+
+		switch(tree->type) {
+			case AST_VARIABLE_DECLARATION:
+
+				
+
+				if(ctx->nodeIndex > buffSize) {
+					buffSize = buffSize * 1.5;
+					ctx->nodes = realloc(ctx->nodes, buffSize);
+				}
+		}
+	}
 }
 
 /**

@@ -49,4 +49,11 @@ struct IRContext {
 
 typedef struct IRContext IR_CTX;
 
+/**
+ * Creates an IR node based on the type and the name given.
+ * @param type the IR type of the node.
+ * @param nodeName the name of the IR node.
+ */
+IR_NODE* createIRNode(IR_TYPE type, char* nodeName);
+
 #endif
