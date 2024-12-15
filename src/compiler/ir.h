@@ -19,7 +19,7 @@ typedef enum IRNodeType IR_TYPE;
 
 struct IRNode {
 
-	IR_TYPE type;
+	IR_TYPE nodeType;
 
 	// Shared Properties
 	
