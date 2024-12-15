@@ -7,7 +7,8 @@
 #include <string.h>
 
 #include "./compiler.h"
-#include "./objects.h"
+#include "./ir.h"
+
 #include "../parser/ast.h"
 #include "../utils/logging.c"
 
