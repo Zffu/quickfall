@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	FILE* fptr = fopen(argv[1], "w");
+	FILE* fptr = fopen(argv[1], "r");
 	
 	fseek(fptr, 0, SEEK_END);
 	int size = ftell(fptr);
