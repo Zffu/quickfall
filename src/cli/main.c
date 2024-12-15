@@ -9,10 +9,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../parser/ast.h"
+
 #include "../lexer/lexer.h"
+
+#include "../parser/ast.h"
 #include "../parser/parser.h"
+
 #include "../compiler/compiler.h"
+#include "../compiler/ir.h"
 
 #include "../utils/logging.c"
 
