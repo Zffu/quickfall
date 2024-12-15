@@ -24,8 +24,7 @@ struct Context {
 	int functionCount;
 
 	// Hashmaps
-	struct Hashmap* variableHashMap;
-	struct Hashmap* functionHashMap;
+	struct Hashmap* hashMap;
 };
 
 /**
