@@ -32,7 +32,7 @@ struct IRNode {
 	char* value;
 
 	// Function Properties
-	struct IRNode* variables;
+	struct IRNode** variables;
 	int variableIndex;
 
 	struct Hashmap* variableMap;
@@ -43,7 +43,7 @@ struct IRNode {
 typedef struct IRNode IR_NODE;
 
 struct IRContext {
-	IR_NODE* nodes;
+	IR_NODE** nodes;
 	int nodeIndex;
 
 	struct Hashmap* nodeMap;

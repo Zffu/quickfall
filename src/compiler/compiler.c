@@ -9,6 +9,7 @@
 
 #include "../parser/ast.h"
 
+#include "../utils/hash.h"
 #include "../utils/hashmap.h"
 
 /**
@@ -37,6 +38,8 @@ IR_CTX* makeContext(AST_NODE* tree) {
 
 				ctx->nodes[ctx->nodeIndex] = node;
 				ctx->nodeIndex++;
+
+				hashPut(ctx->nodeMap, hashstr(node->nodeName), node);
 
 				if(ctx->nodeIndex > buffSize) {
 					buffSize = buffSize * 1.5;
