@@ -54,6 +54,7 @@ IR_CTX* makeContext(AST_NODE* tree) {
 					buffSize = buffSize * 1.5;
 					ctx->nodes = realloc(ctx->nodes, buffSize);
 				}
+
 				break;
 
 			case AST_FUNCTION_DECLARATION:
@@ -87,6 +88,8 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				hashPut(ctx->nodeMap, hash, node);
 		}
 	}
+
+	return ctx;
 }
 
 /**

@@ -25,6 +25,6 @@ int runIRTest(char* buff) {
 	printf("CTX dump:\n\n");
 
 	for(int i = 0; i < ctx->nodeIndex; ++i) {
-		printf("  %s (type: %d)\n", ctx->nodes[i]->nodeName, ctx->nodes[i]->type);
+		if(ctx->nodes[i]->nodeName != NULL) printf("  %s (type: %d)\n", ctx->nodes[i]->nodeName, ctx->nodes[i]->nodeType);
 	}
 }
