@@ -56,6 +56,6 @@ typedef struct IRContext IR_CTX;
  * @param type the IR type of the node.
  * @param nodeName the name of the IR node.
  */
-inline IR_NODE* createIRNode(IR_TYPE type, char* nodeName);
+inline extern IR_NODE* createIRNode(IR_TYPE type, char* nodeName);
 
 #endif
