@@ -30,6 +30,13 @@ IR_CTX* makeContext(AST_NODE* tree) {
 
 		switch(tree->type) {
 			case AST_VARIABLE_DECLARATION:
+
+				int hash = hashstr(tree->left->value);
+
+				if(hashGet(ctx->nodeMap, hash) != NULL) {
+					return NULL;
+				}
+
 				IR_NODE* node = createIRNode(IR_VARIABLE, tree->left->value);
 
 				node->type = tree->value;
@@ -39,7 +46,7 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				ctx->nodes[ctx->nodeIndex] = node;
 				ctx->nodeIndex++;
 
-				hashPut(ctx->nodeMap, hashstr(node->nodeName), node);
+				hashPut(ctx->nodeMap, hash, node);
 
 				if(ctx->nodeIndex > buffSize) {
 					buffSize = buffSize * 1.5;
