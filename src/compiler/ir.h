@@ -35,7 +35,8 @@ struct IRNode {
 
 	struct Hashmap variableMap;
 
-}
+	AST_NODE* tree;
+};
 
 typedef IR_NODE struct IRNode;
 
