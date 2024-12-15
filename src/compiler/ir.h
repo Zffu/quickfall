@@ -33,7 +33,7 @@ struct IRNode {
 	struct IRNode* variables;
 	int variableIndex;
 
-	struct Hashmap variableMap;
+	struct Hashmap* variableMap;
 
 	AST_NODE* tree;
 };
