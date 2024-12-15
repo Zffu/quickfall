@@ -115,18 +115,14 @@ int main(int argc, char* argv[]) {
 			struct LexerResult result = runLexer(buff);
 			struct ASTNode* root = parseNodes(result, 0, AST_ROOT);
 
-			struct Context ctx = parseContext(root);
+			IR_CTX* ctx = makeContext(root);
 
-			char* output = compileV2(ctx);
-
-			if(output == NULL) {
-				printf("Error: the compiled output is null! Something went wrong!\n");
+			if(ctx == NULL) {
+				printf("Error: the IR context is null! Something went wrong during compiling! Please check any logs for errors\n");
 				return -1;
 			}
 
-			fptr = fopen(outputFile, "w");
-			fprintf(fptr, output);
-			fclose(fptr);
+			compile(ctx, outputFile);
 
 			break;
 		case 'v':
