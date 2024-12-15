@@ -2,7 +2,7 @@
  * The compiler's internal IR.
  */
 
-#include "../../utils/hashmap.h"
+#include "../utils/hashmap.h"
 
 #ifndef IR_H
 #define IR_H
@@ -15,7 +15,7 @@ enum IRNodeType {
 	IR_FUNCTION_BODY_VARIABLE
 };
 
-typedef IR_TYPE enum IRNodeType;
+typedef enum IRNodeType IR_TYPE;
 
 struct IRNode {
 
@@ -30,7 +30,7 @@ struct IRNode {
 	char* value;
 
 	// Function Properties
-	IR_NODE* variables;
+	struct IRNode* variables;
 	int variableIndex;
 
 	struct Hashmap variableMap;
@@ -38,7 +38,7 @@ struct IRNode {
 	AST_NODE* tree;
 };
 
-typedef IR_NODE struct IRNode;
+typedef struct IRNode IR_NODE;
 
 struct IRContext {
 	IR_NODE* nodes;
@@ -47,6 +47,6 @@ struct IRContext {
 	struct Hashmap nodeMap;
 };
 
-typedef IR_CTX struct IRContext;
+typedef struct IRContext IR_CTX;
 
 #endif
