@@ -52,6 +52,36 @@ IR_CTX* makeContext(AST_NODE* tree) {
 					buffSize = buffSize * 1.5;
 					ctx->nodes = realloc(ctx->nodes, buffSize);
 				}
+				break;
+
+			case AST_FUNCTION_DECLARATION:
+				
+				hash = hashstr(tree->left->value);
+
+				if(hashGet(ctx->nodeMap, hash) != NULL) {
+					return NULL;
+				}
+
+				node = createIRNode(IR_FUNCTION, tree->left->right->value);
+				
+				node->type = tree->left->value;
+				
+				while(tree->left->left->next != NULL) {
+
+					IR_NODE* var = createIRNode(IR_FUNCTION_ARGUMENT, tree->right->value);
+
+					node->variables[node->variableIndex] = var;
+					node->variableIndex++;
+
+					hashPut(node->variableMap, hashstr(tree->right->value), var);
+
+					tree->left->left = tree->left->left->next;
+				}
+
+				ctx->nodes[ctx->nodeIndex] = node;
+				ctx->nodeIndex;
+
+				hashPut(ctx->nodeMap, hash, node);
 		}
 	}
 }
