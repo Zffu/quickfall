@@ -2,6 +2,8 @@
  * The compiler's internal IR.
  */
 
+#include "../../utils/hashmap.h"
+
 #ifndef IR_H
 #define IR_H
 
@@ -26,6 +28,12 @@ struct IRNode {
 
 	// Variable Properties
 	char* value;
+
+	// Function Properties
+	IR_NODE* variables;
+	int variableIndex;
+
+	struct Hashmap variableMap;
 
 }
 
