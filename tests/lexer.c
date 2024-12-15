@@ -8,7 +8,7 @@
 /**
  * Runs the lexer test.
  */
-inline int runParserTest(char* buff) {
+inline int runLexerTest(char* buff) {
 	struct LexerResult result = runLexer(buff);
 
 	if(result.size == 0) return -1;

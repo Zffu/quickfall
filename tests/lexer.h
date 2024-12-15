@@ -3,6 +3,6 @@
  */
 
 /**
- * Runs the parser test.
+ * Runs the lexer test.
  */
-extern inline int runParserTest(char* buff);
+extern inline int runLexerTest(char* buff);
