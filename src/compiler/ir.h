@@ -39,4 +39,13 @@ struct IRNode {
 
 typedef IR_NODE struct IRNode;
 
+struct IRContext {
+	IR_NODE* nodes;
+	int nodeIndex;
+
+	struct Hashmap nodeMap;
+};
+
+typedef IR_CTX struct IRContext;
+
 #endif
