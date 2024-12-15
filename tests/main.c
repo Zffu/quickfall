@@ -6,8 +6,31 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "../src/utils/logging.c"
+
 #include "./lexer.h"
 #include "./parser.h"
+#include "./ir.h"
+
+void runTest(char* buff, char* testName) {
+	int code = 0;
+
+	if(strcmp(testName, "lexer") == 0) {
+		code = runLexerTest(buff);	
+	}
+	else if(strcmp(testName, "parser") == 0) {
+		code = runParserTest(buff);
+	}
+	else if(strcmp(testName, "ir") == 0) {
+		code = runIRTest(buff);
+	}
+	else {
+		printf("Unknown Test!\n");
+	}
+
+	if(code == -1) printf("[%sFAILED%s] The test %s failed!\n", TEXT_HRED, RESET, testName);
+	else printf("[%sOK%s] The test %s was OK!\n", TEXT_HGREEN, RESET, testName);
+}
 
 int main(int argc, char** argv) {
 	if(argc < 3) {
@@ -31,24 +54,15 @@ int main(int argc, char** argv) {
 	for(int i = 2; i < argv; ++i) {
 		char* testName = argv[i];
 
-		int code = 0;
-
-		if(strcmp(testName, "lexer") == 0) {
-			code = runLexerTest(buff);
-		}
-		if(strcmp(testName, "parser") == 0) {
-			code = runParserTest(buff);
-		}
-		else if(strcmp(testName, "ir") == 0) {
+		if(strcmp(testName, "all") == 0) {
+			char* tests[] = {"lexer", "parser", "ir"};
 			
-		}
-
-		if(code != -1) {
-			printf("[OK] %s Test\n", testName);
+			for(int i = 0; i < 3; ++i) {
+				runTest(buff, tests[i]);
+			}
 		}
 		else {
-			printf("[FAILED] %s Test\n", testName);
+			runTest(buff, testName);
 		}
 	}
-
 }

@@ -14,3 +14,17 @@
 #include "../src/compiler/compiler.h"
 #include "../src/compiler/ir.h"
 
+int runIRTest(char* buff) {
+	struct LexerResult result = runLexer(buff);
+	AST_NODE* node = parseNodes(result, 0, AST_ROOT);
+
+	IR_CTX* ctx = makeContext(node);
+
+	if(ctx == NULL) return -1;
+
+	printf("CTX dump:\n\n");
+
+	for(int i = 0; i < ctx->nodeIndex; ++i) {
+		printf("  %s (type: %d)\n", ctx->nodes[i]->nodeName, ctx->nodes[i]->type);
+	}
+}

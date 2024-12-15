@@ -2,6 +2,7 @@
  * The compiler of Quickfall.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "./compiler.h"
@@ -34,6 +35,7 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				int hash = hashstr(tree->left->value);
 
 				if(hashGet(ctx->nodeMap, hash) != NULL) {
+					printf("Variable %s is already declared!\n", tree->left->value);
 					return NULL;
 				}
 
@@ -59,6 +61,7 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				hash = hashstr(tree->left->value);
 
 				if(hashGet(ctx->nodeMap, hash) != NULL) {
+					printf("Function %s was already declared!\n", tree->left->value);
 					return NULL;
 				}
 
