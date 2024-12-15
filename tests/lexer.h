@@ -5,4 +5,4 @@
 /**
  * Runs the lexer test.
  */
-extern inline int runLexerTest(char* buff);
+int runLexerTest(char* buff);

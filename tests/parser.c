@@ -12,12 +12,12 @@
 
 void dumpASTTree(AST_NODE* node, int depth);
 
-inline int runParserTest(char* buff) {
+int runParserTest(char* buff) {
 	struct LexerResult result = runLexer(buff);
 
-	AST_NODE* root = parseNodes(buff, 0, AST_ROOT);
+	AST_NODE* root = parseNodes(result, 0, AST_ROOT);
 
-	dumpASTTree(node, 0);
+	dumpASTTree(root, 0);
 }
 
 char* debug[12] = {"Root", "Type Node", "Variable Name", "Variable Value", "Variable Declaration", "Variable Reference", "Function Declaration", "Function Header", "Math Operator", "Math Operation", "Math Operation Header", "Parameter"};
