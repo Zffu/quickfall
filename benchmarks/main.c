@@ -16,6 +16,7 @@
 
 // Benchmark Settings
 #define BENCH_DEFAULT_RUNS 100
+#define BENCH_BAR_LENGTH 25
 
 //
 // Timing Utilities
@@ -181,7 +182,7 @@ void main(int argc, char* argv[]) {
 		if(ii == 0) strcat(spacing, "  \0");
 		else if(ii != 9) strcat(spacing, " \0");
 
-		int clean = (averages[ii] / highestAverage) * 25;
+		int clean = (averages[ii] / highestAverage) * BENCH_BAR_LENGTH;
 
 		printf("  %d%% to %d%% Percentile:%s%s ", ii * 10, (ii + 1) * 10, spacing, TEXT_GRAY);
 		for(int c = 0; c < clean; ++c) {
