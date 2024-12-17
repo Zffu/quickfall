@@ -59,11 +59,8 @@ AST_NODE* parseParameters(struct LexerResult result, int index) {
 				stack++;
 				break;
 			case PAREN_CLOSE:
-				if(stack != 0) {
-					root->endingIndex = index;
-					return root;
-				}
-				return NULL;
+				root->endingIndex = index;
+				return root;
 			default:
 				return NULL;
 
@@ -147,14 +144,19 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 	AST_NODE* node = createASTNode(AST_ASM_FUNCTION_DECLARATION);
 	
 	node->left = createASTNode(AST_FUNCTION_HEADER);
-	
-	if(result.tokens[index].type != KEYWORD) {
+
+	if(result.tokens[index + 1].type != KEYWORD) {
 		return NULL;
 	}
 
-	AST_NODE* params = parseParameters(result, index + 1);
+	node->left->right = createASTNode(AST_VARIABLE_NAME);
+	node->left->right->value = result.tokens[index + 1].value;
 
-	if(params == NULL) return NULL;
+	AST_NODE* params = parseParameters(result, index + 2);
+
+	if(params == NULL) {
+		return NULL;
+	}
 
 	node->left->left = params;
 
@@ -189,6 +191,7 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 
 	buff[buffIndex] = '\0';
 
+	node->endingIndex = index;
 	node->value = buff;
 	return node;
 }

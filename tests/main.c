@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
 
 	buff[size] = '\0';
 
-	for(int i = 2; i < argv; ++i) {
+	for(int i = 2; i < argc; ++i) {
 		char* testName = argv[i];
 
 		if(strcmp(testName, "all") == 0) {

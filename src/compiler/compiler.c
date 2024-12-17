@@ -87,17 +87,17 @@ IR_CTX* makeContext(AST_NODE* tree) {
 
 				hashPut(ctx->nodeMap, hash, node);
 
-			case ASM_ASM_FUNCTION_DECLARATION:
-				
-				hash = strhash(tree->left->right);
+			case AST_ASM_FUNCTION_DECLARATION:
+
+				hash = hashstr(tree->left->right->value);
 
 				if(hashGet(ctx->nodeMap, hash) != NULL) {
 					printf("Assembly function %s is already defined!\n");
 					return NULL;
 				}
 
-				IR_NODE* node = createIRNode(IR_ASM_FUNCTION, tree->left->right);
-				
+				node = createIRNode(IR_ASM_FUNCTION, tree->left->right->value);
+
 				node->value = tree->value;
 
 				while(tree->left->left->next != NULL) {
@@ -105,13 +105,15 @@ IR_CTX* makeContext(AST_NODE* tree) {
 					IR_NODE* var = createIRNode(IR_FUNCTION_ARGUMENT, tree->left->left->right->value);
 
 					node->variables[node->variableIndex] = var;
-					nodes->variableIndex++;
+					node->variableIndex++;
 
-					hashPut(node->variableMap, hashstr(tree->left->left->right->value), var)
+					hashPut(node->variableMap, hashstr(tree->left->left->right->value), var);
 
 
 					tree->left->left = tree->left->left->next;
 				}
+
+				break;
 
 		}
 	}
