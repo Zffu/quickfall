@@ -14,6 +14,9 @@
 #include "../src/compiler/compiler.h"
 #include "../src/utils/logging.c"
 
+// Benchmark Settings
+#define BENCH_DEFAULT_RUNS 100
+
 //
 // Timing Utilities
 //
@@ -81,7 +84,7 @@ void main(int argc, char* argv[]) {
         return;
     }
 
-    int runs = 100;
+    int runs = BENCH_DEFAULT_RUNS;
 
     if(argc > 2) {
         runs = atoi(argv[2]);
