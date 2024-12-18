@@ -38,7 +38,7 @@ struct LexerResult runLexer(char* string) {
 		} else if (isdigit(c)) {
 			int numLen = 0;
 
-			while(isdigit(c)) {
+			while(isdigit(c) || c == 'x') {
 				buff[numLen] = c;
 				numLen++;
 

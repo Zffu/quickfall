@@ -2,136 +2,135 @@
  * The compiler of Quickfall.
  */
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
 #include "./compiler.h"
-#include "./objects.h"
+#include "./ir.h"
+
 #include "../parser/ast.h"
-#include "../utils/logging.c"
 
-#include "./att/att-win.h"
-#include "./att/att-linux.h"
-
-#include "../utils/hashmap.h"
 #include "../utils/hash.h"
+#include "../utils/hashmap.h"
 
 /**
- * Assembly format defintions. Will be changed by the architure.
+ * Parses the AST tree into a context.
+ * @param tree the AST tree.
  */
-char** ARGUMENT_REGISTRIES = NULL;
-char** SECTION_TYPES = NULL;
+IR_CTX* makeContext(AST_NODE* tree) {
+	IR_CTX* ctx = malloc(sizeof(IR_CTX));
 
-/**
- * The maximum hash the hashmaps can store.
- */
-#define MAX_HASH_CAPACITY 256000
+	int buffSize = 32;
+	ctx->nodes = malloc(sizeof(IR_NODE) * 32);
 
-struct Context parseContext(struct ASTNode* node) {
-	struct Context ctx = {0};
+	ctx->nodeIndex = 0;
+	ctx->nodeMap = createHashmap(512,200);
 
-	ctx.variables = malloc(sizeof(struct Variable*) * 50);
-	ctx.functions = malloc(sizeof(struct Function*) * 50);
+	while(tree->next != NULL) {
+		tree = tree->next;
 
-	ctx.variableHashMap = createHashmap(512, 500);
-	ctx.functionHashMap = createHashmap(512, 500);
+		switch(tree->type) {
+			case AST_VARIABLE_DECLARATION:
 
-	ctx.variableCount = 0;
-	ctx.functionCount = 0;
+				int hash = hashstr(tree->left->value);
 
-	
-			
+				if(hashGet(ctx->nodeMap, hash) != NULL) {
+					printf("Variable %s is already declared!\n", tree->left->value);
+					return NULL;
+				}
+
+				IR_NODE* node = createIRNode(IR_VARIABLE, tree->left->value);
+
+				node->type = tree->value;
+
+				if(tree->right != NULL && tree->right->value) node->value = tree->right->value;
+
+				ctx->nodes[ctx->nodeIndex] = node;
+				ctx->nodeIndex++;
+
+				hashPut(ctx->nodeMap, hash, node);
+
+				if(ctx->nodeIndex > buffSize) {
+					buffSize = buffSize * 1.5;
+					ctx->nodes = realloc(ctx->nodes, buffSize);
+				}
+
+				break;
+
+			case AST_FUNCTION_DECLARATION:
+				
+				hash = hashstr(tree->left->value);
+
+				if(hashGet(ctx->nodeMap, hash) != NULL) {
+					printf("Function %s was already declared!\n", tree->left->value);
+					return NULL;
+				}
+
+				node = createIRNode(IR_FUNCTION, tree->left->right->value);
+				
+				node->type = tree->left->value;
+				
+				while(tree->left->left->next != NULL) {
+
+					IR_NODE* var = createIRNode(IR_FUNCTION_ARGUMENT, tree->right->value);
+
+					node->variables[node->variableIndex] = var;
+					node->variableIndex++;
+
+					hashPut(node->variableMap, hashstr(tree->right->value), var);
+
+					tree->left->left = tree->left->left->next;
+				}
+
+				ctx->nodes[ctx->nodeIndex] = node;
+				ctx->nodeIndex++;
+
+				hashPut(ctx->nodeMap, hash, node);
+
+			case AST_ASM_FUNCTION_DECLARATION:
+
+				hash = hashstr(tree->left->right->value);
+
+				if(hashGet(ctx->nodeMap, hash) != NULL) {
+					printf("Assembly function %s is already defined!\n");
+					return NULL;
+				}
+
+				node = createIRNode(IR_ASM_FUNCTION, tree->left->right->value);
+
+				node->value = tree->value;
+
+				while(tree->left->left->next != NULL) {
+
+					IR_NODE* var = createIRNode(IR_FUNCTION_ARGUMENT, tree->left->left->right->value);
+
+					node->variables[node->variableIndex] = var;
+					node->variableIndex++;
+
+					hashPut(node->variableMap, hashstr(tree->left->left->right->value), var);
+
+
+					tree->left->left = tree->left->left->next;
+				}
+
+				ctx->nodes[ctx->nodeIndex] = node;
+				ctx->nodeIndex++;
+
+				hashPut(ctx->nodeMap, hash, node);
+
+				break;
+
+		}
+	}
+
 	return ctx;
-
 }
 
 /**
- * Compiles the context down to assembly.
+ * Compiles the Context tree to an executable named the provided file name.
+ * @param ctx the IR context.
+ * @param char the output file name.
  */
-char* compileV2(struct Context context) {
-	char* firstSection = malloc(1024);
-	char* sections = malloc(1024);
-	char* main = malloc(1024);
+void compile(IR_CTX* ctx, char* outputFileName) {
 
-	firstSection[0] = '\0';
-	sections[0] = '\0';
-	main[0] = '\0';
-
-	int sectionIndex = 0;
-	int stackSize = 0;
-
-	// Platform def
-	ARGUMENT_REGISTRIES = ATTWIN_ARGUMENT_REGISTRIES;
-	SECTION_TYPES = ATTWIN_SECTION_TYPES;
-
-	strcat(firstSection, ".LC0:\n    .globl  main");
-
-	for(int i = 0; i < context.variableCount; ++i) {
-		if(context.variables[i]->type[0] == 's') {
-			if(sectionIndex == 0) {
-				strcat(firstSection, "\n    ");
-				strcat(firstSection, SECTION_TYPES[0]);
-				strcat(firstSection, "  ");
-				strcat(firstSection, "\"");
-				strcat(firstSection, context.variables[i]->value);
-				strcat(firstSection, "\"");
-			}
-			else {
-				strcat(sections, ".LC");
-
-				char secI[5];
-				snprintf(secI, 5, "%d", sectionIndex);
-
-				strcat(sections, secI);
-				strcat(sections, ":\n    ");
-				strcat(sections, SECTION_TYPES[0]);
-				strcat(sections, "  ");
-				strcat(sections, "\"");
-				strcat(sections, context.variables[i]->value);
-				strcat(sections, "\"");
-			}
-			sectionIndex++;
-		}
-		else if(context.variables[i]->type[0] == 'n') {
-			stackSize += 4;
-
-			strcat(main, "\n    movq    $");
-			strcat(main, context.variables[i]->value);
-			strcat(main, ", -");
-
-			char sI[5];
-			snprintf(sI, 5, "%d", stackSize);
-
-			strcat(main, sI);
-			strcat(main, "(%rsp)");
-		}
-	}
-
-	char* buff = malloc(1024);
-	
-	buff[0] = '\0';
-
-	strcat(buff, firstSection);
-	strcat(buff, sections);
-	strcat(buff, "\n\nmain:");
-
-	char size[5];
-	snprintf(size, 5, "%d", stackSize);
-
-	if(stackSize > 0) {
-		strcat(buff, "\n    subq    $");
-		strcat(buff, size);
-		strcat(buff, ", %rsp");
-	}
-
-	strcat(buff, main);
-
-	if(stackSize > 0) {
-		strcat(buff, "\n    addq    $");
-		strcat(buff, size);
-		strcat(buff, ", %rsp");
-	}
-
-	return buff;
 }

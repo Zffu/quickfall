@@ -2,37 +2,25 @@
  * The compiler of Quickfall.
  */
 
-#ifndef COMPILER_2_H
-#define COMPILER_2_H
+#ifndef COMPILER_H
+#define COMPILER_H
 
 #include "../utils/hashmap.h"
 #include "../parser/ast.h"
-#include "./objects.h"
 
-enum Platform {
-	ATT_WINDOWS,
-	ATT_LINUX
-};
-
-/**
- * A context is the less abstract way Quickfall represents the code before converting it to assembly.
- */
-struct Context {
-	struct Variable** variables;
-	struct Function** functions;
-	int variableCount;
-	int functionCount;
-
-	// Hashmaps
-	struct Hashmap* variableHashMap;
-	struct Hashmap* functionHashMap;
-};
+#include "./ir.h"
 
 /**
  * Parses the AST tree into a context.
+ * @param tree the AST tree.
  */
-struct Context parseContext(struct ASTNode* node);
+IR_CTX* makeContext(AST_NODE* tree);
 
-char* compileV2(struct Context context);
+/**
+ * Compiles the Context tree to an executable named the provided name.
+ * @param ctx the IR context.
+ * @param char the output file name.
+ */
+void compile(IR_CTX* ctx, char* outputFileName);
 
 #endif
