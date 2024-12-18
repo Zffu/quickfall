@@ -40,6 +40,9 @@ SRC_DIR = src
 # The directory containing the benchmarks of Quickfall.
 BENCH_SRC_DIR = benchmarks
 
+# The directory containg the tests
+TESTS_SRC_DIR = tests
+
 #
 # Output definition
 #
@@ -63,6 +66,9 @@ SRCS = $(wildcard ${SRC_DIR}/**/*.c) $(wildcard ${SRC_DIR}/**/**/*.c)
 SOURCES = $(subst src/cli/main.c,,${SRCS})
 
 BENCH_SOURCES = ${SOURCES} $(wildcard ${BENCH_SRC_DIR}/**/*.c)
+
+TSRCS = ${SOURCES} $(wildcard ${TESTS_SRC_DIR}/*.c)
+TEST_SOURCES = $(subst tests/main.c,,${TSRCS})
 
 #
 # Building logic
@@ -90,5 +96,5 @@ $(BENCH_TARGET):
 	$(COMPILER) $(FLAGS) $(SOURCES) benchmarks/main.c -o $(BENCH_TARGET)
 
 $(TEST_TARGET):
-	$(COMPILER) $(FLAGS) $(SOURCES) tests/parser.c -o $(TEST_TARGET)
+	$(COMPILER) $(FLAGS) $(TEST_SOURCES) tests/main.c -o $(TEST_TARGET)
 
