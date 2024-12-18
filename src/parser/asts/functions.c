@@ -2,6 +2,7 @@
  * Function-related AST parsing.
  */
 
+#include <stdint.h>
 #include <stdlib.h>
 
 #include "./variables.h"
@@ -164,7 +165,7 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 
 	int buffSize = 32;
 	int buffIndex = 0;
-	char* buff = malloc(buffSize);
+	uint8_t* buff = malloc(sizeof(uint8_t) * buffSize);
 
 	for(; index <= result.size; ++index) {
 		struct Token t = result.tokens[index];
@@ -177,22 +178,11 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 			return NULL;
 		}
 
-		char c;
-		while(c = *t.value++) {
-			buff[buffIndex] = c;
-			buffIndex++;
-
-			if(buffIndex >= buffSize) {
-				buffSize *= 1.5;
-				buff = realloc(buff, buffSize);
-			}
-		}
+		buff[buffIndex] = strtol(t.value, NULL, 16);
 	}
 
-	buff[buffIndex] = '\0';
-
 	node->endingIndex = index;
-	node->value = buff;
+	node->value = (char*) buff;
 
 	return node;
 }
