@@ -160,7 +160,7 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 
 	node->left->left = params;
 
-	index = params->endingIndex;
+	index = params->endingIndex + 2;
 
 	int buffSize = 32;
 	int buffIndex = 0;
@@ -193,5 +193,6 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 
 	node->endingIndex = index;
 	node->value = buff;
+
 	return node;
 }

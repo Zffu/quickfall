@@ -83,7 +83,7 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				}
 
 				ctx->nodes[ctx->nodeIndex] = node;
-				ctx->nodeIndex;
+				ctx->nodeIndex++;
 
 				hashPut(ctx->nodeMap, hash, node);
 
@@ -112,6 +112,11 @@ IR_CTX* makeContext(AST_NODE* tree) {
 
 					tree->left->left = tree->left->left->next;
 				}
+
+				ctx->nodes[ctx->nodeIndex] = node;
+				ctx->nodeIndex++;
+
+				hashPut(ctx->nodeMap, hash, node);
 
 				break;
 
