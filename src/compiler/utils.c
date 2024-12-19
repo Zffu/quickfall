@@ -2,6 +2,9 @@
  * Utilities for the Quickfall compiler.
  */
 
+#include <stdio.h>
+#include <stdint.h>
+
 /**
  * Writes an 8 bit number into the file.
  */
