@@ -22,4 +22,14 @@ void write16(FILE* fptr, uint16_t value);
  */
 void write32(FILE* fptr, uint32_t value);
 
+/**
+ * Writes a string with a 8 bit padding.
+ */
+void writestr8(FILE* fptr, char* str);
+
+/**
+ * Writes a string with a 16 bit padding.
+ */
+void writestr16(FILE* fptr, char* str);
+
 #endif
