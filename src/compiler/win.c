@@ -176,4 +176,9 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
     writeWinSTDFields(fptr, text_sz, rdata_sz, idata_sz, bss_sz, text_rva, rdata_rva);
     writeWinSpecificFields(fptr, bss_rva, bss_sz, headers_sz);
     writeWinDataFields(fptr, import_dir_table_rva, import_dir_table_sz, iat_rva, iat_sz);
+
+    writeWinSection(fptr, ".text", text_sz, text_rva, align_to(text_sz, WIN_FILE_ALIGN), text_offset, 0x60000020);
+    writeWinSection(fptr, ".rdata", rdata_sz, rdata_rva, align_to(rdata_sz, WIN_FILE_ALIGN), rdata_offset, 0x40000040);
+    writeWinSection(fptr, ".idata", idata_sz, idata_rva, align_to(idata_sz, WIN_FILE_ALIGN), idata_offset, 0xc0000040);
+    writeWinSection(fptr, ".bss", bss_sz, bss_rva, 0, 0, 0xc0000080);
 }
