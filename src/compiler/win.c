@@ -11,14 +11,11 @@
 /**
  * Writes the windows executable header.
  */
-inline void writeWinExecutableHeader(FILE* f, int dosSize) {
-        uint32_t dos_stub_sz = WIN_DOS_HDR_SZ + dosSize;
-        uint32_t pe_offset = align_to(dos_stub_sz, 8);
-
+inline void writeWinExecutableHeader(FILE* f, int dosStubSZ, int peOffset) {
         write8(f, 'M');                /* Magic number (2 bytes) */
         write8(f, 'Z');
-        write16(f, dos_stub_sz % 512); /* Last page size */
-        write16(f, align_to(dos_stub_sz, 512) / 512); /* Pages in file */
+        write16(f, dosStubSZ % 512); /* Last page size */
+        write16(f, align_to(dosStubSZ, 512) / 512); /* Pages in file */
         write16(f, 0);                 /* Relocations */
         write16(f, WIN_DOS_HDR_SZ / 16);   /* Size of header in paragraphs */
         write16(f, 0);                 /* Minimum extra paragraphs needed */
@@ -38,17 +35,14 @@ inline void writeWinExecutableHeader(FILE* f, int dosSize) {
         write16(f, 0);                 /* OEM info */
         for (int i = 0; i < 10; i++)
                 write16(f, 0);         /* Reserved (10 words) */
-        write32(f, pe_offset);         /* File offset of PE header. */
+        write32(f, peOffset);         /* File offset of PE header. */
 }
 
 /**
  * Writes the Windows PE Signature.
  */
-inline void writeWinPESignature(FILE* fptr, int dosSize) {
-        uint32_t dos_stub_sz = WIN_DOS_HDR_SZ + dosSize;
-        uint32_t pe_offset = align_to(dos_stub_sz, 8);
-
-        seek(fptr, pe_offset);
+inline void writeWinPESignature(FILE* fptr, int peOffset) {
+        seek(fptr, peOffset);
         write8(fptr, 'P');
         write8(fptr, 'E');
         write8(fptr, 0);
@@ -60,8 +54,12 @@ inline void writeWinPESignature(FILE* fptr, int dosSize) {
  */
 inline void writeWinExecutable(FILE* fptr, uint32_t dos[]) {
     int dosSize = sizeof(dos);
+    
+    uint32_t dos_stub_sz = WIN_DOS_HDR_SZ + dosSize;
+    uint32_t pe_offset = align_to(dos_stub_sz, 8);
 
-    writeWinExecutableHeader(fptr, dosSize);
+    writeWinExecutableHeader(fptr, dosSize, pe_offset);
+    writeWinPESignature(fptr, pe_offset);
 
     for(int i = 0; i < dosSize; ++i) {
         write8(fptr, dos[i]);

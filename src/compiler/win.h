@@ -34,12 +34,12 @@
 /**
  * Writes the windows executable header.
  */
-inline void writeWinExecutableHeader(FILE* fptr, int dosSize);
+inline void writeWinExecutableHeader(FILE* fptr, int dosStubSZ, int peOffset);
 
 /**
  * Writes the Windows PE Signature.
  */
-inline void writeWinPESignature(FILE* fptr, int dosSize);
+inline void writeWinPESignature(FILE* fptr, int peOffset);
 
 /**
  * Writes the Windows COFF Header.
