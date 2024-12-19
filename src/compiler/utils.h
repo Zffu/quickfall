@@ -37,4 +37,9 @@ void writestr16(FILE* fptr, char* str);
  */
 void seek(FILE* fptr, long offset);
 
+/**
+ * Rounds the number to the provided alignment.
+ */
+uint32_t align_to(uint32_t value, uint32_t alignment);
+
 #endif
