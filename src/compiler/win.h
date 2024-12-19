@@ -61,4 +61,10 @@ inline void writeWinSpecificFields(FILE* fptr);
  */
 inline void writeWinSection(FILE* fptr, char* secName, int virtualSize, uint32_t virtualAddress, uint32_t size, uint32_t pointer, uint32_t characteristics);
 
+
+/**
+ * Writes a windows executable.
+ */
+inline void writeWinExecutable(FILE* fptr, uint32_t dos);
+
 #endif
