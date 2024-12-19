@@ -53,19 +53,34 @@ inline void writeWinPESignature(FILE* fptr, int peOffset) {
  * Writes the Windows COFF Header.
  */
 inline void writeWinCoffHeader(FILE* fptr, int numSections) {
-        write16(fptr, 0x14c); /* Machine: IMAGE_FILE_MACHINE_I386 */
-        write16(fptr, numSections); /* NumberOfSections */
-        write32(fptr, 0); /* TimeDateStamp */
-        write32(fptr, 0); /* PointerToSymbolTable */
-        write32(fptr, 0); /* NumberOfSymbols */
-        write16(fptr, WIN_OPT_HDR_SZ); /* SizeOfOptionalHeader */
-        write16(fptr, 0x103); /* Characteristics: no relocations, exec, 32-bit */
+    write16(fptr, 0x14c); /* Machine: IMAGE_FILE_MACHINE_I386 */
+    write16(fptr, numSections); /* NumberOfSections */
+    write32(fptr, 0); /* TimeDateStamp */
+    write32(fptr, 0); /* PointerToSymbolTable */
+    write32(fptr, 0); /* NumberOfSymbols */
+    write16(fptr, WIN_OPT_HDR_SZ); /* SizeOfOptionalHeader */
+    write16(fptr, 0x103); /* Characteristics: no relocations, exec, 32-bit */
+}
+
+/**
+ * Writes the Windows standart fields header.
+ */
+inline void writeWinSTDFields(FILE* fptr, int textSize, int rDataSize, int iDataSize, int bssSize, int textPtr, int rdataPtr) {
+    write16(fptr, 0x10b); /* Magic: PE32 */
+    write8(fptr, 0); /* MajorLinkerVersion */
+    write8(fptr, 0); /* MinorLinkerVersion */
+    write32(fptr, textSize); /* SizeOfCode */
+    write32(fptr, rDataSize + iDataSize); /* SizeOfInitializedData */
+    write32(fptr, bssSize); /* SizeOfUninitializedData */
+    write32(fptr, textPtr); /* AddressOfEntryPoint */
+    write32(fptr, textPtr); /* BaseOfCode */
+    write32(fptr, rdataPtr); /* BaseOfData */
 }
 
 /**
  * Writes a Windows executable.
  */
-inline void writeWinExecutable(FILE* fptr, uint32_t dos[]) {
+inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], uint32_t table[]) {
     int dosSize = sizeof(dos);
     
     uint32_t dos_stub_sz = WIN_DOS_HDR_SZ + dosSize;
@@ -77,4 +92,36 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[]) {
     for(int i = 0; i < dosSize; ++i) {
         write8(fptr, dos[i]);
     }
+
+    uint32_t num_sections = 4;
+
+    uint32_t headers_sz = pe_offset + WIN_PE_HDR_SZ + num_sections * WIN_SEC_HDR_SZ;
+
+    uint32_t text_rva = align_to(headers_sz, WIN_SEC_ALIGN);
+    uint32_t text_offset = align_to(headers_sz, WIN_FILE_ALIGN);
+    uint32_t text_sz = sizeof(program);
+
+    uint32_t rdata_rva = align_to(text_rva + text_sz, WIN_SEC_ALIGN);
+    uint32_t rdata_offset = align_to(text_offset + text_sz, WIN_FILE_ALIGN);
+    uint32_t rdata_sz = sizeof(program);
+
+    uint32_t idata_rva = align_to(rdata_rva + rdata_sz, WIN_SEC_ALIGN);
+    uint32_t idata_offset = align_to(rdata_offset + rdata_sz, WIN_FILE_ALIGN);
+
+    uint32_t num_imports = 4;
+    uint32_t iat_rva = idata_rva;
+    uint32_t iat_sz = (num_imports + 1) * WIN_IAT_ENTRY_SZ;
+    uint32_t import_dir_table_rva = iat_rva + iat_sz;
+    uint32_t import_dir_table_sz = 2 * WIN_IMPORT_DIR_ENTRY_SZ;
+    uint32_t import_lookup_table_rva = import_dir_table_rva +
+                                        import_dir_table_sz;
+    uint32_t name_table_rva = import_lookup_table_rva +
+                    (num_imports + 1) * WIN_IMPORT_LOOKUP_TBL_ENTRY_SZ;
+    uint32_t dll_name_rva = name_table_rva +
+                            num_imports * WIN_NAME_TABLE_ENTRY_SZ;
+    uint32_t name_table_sz = num_imports * WIN_NAME_TABLE_ENTRY_SZ + 16;
+    uint32_t idata_sz = name_table_rva + name_table_sz - idata_rva;
+
+    uint32_t bss_rva = align_to(idata_rva + idata_sz, WIN_SEC_ALIGN);
+    uint32_t bss_sz = 4096;
 }

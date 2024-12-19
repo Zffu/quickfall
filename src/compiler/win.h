@@ -49,7 +49,7 @@ inline void writeWinCoffHeader(FILE* fptr, int numSections);
 /**
  * Writes the Windows standart fields header.
  */
-inline void writeWinSTDFields(FILE* fptr);
+inline void writeWinSTDFields(FILE* fptr, int textSize, int rDataSize, int iDataSize, int bssSize, int textPtr, int rdataPtr);
 
 /**
  * Writes the Windows-specific fields header.
@@ -65,6 +65,6 @@ inline void writeWinSection(FILE* fptr, char* secName, int virtualSize, uint32_t
 /**
  * Writes a windows executable.
  */
-inline void writeWinExecutable(FILE* fptr, uint32_t dos);
+inline void writeWinExecutable(FILE* fptr, uint32_t dos[]);
 
 #endif
