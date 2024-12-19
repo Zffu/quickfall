@@ -102,6 +102,30 @@ inline void writeWinSpecificFields(FILE* f, int bssPtr, int bssSize, int headers
 }
 
 /**
+ * Write Windows data fields.
+ */
+inline void writeWinDataFields(FILE* f, int importDirTablePtr, int importDirTableSize, int iatPtr, int iatSize) {
+    write32(f, 0); write32(f, 0); /* Export Table. */
+    write32(f, importDirTablePtr); /* Import Table. */
+    write32(f, importDirTableSize);
+    write32(f, 0); write32(f, 0); /* Resource Table. */
+    write32(f, 0); write32(f, 0); /* Exception Table. */
+    write32(f, 0); write32(f, 0); /* Certificate Table. */
+    write32(f, 0); write32(f, 0); /* Base Relocation Table. */
+    write32(f, 0); write32(f, 0); /* Debug. */
+    write32(f, 0); write32(f, 0); /* Architecture. */
+    write32(f, 0); write32(f, 0); /* Global Ptr. */
+    write32(f, 0); write32(f, 0); /* TLS Table. */
+    write32(f, 0); write32(f, 0); /* Load Config Table. */
+    write32(f, 0); write32(f, 0); /* Bound Import. */
+    write32(f, iatPtr); /* Import Address Table. */
+    write32(f, iatSize);
+    write32(f, 0); write32(f, 0); /* Delay Import Descriptor. */
+    write32(f, 0); write32(f, 0); /* CLR Runtime Header. */
+    write32(f, 0); write32(f, 0); /* (Reserved). */
+}
+
+/**
  * Writes a Windows executable.
  */
 inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], uint32_t table[]) {
@@ -151,4 +175,5 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
 
     writeWinSTDFields(fptr, text_sz, rdata_sz, idata_sz, bss_sz, text_rva, rdata_rva);
     writeWinSpecificFields(fptr, bss_rva, bss_sz, headers_sz);
+    writeWinDataFields(fptr, import_dir_table_rva, import_dir_table_sz, iat_rva, iat_sz);
 }
