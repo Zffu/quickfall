@@ -44,7 +44,7 @@ inline void writeWinPESignature(FILE* fptr, int peOffset);
 /**
  * Writes the Windows COFF Header.
  */
-inline void writeWinCoffHeader(FILE* fptr);
+inline void writeWinCoffHeader(FILE* fptr, int numSections);
 
 /**
  * Writes the Windows standart fields header.

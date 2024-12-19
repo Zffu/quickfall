@@ -50,6 +50,19 @@ inline void writeWinPESignature(FILE* fptr, int peOffset) {
 }
 
 /**
+ * Writes the Windows COFF Header.
+ */
+inline void writeWinCoffHeader(FILE* fptr, int numSections) {
+        write16(fptr, 0x14c); /* Machine: IMAGE_FILE_MACHINE_I386 */
+        write16(fptr, numSections); /* NumberOfSections */
+        write32(fptr, 0); /* TimeDateStamp */
+        write32(fptr, 0); /* PointerToSymbolTable */
+        write32(fptr, 0); /* NumberOfSymbols */
+        write16(fptr, WIN_OPT_HDR_SZ); /* SizeOfOptionalHeader */
+        write16(fptr, 0x103); /* Characteristics: no relocations, exec, 32-bit */
+}
+
+/**
  * Writes a Windows executable.
  */
 inline void writeWinExecutable(FILE* fptr, uint32_t dos[]) {
