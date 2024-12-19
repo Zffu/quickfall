@@ -32,4 +32,9 @@ void writestr8(FILE* fptr, char* str);
  */
 void writestr16(FILE* fptr, char* str);
 
+/**
+ * Seeks to offset in a file.
+ */
+void seek(FILE* fptr, long offset);
+
 #endif
