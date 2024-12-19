@@ -2,6 +2,7 @@
  * Utilities for the Quickfall compiler.
  */
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 
@@ -11,7 +12,6 @@
 void write8(FILE *file, uint8_t value) {
 	if (fputc(value, file) == EOF) {
                 perror("fputc");
-                exit(1);
         }
 }
 
@@ -40,7 +40,6 @@ void writestr8(FILE *file, char *str) {
         size_t len, i;
 
         len = strlen(str);
-        assert(len <= 8 && "The string must fit in 8 bytes.");
 
         for (i = 0; i < 8; i++) {
                 write8(file, i < len ? str[i] : 0);
@@ -54,7 +53,6 @@ void writestr16(FILE *file, char *str) {
         size_t len, i;
 
         len = strlen(str);
-        assert(len <= 15 && "The string and terminator must fit in 16 bytes.");
 
         for (i = 0; i < 16; i++) {
                 write8(file, i < len ? str[i] : 0);
@@ -67,7 +65,6 @@ void writestr16(FILE *file, char *str) {
 void seek(FILE *file, long offset) {
         if (fseek(file, offset, SEEK_SET) == -1) {
                 perror("fseek");
-                exit(1);
         }
 }
 
