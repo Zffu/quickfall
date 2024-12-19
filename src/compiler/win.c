@@ -40,3 +40,30 @@ inline void writeWinExecutableHeader(FILE* f, int dosSize) {
                 write16(f, 0);         /* Reserved (10 words) */
         write32(f, pe_offset);         /* File offset of PE header. */
 }
+
+/**
+ * Writes the Windows PE Signature.
+ */
+inline void writeWinPESignature(FILE* fptr, int dosSize) {
+        uint32_t dos_stub_sz = WIN_DOS_HDR_SZ + dosSize;
+        uint32_t pe_offset = align_to(dos_stub_sz, 8);
+
+        seek(fptr, pe_offset);
+        write8(fptr, 'P');
+        write8(fptr, 'E');
+        write8(fptr, 0);
+        write8(fptr, 0);
+}
+
+/**
+ * Writes a Windows executable.
+ */
+inline void writeWinExecutable(FILE* fptr, uint32_t dos[]) {
+    int dosSize = sizeof(dos);
+
+    writeWinExecutableHeader(fptr, dosSize);
+
+    for(int i = 0; i < dosSize; ++i) {
+        write8(fptr, dos[i]);
+    }
+}
