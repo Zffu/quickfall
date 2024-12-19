@@ -77,6 +77,30 @@ inline void writeWinSTDFields(FILE* fptr, int textSize, int rDataSize, int iData
     write32(fptr, rdataPtr); /* BaseOfData */
 }
 
+inline void writeWinSpecificFields(FILE* f, int bssPtr, int bssSize, int headersSize) {
+    write32(f, WIN_IMAGE_BASE); /* ImageBase */
+    write32(f, WIN_SEC_ALIGN); /* SectionAlignment */
+    write32(f, WIN_FILE_ALIGN); /* FileAlignment */
+    write16(f, 3); /* MajorOperatingSystemVersion */
+    write16(f, 10); /* MinorOperatingSystemVersion*/
+    write16(f, 0); /* MajorImageVersion */
+    write16(f, 0); /* MinorImageVersion */
+    write16(f, 3); /* MajorSubsystemVersion */
+    write16(f, 10); /* MinorSubsystemVersion */
+    write32(f, 0); /* Win32VersionValue*/
+    write32(f, align_to(bssPtr + bssSize, WIN_SEC_ALIGN)); /* SizeOfImage */
+    write32(f, align_to(headersSize, WIN_FILE_ALIGN)); /* SizeOfHeaders */
+    write32(f, 0); /* Checksum */
+    write16(f, 3); /* Subsystem: Console */
+    write16(f, 0); /* DllCharacteristics */
+    write32(f, 0x100000); /* SizeOfStackReserve */
+    write32(f, 0x1000); /* SizeOfStackCommit */
+    write32(f, 0x100000); /* SizeOfHeapReserve */
+    write32(f, 0x1000); /* SizeOfHeapCommit */
+    write32(f, 0); /* LoadFlags */
+    write32(f, 16); /* NumberOfRvaAndSizes */
+}
+
 /**
  * Writes a Windows executable.
  */
@@ -124,4 +148,7 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
 
     uint32_t bss_rva = align_to(idata_rva + idata_sz, WIN_SEC_ALIGN);
     uint32_t bss_sz = 4096;
+
+    writeWinSTDFields(fptr, text_sz, rdata_sz, idata_sz, bss_sz, text_rva, rdata_rva);
+    writeWinSpecificFields(fptr, bss_rva, bss_sz, headers_sz);
 }

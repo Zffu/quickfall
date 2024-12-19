@@ -54,7 +54,7 @@ inline void writeWinSTDFields(FILE* fptr, int textSize, int rDataSize, int iData
 /**
  * Writes the Windows-specific fields header.
  */
-inline void writeWinSpecificFields(FILE* fptr);
+inline void writeWinSpecificFields(FILE* f, int bssPtr, int bssSize, int headersSize);
 
 /**
  * Writes a Windows section header.
@@ -65,6 +65,6 @@ inline void writeWinSection(FILE* fptr, char* secName, int virtualSize, uint32_t
 /**
  * Writes a windows executable.
  */
-inline void writeWinExecutable(FILE* fptr, uint32_t dos[]);
+inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], uint32_t table[]);
 
 #endif
