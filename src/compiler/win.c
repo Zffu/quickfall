@@ -194,7 +194,7 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
     seek(fptr, idata_offset);
 
     for(int i = 0; i < num_imports; ++i) {
-	write32(fptr, name_table_rva + i * WIN_TABLE_ENTRY_SZ);
+	write32(fptr, name_table_rva + i * WIN_NAME_TABLE_ENTRY_SZ);
     }
 
     write(fptr, 0);
