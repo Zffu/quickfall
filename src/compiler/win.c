@@ -199,4 +199,20 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
     write32(fptr, name_table_rva + 2 * NAME_TABLE_ENTRY_SZ);
     write32(fptr, name_table_rva + 3 * NAME_TABLE_ENTRY_SZ);
     write(fptr, 0);
+
+    // Windows STD Imports
+
+    // kernel32.dll
+    write32(fptr, import_lookup_table_rva);
+    write32(fptr, 0);
+    write32(fptr, 0);
+    write32(fptr, dll_name_rva);
+    write32(fptr, iat_rva);
+
+    // Null term
+    write32(f, 0);
+    write32(f, 0);
+    write32(f, 0);
+    write32(f, 0);
+    write32(f, 0);
 }
