@@ -128,7 +128,7 @@ inline void writeWinDataFields(FILE* f, int importDirTablePtr, int importDirTabl
 /**
  * Writes a Windows executable.
  */
-inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], uint32_t table[]) {
+inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], uint32_t table[], int numImports, char* imports[]) {
     int dosSize = sizeof(dos);
     
     uint32_t dos_stub_sz = WIN_DOS_HDR_SZ + dosSize;
