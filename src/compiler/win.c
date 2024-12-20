@@ -194,10 +194,10 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
 
     seek(fptr, idata_offset);
 
-    write32(fptr, name_table_tva + 0 * WIN_TABLE_ENTRY_SZ);
-    write32(fptr, name_table_rva + 1 * NAME_TABLE_ENTRY_SZ);
-    write32(fptr, name_table_rva + 2 * NAME_TABLE_ENTRY_SZ);
-    write32(fptr, name_table_rva + 3 * NAME_TABLE_ENTRY_SZ);
+    write32(fptr, name_table_tva + 0 * WIN_NAME_TABLE_ENTRY_SZ);
+    write32(fptr, name_table_rva + 1 * WIN_NAME_TABLE_ENTRY_SZ);
+    write32(fptr, name_table_rva + 2 * WIN_NAME_TABLE_ENTRY_SZ);
+    write32(fptr, name_table_rva + 3 * WIN_NAME_TABLE_ENTRY_SZ);
     write(fptr, 0);
 
     // Windows STD Imports
@@ -215,4 +215,23 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
     write32(f, 0);
     write32(f, 0);
     write32(f, 0);
+
+    write32(fptr, name_table_rva + 0 * WIN_NAME_TABLE_ENTRY_SZ);
+    write32(fptr, name_table_rva + 1 * WIN_NAME_TABLE_ENTRY_SZ);
+    write32(fptr, name_table_rva + 2 * WIN_NAME_TABLE_ENTRY_SZ);
+    write32(fptr, name_table_rva + 3 * WIN_NAME_TABLE_ENTRY_SZ);
+    write32(fptr, 0); // Null term
+
+    // Hint table
+    write16(fptr, 0);
+    writestr16(fptr, "GetStdHandle");
+    write16(fptr, 0);
+    writestr16(fptr, "ReadFile");
+    write16(fptr, 0);
+    writestr16(fptr, "WriteFile");
+    write16(fptr, 0);
+    writestr16(fptr, "ExitProcess");
+    
+    // We need to put the dll name somewhere.
+    writestr16(fptr, "kernel32.dll");
 }
