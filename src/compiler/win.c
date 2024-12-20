@@ -222,14 +222,11 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
     write32(fptr, 0); // Null term
 
     // Hint table
-    write16(fptr, 0);
-    writestr16(fptr, "GetStdHandle");
-    write16(fptr, 0);
-    writestr16(fptr, "ReadFile");
-    write16(fptr, 0);
-    writestr16(fptr, "WriteFile");
-    write16(fptr, 0);
-    writestr16(fptr, "ExitProcess");
+    
+    for(int i = 0; i < num_imports; ++i) {
+	write16(fptr, 0);
+	writestr16(fptr, imports[i]);
+    }
     
     // We need to put the dll name somewhere.
     writestr16(fptr, "kernel32.dll");
