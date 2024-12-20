@@ -2,6 +2,7 @@
  * Windows related Quickfall compiling.
  */
 
+#include <stdio.h>
 #include <stdint.h>
 
 #ifndef COMPILER_WIN
@@ -69,6 +70,6 @@ inline void writeWinSection(FILE* fptr, char* secName, int virtualSize, uint32_t
 /**
  * Writes a windows executable.
  */
-inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], uint32_t table[], int numImports, char* imports[]);
+void writeWinExecutable(FILE* fptr, uint8_t dos[], uint8_t program[], uint8_t table[], int numImports, char* imports[]);
 
 #endif

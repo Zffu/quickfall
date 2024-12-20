@@ -11,7 +11,7 @@
 /**
  * Writes the windows executable header.
  */
-inline void writeWinExecutableHeader(FILE* f, int dosStubSZ, int peOffset) {
+void writeWinExecutableHeader(FILE* f, int dosStubSZ, int peOffset) {
         write8(f, 'M');                /* Magic number (2 bytes) */
         write8(f, 'Z');
         write16(f, dosStubSZ % 512); /* Last page size */
@@ -41,7 +41,7 @@ inline void writeWinExecutableHeader(FILE* f, int dosStubSZ, int peOffset) {
 /**
  * Writes the Windows PE Signature.
  */
-inline void writeWinPESignature(FILE* fptr, int peOffset) {
+void writeWinPESignature(FILE* fptr, int peOffset) {
         seek(fptr, peOffset);
         write8(fptr, 'P');
         write8(fptr, 'E');
@@ -52,7 +52,7 @@ inline void writeWinPESignature(FILE* fptr, int peOffset) {
 /**
  * Writes the Windows COFF Header.
  */
-inline void writeWinCoffHeader(FILE* fptr, int numSections) {
+void writeWinCoffHeader(FILE* fptr, int numSections) {
     write16(fptr, 0x14c); /* Machine: IMAGE_FILE_MACHINE_I386 */
     write16(fptr, numSections); /* NumberOfSections */
     write32(fptr, 0); /* TimeDateStamp */
@@ -65,7 +65,7 @@ inline void writeWinCoffHeader(FILE* fptr, int numSections) {
 /**
  * Writes the Windows standart fields header.
  */
-inline void writeWinSTDFields(FILE* fptr, int textSize, int rDataSize, int iDataSize, int bssSize, int textPtr, int rdataPtr) {
+void writeWinSTDFields(FILE* fptr, int textSize, int rDataSize, int iDataSize, int bssSize, int textPtr, int rdataPtr) {
     write16(fptr, 0x10b); /* Magic: PE32 */
     write8(fptr, 0); /* MajorLinkerVersion */
     write8(fptr, 0); /* MinorLinkerVersion */
@@ -77,7 +77,7 @@ inline void writeWinSTDFields(FILE* fptr, int textSize, int rDataSize, int iData
     write32(fptr, rdataPtr); /* BaseOfData */
 }
 
-inline void writeWinSpecificFields(FILE* f, int bssPtr, int bssSize, int headersSize) {
+void writeWinSpecificFields(FILE* f, int bssPtr, int bssSize, int headersSize) {
     write32(f, WIN_IMAGE_BASE); /* ImageBase */
     write32(f, WIN_SEC_ALIGN); /* SectionAlignment */
     write32(f, WIN_FILE_ALIGN); /* FileAlignment */
@@ -104,7 +104,7 @@ inline void writeWinSpecificFields(FILE* f, int bssPtr, int bssSize, int headers
 /**
  * Write Windows data fields.
  */
-inline void writeWinDataFields(FILE* f, int importDirTablePtr, int importDirTableSize, int iatPtr, int iatSize) {
+void writeWinDataFields(FILE* f, int importDirTablePtr, int importDirTableSize, int iatPtr, int iatSize) {
     write32(f, 0); write32(f, 0); /* Export Table. */
     write32(f, importDirTablePtr); /* Import Table. */
     write32(f, importDirTableSize);
@@ -126,9 +126,27 @@ inline void writeWinDataFields(FILE* f, int importDirTablePtr, int importDirTabl
 }
 
 /**
+ * Writes a windows section.h
+ */
+void writeWinSection(FILE* fptr, char* secName, int virtualSize, uint32_t virtualAddress, uint32_t size, uint32_t ptr, uint32_t chrs) {
+	writestr8(fptr, secName);
+	write32(fptr, virtualSize);
+	write32(fptr, virtualAddress);
+	write32(fptr, size);
+	write32(fptr, ptr);
+
+	write32(fptr, 0);
+	write32(fptr, 0);
+	write16(fptr, 0);
+	write16(fptr, 0);
+
+	write32(fptr, chrs);
+}
+
+/**
  * Writes a Windows executable.
  */
-inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], uint32_t table[], int num_imports, char* imports[]) {
+void writeWinExecutable(FILE* fptr, uint8_t* dos, uint8_t* program, uint8_t* table, int num_imports, char* imports[]) {
     int dosSize = sizeof(dos);
     
     uint32_t dos_stub_sz = WIN_DOS_HDR_SZ + dosSize;
@@ -136,9 +154,12 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
 
     writeWinExecutableHeader(fptr, dosSize, pe_offset);
     writeWinPESignature(fptr, pe_offset);
+    writeWinCoffHeader(fptr, pe_offset);
 
-    for(int i = 0; i < dosSize; ++i) {
-        write8(fptr, dos[i]);
+    uint8_t b;
+
+    while(b = *dos++) {
+	write8(fptr, b);
     }
 
     uint32_t num_sections = 4;
@@ -197,7 +218,7 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
 	write32(fptr, name_table_rva + i * WIN_NAME_TABLE_ENTRY_SZ);
     }
 
-    write(fptr, 0);
+    write32(fptr, 0);
 
     // Windows STD Imports
 
@@ -209,11 +230,11 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
     write32(fptr, iat_rva);
 
     // Null term
-    write32(f, 0);
-    write32(f, 0);
-    write32(f, 0);
-    write32(f, 0);
-    write32(f, 0);
+    write32(fptr, 0);
+    write32(fptr, 0);
+    write32(fptr, 0);
+    write32(fptr, 0);
+    write32(fptr, 0);
 
     for(int i = 0; i < num_imports; ++i) {
 	write32(fptr, name_table_rva + i * WIN_NAME_TABLE_ENTRY_SZ);
@@ -230,4 +251,6 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
     
     // We need to put the dll name somewhere.
     writestr16(fptr, "kernel32.dll");
+    
+    fclose(fptr);
 }
