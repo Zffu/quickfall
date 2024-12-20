@@ -128,7 +128,7 @@ inline void writeWinDataFields(FILE* f, int importDirTablePtr, int importDirTabl
 /**
  * Writes a Windows executable.
  */
-inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], uint32_t table[], int numImports, char* imports[]) {
+inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], uint32_t table[], int num_imports, char* imports[]) {
     int dosSize = sizeof(dos);
     
     uint32_t dos_stub_sz = WIN_DOS_HDR_SZ + dosSize;
@@ -156,7 +156,6 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
     uint32_t idata_rva = align_to(rdata_rva + rdata_sz, WIN_SEC_ALIGN);
     uint32_t idata_offset = align_to(rdata_offset + rdata_sz, WIN_FILE_ALIGN);
 
-    uint32_t num_imports = 4;
     uint32_t iat_rva = idata_rva;
     uint32_t iat_sz = (num_imports + 1) * WIN_IAT_ENTRY_SZ;
     uint32_t import_dir_table_rva = iat_rva + iat_sz;
@@ -194,10 +193,10 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
 
     seek(fptr, idata_offset);
 
-    write32(fptr, name_table_tva + 0 * WIN_NAME_TABLE_ENTRY_SZ);
-    write32(fptr, name_table_rva + 1 * WIN_NAME_TABLE_ENTRY_SZ);
-    write32(fptr, name_table_rva + 2 * WIN_NAME_TABLE_ENTRY_SZ);
-    write32(fptr, name_table_rva + 3 * WIN_NAME_TABLE_ENTRY_SZ);
+    for(int i = 0; i < num_imports; ++i) {
+	write32(fptr, name_table_rva + i * WIN_TABLE_ENTRY_SZ);
+    }
+
     write(fptr, 0);
 
     // Windows STD Imports
@@ -216,10 +215,10 @@ inline void writeWinExecutable(FILE* fptr, uint32_t dos[], uint32_t program[], u
     write32(f, 0);
     write32(f, 0);
 
-    write32(fptr, name_table_rva + 0 * WIN_NAME_TABLE_ENTRY_SZ);
-    write32(fptr, name_table_rva + 1 * WIN_NAME_TABLE_ENTRY_SZ);
-    write32(fptr, name_table_rva + 2 * WIN_NAME_TABLE_ENTRY_SZ);
-    write32(fptr, name_table_rva + 3 * WIN_NAME_TABLE_ENTRY_SZ);
+    for(int i = 0; i < num_imports; ++i) {
+	write32(fptr, name_table_rva + i * WIN_NAME_TABLE_ENTRY_SZ);
+    }
+
     write32(fptr, 0); // Null term
 
     // Hint table
