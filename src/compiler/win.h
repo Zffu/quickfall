@@ -70,6 +70,6 @@ inline void writeWinSection(FILE* fptr, char* secName, int virtualSize, uint32_t
 /**
  * Writes a windows executable.
  */
-void writeWinExecutable(FILE* fptr, uint8_t dos[], uint8_t program[], uint8_t table[], int numImports, char* imports[]);
+void writeWinExecutable(FILE* fptr, uint8_t dos[], int dosSize, uint8_t program[], int programSize, uint8_t table[], int numImports, char* imports[]);
 
 #endif

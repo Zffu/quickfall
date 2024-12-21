@@ -146,20 +146,17 @@ void writeWinSection(FILE* fptr, char* secName, int virtualSize, uint32_t virtua
 /**
  * Writes a Windows executable.
  */
-void writeWinExecutable(FILE* fptr, uint8_t* dos, uint8_t* program, uint8_t* table, int num_imports, char* imports[]) {
-    int dosSize = sizeof(dos);
+void writeWinExecutable(FILE* fptr, uint8_t dos[], int dosSize, uint8_t program[], int programSize, uint8_t* table, int num_imports, char* imports[]) {
     
     uint32_t dos_stub_sz = WIN_DOS_HDR_SZ + dosSize;
     uint32_t pe_offset = align_to(dos_stub_sz, 8);
 
-    writeWinExecutableHeader(fptr, dosSize, pe_offset);
+    writeWinExecutableHeader(fptr, dos_stub_sz, pe_offset);
     writeWinPESignature(fptr, pe_offset);
     writeWinCoffHeader(fptr, pe_offset);
 
-    uint8_t b;
-
-    while(b = *dos++) {
-	write8(fptr, b);
+    for(int i = 0; i < dosSize; ++i) {
+	write8(fptr, dos[i]);
     }
 
     uint32_t num_sections = 4;
@@ -168,11 +165,11 @@ void writeWinExecutable(FILE* fptr, uint8_t* dos, uint8_t* program, uint8_t* tab
 
     uint32_t text_rva = align_to(headers_sz, WIN_SEC_ALIGN);
     uint32_t text_offset = align_to(headers_sz, WIN_FILE_ALIGN);
-    uint32_t text_sz = sizeof(program);
+    uint32_t text_sz = programSize;
 
     uint32_t rdata_rva = align_to(text_rva + text_sz, WIN_SEC_ALIGN);
     uint32_t rdata_offset = align_to(text_offset + text_sz, WIN_FILE_ALIGN);
-    uint32_t rdata_sz = sizeof(program);
+    uint32_t rdata_sz = programSize;
 
     uint32_t idata_rva = align_to(rdata_rva + rdata_sz, WIN_SEC_ALIGN);
     uint32_t idata_offset = align_to(rdata_offset + rdata_sz, WIN_FILE_ALIGN);
@@ -203,7 +200,7 @@ void writeWinExecutable(FILE* fptr, uint8_t* dos, uint8_t* program, uint8_t* tab
     writeWinSection(fptr, ".bss", bss_sz, bss_rva, 0, 0, 0xc0000080);
 
     seek(fptr, text_offset);
-    for (int i = 0; i < sizeof(program); i++) {
+    for (int i = 0; i < programSize; i++) {
         write8(fptr, program[i]);
     }
 
