@@ -53,6 +53,16 @@ AST_NODE* parseNodes(struct LexerResult result, int index, enum ASTNodeType type
 					index = node->endingIndex;
 				}
 				break;
+			case KEYWORD:
+				if(result.tokens[index + 1].type == PAREN_OPEN) {
+					node = parseFunctionInvoke(result, index);
+
+					if(node != NULL) {
+						current->next = node;
+						current = node;
+						index = node->endingIndex;
+					}
+				}
 
 		}
 	}

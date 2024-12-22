@@ -37,4 +37,6 @@ AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index);
  */
 AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index); 
 
+AST_NODE* parseFunctionInvoke(struct LexerResult result, int index);
+
 #endif

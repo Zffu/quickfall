@@ -186,3 +186,17 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 
 	return node;
 }
+
+AST_NODE* parseFunctionInvoke(struct LexerResult result, int index) {
+	AST_NODE* node = createASTNode(AST_FUNCTION_INVOKE);
+
+	node->value = result.tokens[index].value;
+	
+	AST_NODE* args = parseArguments(result, index + 1);
+
+	if(args != NULL) node->right = args;
+	
+	node->endingIndex = args->endingIndex;
+
+	return node;
+}
