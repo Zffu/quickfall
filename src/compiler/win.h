@@ -43,6 +43,6 @@ typedef struct PE_DOS_HEADER {
 	WORD e_oeminfo;
 	WORD e_res2[4];
 	long e_lfanew;
-} DOS_HEADER;
+} PE_DOS_HEADER;
 
 #endif
