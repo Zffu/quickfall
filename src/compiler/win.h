@@ -12,6 +12,13 @@ typedef DWORD unsigned long
 typedef WORD unsigned short
 
 /**
+ * PE Format Constants.
+ */
+//todo: we could use Windows bundled constants but that wouldn't be cross platform compiling.
+
+#define PE_HEADER_SIGNATURE 0x00004550
+
+/**
  * PE Format Structure Defintions.
  */
 //todo: we could use Windows bundled structures but that wouldn't be cross platform compiling.
