@@ -11,6 +11,6 @@
 /**
  * Compiles into PE format.
  */
-void compilePE(FILE* fptr, uint8_t program[], int programSize, uint8_t dos[], int dosSize);
+void compilePE(FILE* fptr, uint8_t program[], int programSize);
 
 #endif

@@ -10,42 +10,61 @@
 /**
  * Compiles into PE format.
  */
-void compilePE(FILE* fptr, uint8_t program[], int programSize, uint8_t dos[], int dosSize) {
+void compilePE(FILE* fptr, uint8_t program[], int programSize) {
+	PE_DOS_HEADER dos_header = {0};
+    dos_header.e_magic = 0x5A4D;  // "MZ"
+    dos_header.e_lfanew = sizeof(PE_DOS_HEADER);
 
-	uint8_t buff[512] = {0};
+    fwrite(&dos_header, sizeof(dos_header), 1, fptr);
 
-	PE_DOS_HEADER* dos_header = (PE_DOS_HEADER*) buff;
-	dos_header->e_magic = 0x5A4D;
-	
-	dos_header->e_cblp = (PE_DOS_HDR_SZ + dosSize) % 512;
-	dos_header->e_cp = (PE_DOS_HDR_SZ + dosSize) / 512;
-	dos_header->e_crlc = 0;
-	dos_header->e_cparhdr = PE_DOS_HDR_SZ / 16;
-	dos_header->e_minalloc = 0;
-	dos_header->e_maxalloc = 0;
-	
-	dos_header->e_ss = 0;
-	dos_header->e_sp = 0;
-	dos_header->e_csum = 0;
-	dos_header->e_ip = 0;
-	dos_header->e_cs = 0;
-	dos_header->e_lfarlc = PE_DOS_HDR_SZ;
-	dos_header->e_ovno = 0;
+    // Create NT headers
+    PE_NT_HEADERS nt_headers = {0};
+    nt_headers.Signature = 0x00004550;  // "PE\0\0"
+    nt_headers.Machine = 0x8664;        // x64
+    nt_headers.NumberOfSections = 1;
+    nt_headers.SizeOfOptionalHeader = sizeof(PE_OPTIONAL_HEADER);
+    nt_headers.Characteristics = 0x0002 | 0x0100; // Executable | 32-bit machine
 
-	for(int i = 0; i < 4; ++i) {
-		dos_header->e_res[i] = 0;
-	}
+    fwrite(&nt_headers, sizeof(nt_headers), 1, fptr);
 
-	dos_header->e_oemid = 0;
-	dos_header->e_oeminfo = 0;
+    // Create Optional header
+    PE_OPTIONAL_HEADER optional_header = {0};
+    optional_header.Magic = 0x20B;  // PE32+
+    optional_header.AddressOfEntryPoint = 0x1000;
+    optional_header.ImageBase = 0x400000;
+    optional_header.SectionAlignment = 0x1000;
+    optional_header.FileAlignment = 0x200;
+    optional_header.MajorOperatingSystemVersion = 5;
+    optional_header.MinorOperatingSystemVersion = 1;
+    optional_header.MajorSubsystemVersion = 5;
+    optional_header.MinorSubsystemVersion = 1;
+    optional_header.SizeOfImage = 0x2000;
+    optional_header.SizeOfHeaders = 0x200;
+    optional_header.Subsystem = 3;  // Windows CUI
+    optional_header.SizeOfStackReserve = 0x100000;
+    optional_header.SizeOfStackCommit = 0x1000;
+    optional_header.SizeOfHeapReserve = 0x100000;
+    optional_header.SizeOfHeapCommit = 0x1000;
+    optional_header.NumberOfRvaAndSizes = 16;
 
-	for(int i = 0; i < 10; ++i) {
-		dos_header->e_res2[i] = 0;
-	}
+    fwrite(&optional_header, sizeof(optional_header), 1, fptr);
 
-	dos_header->e_lfanew = sizeof(dos_header);
+    // Create Section header
+    PE_SECTION_HEADER section_header = {0};
+    memcpy(section_header.Name, ".text", 5);
+    section_header.Misc.VirtualSize = 0x1000;
+    section_header.VirtualAddress = 0x1000;
+    section_header.SizeOfRawData = 0x200;
+    section_header.PointerToRawData = 0x200;
+    section_header.Characteristics = 0x60000020;  // Code | Execute | Read
 
-	fwrite(buff, 1, sizeof(dos_header), fptr);
+    fwrite(&section_header, sizeof(section_header), 1, fptr);
 
-	fclose(fptr);
+    // Write padding to align headers
+    uint8_t padding[256] = {0};
+    fwrite(padding, 1, 0x200 - (sizeof(PE_DOS_HEADER) + sizeof(PE_NT_HEADERS) + sizeof(PE_OPTIONAL_HEADER) + sizeof(PE_SECTION_HEADER)), fptr);
+
+    fwrite(program, 1, programSize, fptr);
+
+    fclose(fptr);
 }
