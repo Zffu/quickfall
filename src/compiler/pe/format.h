@@ -12,95 +12,99 @@
  */
 
 #define PE_HEADER_SIGNATURE 0x00004550
+#define PE_DOS_HDR_SZ 0x40
 
 /**
  * Structures.
  */
 
-typedef struct PE_DOS_HEADER {
-	WORD   e_magic;                     // Magic number
-	WORD   e_cblp;                      // Bytes on last page of file
-	WORD   e_cp;                        // Pages in file
-	WORD   e_crlc;                      // Relocations
-	WORD   e_cparhdr;                   // Size of header in paragraphs
-	WORD   e_minalloc;                  // Minimum extra paragraphs needed
-	WORD   e_maxalloc;                  // Maximum extra paragraphs needed
-	WORD   e_ss;                        // Initial (relative) SS value
-	WORD   e_sp;                        // Initial SP value
-	WORD   e_csum;                      // Checksum
-	WORD   e_ip;                        // Initial IP value
-	WORD   e_cs;                        // Initial (relative) CS value
-    	WORD   e_lfarlc;                    // File address of relocation table
-    	WORD   e_ovno;                      // Overlay number
-    	WORD   e_res[4];                    // Reserved words
-    	WORD   e_oemid;                     // OEM identifier (for e_oeminfo)
-    	WORD   e_oeminfo;                   // OEM information; e_oemid specific
-    	WORD   e_res2[10];                  // Reserved words
-    	long   e_lfanew;                    // File address of new exe header
+#pragma pack(push, 1)
+
+typedef struct {
+    uint16_t e_magic;
+    uint16_t e_cblp;
+    uint16_t e_cp;
+    uint16_t e_crlc;
+    uint16_t e_cparhdr;
+    uint16_t e_minalloc;
+    uint16_t e_maxalloc;
+    uint16_t e_ss;
+    uint16_t e_sp;
+    uint16_t e_csum;
+    uint16_t e_ip;
+    uint16_t e_cs;
+    uint16_t e_lfarlc;
+    uint16_t e_ovno;
+    uint16_t e_res[4];
+    uint16_t e_oemid;
+    uint16_t e_oeminfo;
+    uint16_t e_res2[10];
+    uint32_t e_lfanew;
 } PE_DOS_HEADER;
 
-typedef struct PE_FILE_HEADER {
-	WORD machine;
-	WORD sec_num;
-	DWORD timestamp;
-	DWORD symbolTablePtr;
-	DWORD symbolCount;
-	WORD optionalHeaderSize;
-	WORD chrs;
-} PE_FILE_HEADER;
+typedef struct {
+    uint32_t Signature;
+    uint16_t Machine;
+    uint16_t NumberOfSections;
+    uint32_t TimeDateStamp;
+    uint32_t PointerToSymbolTable;
+    uint32_t NumberOfSymbols;
+    uint16_t SizeOfOptionalHeader;
+    uint16_t Characteristics;
+} PE_NT_HEADERS;
 
-typedef struct PE_OPTIONAL_HEADER {
-	WORD                 Magic;
-  	unsigned char                 MajorLinkerVersion;
-  	unsigned char                 MinorLinkerVersion;
-  	DWORD                SizeOfCode;
-  	DWORD                SizeOfInitializedData;
-  	DWORD                SizeOfUninitializedData;
-  	DWORD                AddressOfEntryPoint;
-  	DWORD                BaseOfCode;
-  	DWORD                BaseOfData;
-  	DWORD                ImageBase;
-  	DWORD                SectionAlignment;
-  	DWORD                FileAlignment;
-  	WORD                 MajorOperatingSystemVersion;
-  	WORD                 MinorOperatingSystemVersion;
-  	WORD                 MajorImageVersion;
-  	WORD                 MinorImageVersion;
-  	WORD                 MajorSubsystemVersion;
-  	WORD                 MinorSubsystemVersion;
-  	DWORD                Win32VersionValue;
-  	DWORD                SizeOfImage;
-  	DWORD                SizeOfHeaders;
-  	DWORD                CheckSum;
-  	WORD                 Subsystem;
-  	WORD                 DllCharacteristics;
-	DWORD                SizeOfStackReserve;
- 	DWORD                SizeOfStackCommit;
-  	DWORD                SizeOfHeapReserve;
-  	DWORD                SizeOfHeapCommit;
-  	DWORD                LoaderFlags;
-  	DWORD                NumberOfRvaAndSizes;
+typedef struct {
+    uint16_t Magic;
+    uint8_t MajorLinkerVersion;
+    uint8_t MinorLinkerVersion;
+    uint32_t SizeOfCode;
+    uint32_t SizeOfInitializedData;
+    uint32_t SizeOfUninitializedData;
+    uint32_t AddressOfEntryPoint;
+    uint32_t BaseOfCode;
+    uint64_t ImageBase;
+    uint32_t SectionAlignment;
+    uint32_t FileAlignment;
+    uint16_t MajorOperatingSystemVersion;
+    uint16_t MinorOperatingSystemVersion;
+    uint16_t MajorImageVersion;
+    uint16_t MinorImageVersion;
+    uint16_t MajorSubsystemVersion;
+    uint16_t MinorSubsystemVersion;
+    uint32_t Win32VersionValue;
+    uint32_t SizeOfImage;
+    uint32_t SizeOfHeaders;
+    uint32_t CheckSum;
+    uint16_t Subsystem;
+    uint16_t DllCharacteristics;
+    uint64_t SizeOfStackReserve;
+    uint64_t SizeOfStackCommit;
+    uint64_t SizeOfHeapReserve;
+    uint64_t SizeOfHeapCommit;
+    uint32_t LoaderFlags;
+    uint32_t NumberOfRvaAndSizes;
+    struct {
+        uint32_t VirtualAddress;
+        uint32_t Size;
+    } DataDirectory[16];
 } PE_OPTIONAL_HEADER;
 
-typedef struct PE_HEADER {
-	DWORD signature;
-	PE_FILE_HEADER file_header;
-	PE_OPTIONAL_HEADER optional_header;
-} PE_HEADER;
-
-typedef struct PE_SECTION_HEADER {
-	unsigned char name[8];
-	union {
-		DWORD physical_addr;
-		DWORD virtual_size;
-	} Misc;
-	DWORD virtual_addr;
-	DWORD raw_sz;
-	DWORD raw_ptr;
-	DWORD reloc_ptr;
-	DWORD lnum_ptr;
-	WORD reloc_sz;
-	WORD lnum_sz;
-	DWORD chrs;
+typedef struct {
+    uint8_t Name[8];
+    union {
+        uint32_t PhysicalAddress;
+        uint32_t VirtualSize;
+    } Misc;
+    uint32_t VirtualAddress;
+    uint32_t SizeOfRawData;
+    uint32_t PointerToRawData;
+    uint32_t PointerToRelocations;
+    uint32_t PointerToLinenumbers;
+    uint16_t NumberOfRelocations;
+    uint16_t NumberOfLinenumbers;
+    uint32_t Characteristics;
 } PE_SECTION_HEADER;
+
+#pragma pack(pop)
+
 #endif
