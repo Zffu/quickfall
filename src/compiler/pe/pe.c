@@ -55,7 +55,7 @@ void compilePE(FILE* fptr, uint8_t program[], int programSize) {
     memcpy(section_header.Name, ".text", 5);
     section_header.Misc.VirtualSize = 0x1000;
     section_header.VirtualAddress = 0x1000;
-    section_header.SizeOfRawData = 0x200;
+    section_header.SizeOfRawData = programSize;
     section_header.PointerToRawData = 0x200;
     section_header.Characteristics = 0x60000020;  // Code | Execute | Read
 
