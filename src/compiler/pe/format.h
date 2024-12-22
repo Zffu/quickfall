@@ -17,7 +17,7 @@
  * Structures.
  */
 
-typdef struct PE_DOS_HEADER {
+typedef struct PE_DOS_HEADER {
 	WORD   e_magic;                     // Magic number
 	WORD   e_cblp;                      // Bytes on last page of file
 	WORD   e_cp;                        // Pages in file
@@ -49,10 +49,10 @@ typedef struct PE_FILE_HEADER {
 	WORD chrs;
 } PE_FILE_HEADER;
 
-typdef struct PE_OPTIONAL_HEADER {
+typedef struct PE_OPTIONAL_HEADER {
 	WORD                 Magic;
-  	BYTE                 MajorLinkerVersion;
-  	BYTE                 MinorLinkerVersion;
+  	unsigned char                 MajorLinkerVersion;
+  	unsigned char                 MinorLinkerVersion;
   	DWORD                SizeOfCode;
   	DWORD                SizeOfInitializedData;
   	DWORD                SizeOfUninitializedData;
@@ -89,7 +89,7 @@ typedef struct PE_HEADER {
 } PE_HEADER;
 
 typedef struct PE_SECTION_HEADER {
-	byte name[8];
+	unsigned char name[8];
 	union {
 		DWORD physical_addr;
 		DWORD virtual_size;
