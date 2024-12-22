@@ -17,7 +17,7 @@
  * Structures.
  */
 
-typdef PE_DOS_HEADER {
+typdef struct PE_DOS_HEADER {
 	WORD   e_magic;                     // Magic number
 	WORD   e_cblp;                      // Bytes on last page of file
 	WORD   e_cp;                        // Pages in file
@@ -37,6 +37,6 @@ typdef PE_DOS_HEADER {
     	WORD   e_oeminfo;                   // OEM information; e_oemid specific
     	WORD   e_res2[10];                  // Reserved words
     	long   e_lfanew;                    // File address of new exe header
-}
+} PE_DOS_HEADER;
 
 #endif
