@@ -88,5 +88,19 @@ typedef struct PE_HEADER {
 	PE_OPTIONAL_HEADER optional_header;
 } PE_HEADER;
 
-
+typedef struct PE_SECTION_HEADER {
+	byte name[8];
+	union {
+		DWORD physical_addr;
+		DWORD virtual_size;
+	} Misc;
+	DWORD virtual_addr;
+	DWORD raw_sz;
+	DWORD raw_ptr;
+	DWORD reloc_ptr;
+	DWORD lnum_ptr;
+	WORD reloc_sz;
+	WORD lnum_sz;
+	DWORD chrs;
+} PE_SECTION_HEADER;
 #endif
