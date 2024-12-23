@@ -49,6 +49,9 @@ struct IRContext {
 	int nodeIndex;
 
 	struct Hashmap* nodeMap;
+
+	IR_NODE* mainFunc;
+
 };
 
 typedef struct IRContext IR_CTX;

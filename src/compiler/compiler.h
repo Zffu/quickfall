@@ -19,8 +19,8 @@ IR_CTX* makeContext(AST_NODE* tree);
 /**
  * Compiles the Context tree to an executable named the provided name.
  * @param ctx the IR context.
- * @param char the output file name.
+ * @param char the output file.
  */
-void compile(IR_CTX* ctx, char* outputFileName);
+void compile(IR_CTX* ctx, FILE* outputFileName);
 
 #endif

@@ -2,6 +2,7 @@
  * The compiler of Quickfall.
  */
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -26,9 +27,7 @@ IR_CTX* makeContext(AST_NODE* tree) {
 	ctx->nodeIndex = 0;
 	ctx->nodeMap = createHashmap(512,200);
 
-	while(tree->next != NULL) {
-		tree = tree->next;
-
+	while(tree != NULL) {
 		switch(tree->type) {
 			case AST_VARIABLE_DECLARATION:
 
@@ -59,10 +58,10 @@ IR_CTX* makeContext(AST_NODE* tree) {
 
 			case AST_FUNCTION_DECLARATION:
 				
-				hash = hashstr(tree->left->value);
+				hash = hashstr(tree->left->right->value);
 
 				if(hashGet(ctx->nodeMap, hash) != NULL) {
-					printf("Function %s was already declared!\n", tree->left->value);
+					printf("Function %s was already declared!\n", tree->left->right->value);
 					return NULL;
 				}
 
@@ -86,9 +85,9 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				ctx->nodeIndex++;
 
 				hashPut(ctx->nodeMap, hash, node);
+				break;
 
 			case AST_ASM_FUNCTION_DECLARATION:
-
 				hash = hashstr(tree->left->right->value);
 
 				if(hashGet(ctx->nodeMap, hash) != NULL) {
@@ -121,6 +120,8 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				break;
 
 		}
+
+		tree = tree->next;
 	}
 
 	return ctx;
@@ -131,6 +132,45 @@ IR_CTX* makeContext(AST_NODE* tree) {
  * @param ctx the IR context.
  * @param char the output file name.
  */
-void compile(IR_CTX* ctx, char* outputFileName) {
+void compile(IR_CTX* ctx, FILE* out) {
+
+	uint8_t* buff = malloc(sizeof(uint8_t) * 512);
+	int i = 0;
+
+	int h = hashstr("main");
+
+	if(hashGet(ctx->nodeMap, h) == NULL) {
+		printf("Error: the main function wasn't defined!\n");
+		return;
+	}
+
+	IR_NODE* node = hashGet(ctx->nodeMap, h);
+
+	if(node->nodeType != IR_FUNCTION) {
+		printf("Error: main must be a function!\n");
+		return;
+	}
+
+	while(node->tree->next != NULL) {
+
+		if(node->tree->type == AST_FUNCTION_INVOKE) {
+			int hash = hashstr(node->tree->value);
+
+			AST_NODE* wa = hashGet(ctx->nodeMap, hash);
+
+			if(wa == NULL) {
+				printf("Error: The %s function doesn't exist!\n", node->tree->value);
+				return;
+			}
+
+			if(wa->type == IR_ASM_FUNCTION) {
+				printf("%d", wa->value);
+			}
+		}
+
+		node->tree = node->tree->next;
+	}
+
+
 
 }
