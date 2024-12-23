@@ -13,6 +13,7 @@
 AST_NODE* createASTNode(enum ASTNodeType type) {
 	AST_NODE* node = malloc(sizeof(AST_NODE));
 
+	node->valueSize = 0;
 	node->type = type;
 	node->left = NULL;
 	node->right = NULL;

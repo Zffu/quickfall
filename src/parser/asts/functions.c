@@ -62,7 +62,10 @@ AST_NODE* parseParameters(struct LexerResult result, int index) {
 			case PAREN_CLOSE:
 				root->endingIndex = index;
 				return root;
+			case PAREN_OPEN:
+				continue;
 			default:
+				printf("Type: %d", t.type);
 				return NULL;
 
 		}
@@ -109,6 +112,7 @@ AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index) {
 	node->left = createASTNode(AST_FUNCTION_HEADER);
 
 	if(result.tokens[index].type != KEYWORD) {
+		printf("jd");
 		return NULL;
 	}
 
@@ -136,7 +140,9 @@ AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index) {
 
 	node->left->left = params;
 
-	node->right = parseNodes(result, params->endingIndex, AST_ROOT);
+	node->right = parseNodes(result, params->endingIndex, AST_FUNCTION_ROOT);
+
+	node->endingIndex = node->right->endingIndex;
 
 	return node;
 }
@@ -174,15 +180,37 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 			break;
 		}
 
-		if(t.type != STRING) {
+		if(t.type != NUMBER) {
 			return NULL;
 		}
 
 		buff[buffIndex] = strtol(t.value, NULL, 16);
+		buffIndex++;
 	}
 
 	node->endingIndex = index;
-	node->value = (char*) buff;
+
+	buff = realloc(buff, sizeof(uint8_t) * buffIndex);
+	
+	node->valueSize = buffIndex;
+	node->value = buff;
+
+	return node;
+}
+
+AST_NODE* parseFunctionInvoke(struct LexerResult result, int index) {
+	AST_NODE* node = createASTNode(AST_FUNCTION_INVOKE);
+
+	node->value = result.tokens[index].value;
+	
+	AST_NODE* args = parseArguments(result, index + 2);
+
+	node->endingIndex = index;
+
+	if(args != NULL) {
+		node->right = args;
+		node->endingIndex = args->endingIndex;
+	}
 
 	return node;
 }

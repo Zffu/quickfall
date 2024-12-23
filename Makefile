@@ -82,12 +82,13 @@ prepare_build:
 	@echo [INFO] Using "${COMPILER}" as a compiler!
 	@echo [INFO] Detected current operating system as ${DETECTED_OS}
 	$(CHECK_COMMANDS)
-	@echo [INFO] Clearing old builds
+	@echo [INFO] Starting building logic
+
+clean:
 	$(RM) build
 	$(RM) $(TARGET)
 	$(RM) $(TEST_TARGET)
 	$(RM) $(BENCH_TARGET)
-	@echo [INFO] Starting building logic
 
 $(TARGET):
 	$(COMPILER) $(FLAGS) $(SOURCES) src/cli/main.c -o $(TARGET)

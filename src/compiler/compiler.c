@@ -2,6 +2,7 @@
  * The compiler of Quickfall.
  */
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,6 +13,8 @@
 
 #include "../utils/hash.h"
 #include "../utils/hashmap.h"
+
+#include "./pe/pe.h"
 
 /**
  * Parses the AST tree into a context.
@@ -26,9 +29,7 @@ IR_CTX* makeContext(AST_NODE* tree) {
 	ctx->nodeIndex = 0;
 	ctx->nodeMap = createHashmap(512,200);
 
-	while(tree->next != NULL) {
-		tree = tree->next;
-
+	while(tree != NULL) {
 		switch(tree->type) {
 			case AST_VARIABLE_DECLARATION:
 
@@ -59,10 +60,10 @@ IR_CTX* makeContext(AST_NODE* tree) {
 
 			case AST_FUNCTION_DECLARATION:
 				
-				hash = hashstr(tree->left->value);
+				hash = hashstr(tree->left->right->value);
 
 				if(hashGet(ctx->nodeMap, hash) != NULL) {
-					printf("Function %s was already declared!\n", tree->left->value);
+					printf("Function %s was already declared!\n", tree->left->right->value);
 					return NULL;
 				}
 
@@ -77,18 +78,20 @@ IR_CTX* makeContext(AST_NODE* tree) {
 					node->variables[node->variableIndex] = var;
 					node->variableIndex++;
 
-					hashPut(node->variableMap, hashstr(tree->right->value), var);
+					hashPut(node->variableMap, hashstr(tree->left->left->right->value), var);
 
 					tree->left->left = tree->left->left->next;
 				}
+
+				node->tree = tree->right;
 
 				ctx->nodes[ctx->nodeIndex] = node;
 				ctx->nodeIndex++;
 
 				hashPut(ctx->nodeMap, hash, node);
+				break;
 
 			case AST_ASM_FUNCTION_DECLARATION:
-
 				hash = hashstr(tree->left->right->value);
 
 				if(hashGet(ctx->nodeMap, hash) != NULL) {
@@ -99,6 +102,7 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				node = createIRNode(IR_ASM_FUNCTION, tree->left->right->value);
 
 				node->value = tree->value;
+				node->valueSize = tree->valueSize;
 
 				while(tree->left->left->next != NULL) {
 
@@ -121,6 +125,8 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				break;
 
 		}
+
+		tree = tree->next;
 	}
 
 	return ctx;
@@ -131,6 +137,52 @@ IR_CTX* makeContext(AST_NODE* tree) {
  * @param ctx the IR context.
  * @param char the output file name.
  */
-void compile(IR_CTX* ctx, char* outputFileName) {
+void compile(IR_CTX* ctx, FILE* out) {
 
+	uint8_t* buff = malloc(sizeof(uint8_t) * 512);
+	int i = 0;
+
+	int h = hashstr("main");
+
+	if(hashGet(ctx->nodeMap, h) == NULL) {
+		printf("Error: the main function wasn't defined!\n");
+		return;
+	}
+
+	IR_NODE* node = hashGet(ctx->nodeMap, h);
+
+	if(node->nodeType != IR_FUNCTION) {
+		printf("Error: main must be a function!\n");
+		return;
+	}
+
+	while(node->tree != NULL) {
+
+		if(node->tree->type == AST_FUNCTION_INVOKE) {
+
+			int hash = hashstr(node->tree->value);
+
+			IR_NODE* wa = hashGet(ctx->nodeMap, hash);
+
+			if(wa == NULL) {
+				printf("Error: The %s function doesn't exist!\n", node->tree->value);
+				return;
+			}
+
+			if(wa->nodeType == IR_ASM_FUNCTION) {
+				unsigned char b;
+				unsigned char* ptr = (unsigned char*) wa->value;
+
+				for(int ii = 0; ii < wa->valueSize; ++ii) {
+					buff[i] = ptr[ii];
+					++i;
+				}
+			}
+		}
+
+		node->tree = node->tree->next;
+	}
+
+	//todo: change format based on user
+	compilePE(out, buff, i);
 }

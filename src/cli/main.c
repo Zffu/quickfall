@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "../lexer/lexer.h"
 
@@ -16,6 +17,7 @@
 #include "../parser/parser.h"
 
 #include "../compiler/compiler.h"
+#include "../compiler/pe/pe.h"
 #include "../compiler/ir.h"
 
 #include "../utils/logging.c"
@@ -23,6 +25,9 @@
 // Version
 #define VERSION "0.1.0"
 
+uint8_t code_section[6] = {
+	0xB8, 0x4C, 0x00, 0x00, 0x00, 0xC3
+};
 
 void showCommandEntry(char* commandName, char* description, int argumentCount, char* argumentNames[], char* argumentDescriptions[]) {
 	printf("\n    >  %s\n\n       %s%sDescription%s: %s\n", commandName, STYLE_BOLD, STYLE_UNDERLINE, RESET, description);
@@ -108,11 +113,11 @@ int main(int argc, char* argv[]) {
 
 			char* buff = malloc(size + 1); // Allocates one more byte for the \0 char.
 
-			fread(buff, 1, size, fptr);
+			size = fread(buff, 1, size, fptr);
 			buff[size] = '\0';
 			fclose(fptr);
 
-			struct LexerResult result = runLexer(buff);
+			struct LexerResult result = runLexer(buff, size);
 			struct ASTNode* root = parseNodes(result, 0, AST_ROOT);
 
 			IR_CTX* ctx = makeContext(root);
@@ -122,7 +127,10 @@ int main(int argc, char* argv[]) {
 				return -1;
 			}
 
-			compile(ctx, outputFile);
+			fptr = fopen(outputFile, "w");
+			compile(ctx, fptr);
+
+			//compilePE(fptr, code_section, sizeof(code_section));
 
 			break;
 		case 'v':

@@ -123,7 +123,7 @@ void main(int argc, char* argv[]) {
         endTimer(i, 0);
         startTimer();
 
-        struct LexerResult result = runLexer(buff);
+        struct LexerResult result = runLexer(buff, size);
 
 	free(buff);
 
@@ -136,20 +136,14 @@ void main(int argc, char* argv[]) {
         endTimer(i, 2);
         startTimer();
 
-        struct Context ctx = parseContext(node);
-	char* compiled = compileV2(ctx);
+	fptr = fopen("output.txt", "w");
 
-        endTimer(i, 3);
-		
-        startTimer();
-	
-        fptr = fopen("output.txt", "w");
-	fprintf(fptr, compiled);
+        IR_CTX* ctx = makeContext(node);
+	compile(ctx, fptr);
+
 	fclose(fptr);
 
-        endTimer(i, 4);
-
-	free(compiled);
+        endTimer(i, 3);
     }
 
     printf("========= Benchmarking Results =========\n");

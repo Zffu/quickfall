@@ -31,7 +31,8 @@ struct IRNode {
 	char* type;
 
 	// Variable Properties
-	char* value;
+	void* value;
+	int valueSize;
 
 	// Function Properties
 	struct IRNode** variables;
@@ -49,6 +50,9 @@ struct IRContext {
 	int nodeIndex;
 
 	struct Hashmap* nodeMap;
+
+	IR_NODE* mainFunc;
+
 };
 
 typedef struct IRContext IR_CTX;

@@ -23,7 +23,11 @@ enum ASTNodeType {
 
 	AST_FUNCTION_DECLARATION,
 	AST_FUNCTION_HEADER,
-	
+
+	AST_FUNCTION_INVOKE,
+
+	AST_FUNCTION_ROOT,
+
 	AST_MATH_OPERATOR,
 	AST_MATH_OPERATION,
 	AST_MATH_OP_HEADER,
@@ -41,6 +45,8 @@ struct ASTNode {
 	struct ASTNode* next;
 
 	enum ASTNodeType type;
+	
+	int valueSize;
 	char* value;
 	int endingIndex; // The index which the parsing ended
 

@@ -20,7 +20,7 @@ void pushToken(struct LexerResult* result, enum TokenType type) {
     result->size++;
 }
 
-struct LexerResult runLexer(char* string) {
+struct LexerResult runLexer(char* string, int size) {
 	struct LexerResult result;
 	result.size = 0;
 
@@ -28,22 +28,35 @@ struct LexerResult runLexer(char* string) {
 
 	char c;
 
-	while(c = *string++) {
+	for(int i = 0; i < size; ++i) {
+
+		c = string[i];
 
 		int buffLen = 32;
 		char* buff = malloc(buffLen);
+		buff[0] = '\0';
 
 		if(c == ' ' || c == '\t' || c == '\n') {
 			continue;
-		} else if (isdigit(c)) {
+		} 
+		else if(c == '\0') {
+			break;
+		}
+		else if (isdigit(c)) {
 			int numLen = 0;
 
-			while(isdigit(c) || c == 'x') {
+			int foundX = 0;
+			while(isdigit(c) || c == 'x' || (foundX == 1 && c != '\0' && c != ' ' && c != '\n')) {
 				buff[numLen] = c;
 				numLen++;
 
-				c = *string++;
+				if(c == 'x') foundX = 1;
+
+				++i;
+				c = string[i];
 			}
+
+			buff[numLen] = '\0';
 
 			pushToken(&result, NUMBER);
 			result.tokens[result.size - 1].value = buff;
@@ -55,21 +68,27 @@ struct LexerResult runLexer(char* string) {
 				buff[strLen] = c;
 				strLen++;
 
-				c = *string++;
+				++i;
+				c = string[i];
 			}
 
 			pushToken(&result, STRING);
 			result.tokens[result.size - 1].value = buff;
 
 		} else if(isalpha(c)) {
+
 			int keywordLen = 0;
 			
 			while(isalpha(c)) {
 				buff[keywordLen] = c;
+				buff[keywordLen + 1] = '\0';
 				keywordLen++;
 
-				c = *string++;
+				++i;
+				c = string[i];
 			}
+
+			if(keywordLen > 0) --i;
 
 			if(strcmp(buff, "func") == 0) {
 				pushToken(&result, FUNCTION);
