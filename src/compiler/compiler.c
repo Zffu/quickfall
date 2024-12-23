@@ -14,6 +14,8 @@
 #include "../utils/hash.h"
 #include "../utils/hashmap.h"
 
+#include "./pe/pe.h"
+
 /**
  * Parses the AST tree into a context.
  * @param tree the AST tree.
@@ -76,10 +78,12 @@ IR_CTX* makeContext(AST_NODE* tree) {
 					node->variables[node->variableIndex] = var;
 					node->variableIndex++;
 
-					hashPut(node->variableMap, hashstr(tree->right->value), var);
+					hashPut(node->variableMap, hashstr(tree->left->left->right->value), var);
 
 					tree->left->left = tree->left->left->next;
 				}
+
+				node->tree = tree->right;
 
 				ctx->nodes[ctx->nodeIndex] = node;
 				ctx->nodeIndex++;
@@ -98,6 +102,7 @@ IR_CTX* makeContext(AST_NODE* tree) {
 				node = createIRNode(IR_ASM_FUNCTION, tree->left->right->value);
 
 				node->value = tree->value;
+				node->valueSize = tree->valueSize;
 
 				while(tree->left->left->next != NULL) {
 
@@ -151,26 +156,33 @@ void compile(IR_CTX* ctx, FILE* out) {
 		return;
 	}
 
-	while(node->tree->next != NULL) {
+	while(node->tree != NULL) {
 
 		if(node->tree->type == AST_FUNCTION_INVOKE) {
+
 			int hash = hashstr(node->tree->value);
 
-			AST_NODE* wa = hashGet(ctx->nodeMap, hash);
+			IR_NODE* wa = hashGet(ctx->nodeMap, hash);
 
 			if(wa == NULL) {
 				printf("Error: The %s function doesn't exist!\n", node->tree->value);
 				return;
 			}
 
-			if(wa->type == IR_ASM_FUNCTION) {
-				printf("%d", wa->value);
+			if(wa->nodeType == IR_ASM_FUNCTION) {
+				unsigned char b;
+				unsigned char* ptr = (unsigned char*) wa->value;
+
+				for(int ii = 0; ii < wa->valueSize; ++ii) {
+					buff[i] = ptr[ii];
+					++i;
+				}
 			}
 		}
 
 		node->tree = node->tree->next;
 	}
 
-
-
+	//todo: change format based on user
+	compilePE(out, buff, i);
 }

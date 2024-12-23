@@ -45,6 +45,8 @@ struct ASTNode {
 	struct ASTNode* next;
 
 	enum ASTNodeType type;
+	
+	int valueSize;
 	char* value;
 	int endingIndex; // The index which the parsing ended
 

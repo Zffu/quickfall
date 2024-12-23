@@ -31,7 +31,8 @@ struct IRNode {
 	char* type;
 
 	// Variable Properties
-	char* value;
+	void* value;
+	int valueSize;
 
 	// Function Properties
 	struct IRNode** variables;

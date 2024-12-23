@@ -180,15 +180,20 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 			break;
 		}
 
-		if(t.type != STRING) {
+		if(t.type != NUMBER) {
 			return NULL;
 		}
 
 		buff[buffIndex] = strtol(t.value, NULL, 16);
+		buffIndex++;
 	}
 
 	node->endingIndex = index;
-	node->value = (char*) buff;
+
+	buff = realloc(buff, sizeof(uint8_t) * buffIndex);
+	
+	node->valueSize = buffIndex;
+	node->value = buff;
 
 	return node;
 }
@@ -198,11 +203,14 @@ AST_NODE* parseFunctionInvoke(struct LexerResult result, int index) {
 
 	node->value = result.tokens[index].value;
 	
-	AST_NODE* args = parseArguments(result, index + 1);
+	AST_NODE* args = parseArguments(result, index + 2);
 
-	if(args != NULL) node->right = args;
-	
-	node->endingIndex = args->endingIndex;
+	node->endingIndex = index;
+
+	if(args != NULL) {
+		node->right = args;
+		node->endingIndex = args->endingIndex;
+	}
 
 	return node;
 }

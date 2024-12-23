@@ -45,12 +45,18 @@ struct LexerResult runLexer(char* string, int size) {
 		else if (isdigit(c)) {
 			int numLen = 0;
 
-			while(isdigit(c) || c == 'x') {
+			int foundX = 0;
+			while(isdigit(c) || c == 'x' || (foundX == 1 && c != '\0' && c != ' ' && c != '\n')) {
 				buff[numLen] = c;
 				numLen++;
 
-				c = *string++;
+				if(c == 'x') foundX = 1;
+
+				++i;
+				c = string[i];
 			}
+
+			buff[numLen] = '\0';
 
 			pushToken(&result, NUMBER);
 			result.tokens[result.size - 1].value = buff;
