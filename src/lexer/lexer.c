@@ -15,16 +15,16 @@
 /**
  * Sets the token type of the currently selected token in the LexerResult with the provided token type.
  */
-void pushToken(struct LexerResult* result, enum TokenType type) {
+void pushToken(LEXER_RESULT* result, TOKEN_TYPE type) {
     result->tokens[result->size].type = type;
     result->size++;
 }
 
-struct LexerResult runLexer(char* string, int size) {
-	struct LexerResult result;
+LEXER_RESULT runLexer(char* string, int size) {
+	LEXER_RESULT result;
 	result.size = 0;
 
-	result.tokens = malloc(sizeof(struct Token) * 1024);
+	result.tokens = malloc(sizeof(TOKEN) * 1024);
 
 	char c;
 
