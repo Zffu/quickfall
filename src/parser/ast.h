@@ -2,8 +2,8 @@
  * The header file of AST nodes in Quickfall.
  */
 
-#ifndef AST_2_H
-#define AST_2_H
+#ifndef AST_H
+#define AST_H
 
 /**
  * The type of AST Node(s).
