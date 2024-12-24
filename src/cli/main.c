@@ -125,9 +125,7 @@ int main(int argc, char* argv[]) {
 
 			fptr = fopen(outputFile, "w");
 			compile(ctx, fptr);
-
-			//compilePE(fptr, code_section, sizeof(code_section));
-
+			
 			break;
 		case 'v':
 			if(strlen(argv[1]) > 1 && strcmp(argv[1], "version") != 0) {
