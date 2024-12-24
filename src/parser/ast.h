@@ -38,11 +38,11 @@ enum ASTNodeType {
 /**
  * An AST Node. Has a tree-ish structure.
  */
-struct ASTNode {
+typedef struct {
 
-	struct ASTNode* left;
-	struct ASTNode* right;
-	struct ASTNode* next;
+	AST_NODE* left;
+	AST_NODE* right;
+	AST_NODE* next;
 
 	enum ASTNodeType type;
 	
@@ -50,9 +50,7 @@ struct ASTNode {
 	char* value;
 	int endingIndex; // The index which the parsing ended
 
-};
-
-typedef struct ASTNode AST_NODE;
+} AST_NODE;
 
 /**
  * Creates a new AST Node.
