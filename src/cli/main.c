@@ -25,10 +25,6 @@
 // Version
 #define VERSION "0.1.0"
 
-uint8_t code_section[6] = {
-	0xB8, 0x4C, 0x00, 0x00, 0x00, 0xC3
-};
-
 void showCommandEntry(char* commandName, char* description, int argumentCount, char* argumentNames[], char* argumentDescriptions[]) {
 	printf("\n    >  %s\n\n       %s%sDescription%s: %s\n", commandName, STYLE_BOLD, STYLE_UNDERLINE, RESET, description);
 
