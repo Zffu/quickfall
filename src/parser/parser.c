@@ -17,12 +17,12 @@
  * @param result the LexerResult provided by the lexer.
  * @param index the starting index.
  */
-AST_NODE* parseNodes(struct LexerResult result, int index, enum ASTNodeType type) {
+AST_NODE* parseNodes(LEXER_RESULT result, int index, AST_NODE_TYPE type) {
 	AST_NODE* root = createASTNode(type);
 	AST_NODE* current = root;
 
 	for(; index <= result.size; ++index) {
-		struct Token t = result.tokens[index];
+		TOKEN t = result.tokens[index];
 
 		AST_NODE* node = NULL;
 

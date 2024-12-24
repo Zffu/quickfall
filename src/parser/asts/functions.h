@@ -14,34 +14,34 @@
  * @param result the lexer result.
  * @param index the starting index of the parsing.
  */
-AST_NODE* parseParameters(struct LexerResult result, int index);
+AST_NODE* parseParameters(LEXER_RESULT result, int index);
 
 /**
  * Parses the arguments from a function call (for example).
  * @param result the lexer result.
  * @param index the starting index of the parsing.
  */
-AST_NODE* parseArguments(struct LexerResult result, int index);
+AST_NODE* parseArguments(LEXER_RESULT result, int index);
 
 /**
  * Parses a function declaration.
  * @param result the lexer result.
  * @param index the starting index of the parsing.
  */
-AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index);
+AST_NODE* parseFunctionDeclaration(LEXER_RESULT result, int index);
 
 /**
  * Parses an ASM function declaration.
  * @param result the lexer result.
  * @param index the starting index of the parsing.
  */
-AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index); 
+AST_NODE* parseASMFunctionDeclaration(LEXER_RESULT result, int index); 
 
 /**
  * Parses an function invocation.
  * @param result the lexer result.
  * @param index the starting index of the parsing.
  */
-AST_NODE* parseFunctionInvoke(struct LexerResult result, int index);
+AST_NODE* parseFunctionInvoke(LEXER_RESULT result, int index);
 
 #endif

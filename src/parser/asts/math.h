@@ -12,6 +12,6 @@
  * @param result the lexer result.
  * @param index the starting index.
  */
-AST_NODE* parseMathematicalOpNode(struct LexerResult result, int index);
+AST_NODE* parseMathematicalOpNode(LEXER_RESULT, int index);
 
 #endif

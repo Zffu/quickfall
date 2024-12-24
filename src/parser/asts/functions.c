@@ -20,7 +20,7 @@
  * @param result the lexer result.
  * @param index the starting index of the parsing.
  */
-AST_NODE* parseParameters(struct LexerResult result, int index) {
+AST_NODE* parseParameters(LEXER_RESULT result, int index) {
 
 	AST_NODE* root = createASTNode(AST_PARAMETER);
 	AST_NODE* current = root;
@@ -28,7 +28,7 @@ AST_NODE* parseParameters(struct LexerResult result, int index) {
 	int stack = 0;	
 
 	for(; index < result.size + 1; ++index) {
-		struct Token t = result.tokens[index];
+		TOKEN t = result.tokens[index];
 
 		switch(t.type) {
 			case COMMA:
@@ -46,7 +46,7 @@ AST_NODE* parseParameters(struct LexerResult result, int index) {
 					return NULL;
 				}
 
-				struct Token next = result.tokens[index + 1];
+				TOKEN next = result.tokens[index + 1];
 
 				if(next.type == NONE || next.type == KEYWORD) {
 					current->left = createASTNode(AST_TYPE);
@@ -77,12 +77,12 @@ AST_NODE* parseParameters(struct LexerResult result, int index) {
  * @param result the result of the lexer.
  * @param index the starting index of the parsing.
  */
-AST_NODE* parseArguments(struct LexerResult result, int index) {
+AST_NODE* parseArguments(LEXER_RESULT result, int index) {
 	AST_NODE* root = NULL;
 	AST_NODE* current = root;
 
 	for(; index < result.size + 1; ++index) {
-		struct Token t = result.tokens[index];
+		TOKEN t = result.tokens[index];
 
 		if(t.type == PAREN_CLOSE) {
 			return root;
@@ -106,13 +106,12 @@ AST_NODE* parseArguments(struct LexerResult result, int index) {
 	return NULL;
 }
 
-AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index) {
+AST_NODE* parseFunctionDeclaration(LEXER_RESULT result, int index) {
 
 	AST_NODE* node = createASTNode(AST_FUNCTION_DECLARATION);
 	node->left = createASTNode(AST_FUNCTION_HEADER);
 
 	if(result.tokens[index].type != KEYWORD) {
-		printf("jd");
 		return NULL;
 	}
 
@@ -147,7 +146,7 @@ AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index) {
 	return node;
 }
 
-AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
+AST_NODE* parseASMFunctionDeclaration(LEXER_RESULT result, int index) {
 	AST_NODE* node = createASTNode(AST_ASM_FUNCTION_DECLARATION);
 	
 	node->left = createASTNode(AST_FUNCTION_HEADER);
@@ -174,7 +173,7 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 	uint8_t* buff = malloc(sizeof(uint8_t) * buffSize);
 
 	for(; index <= result.size; ++index) {
-		struct Token t = result.tokens[index];
+		TOKEN t = result.tokens[index];
 
 		if(t.type == BRACKETS_CLOSE) {
 			break;
@@ -198,7 +197,7 @@ AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index) {
 	return node;
 }
 
-AST_NODE* parseFunctionInvoke(struct LexerResult result, int index) {
+AST_NODE* parseFunctionInvoke(LEXER_RESULT result, int index) {
 	AST_NODE* node = createASTNode(AST_FUNCTION_INVOKE);
 
 	node->value = result.tokens[index].value;

@@ -8,7 +8,7 @@
 /**
  * The type of AST Node(s).
  */
-enum ASTNodeType {
+typedef enum {
 
 	AST_ROOT, // A root of an AST tree, can either represent the first node of the tree or a function body.
 
@@ -33,7 +33,7 @@ enum ASTNodeType {
 	AST_MATH_OP_HEADER,
 
 	AST_PARAMETER // A function parameter AST Node, used in function declaration.
-};
+} AST_NODE_TYPE;
 
 /**
  * An AST Node. Has a tree-ish structure.
@@ -56,6 +56,6 @@ typedef struct {
  * Creates a new AST Node.
  * @param type the AST type of the node.
  */
-AST_NODE* createASTNode(enum ASTNodeType type);
+AST_NODE* createASTNode(AST_NODE_TYPE type);
 
 #endif
