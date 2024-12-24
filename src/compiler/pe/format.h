@@ -2,8 +2,6 @@
  * Quickfall PE Format Defintion.
  */
 
-#include "../units.h"
-
 #ifndef PE_FORMAT
 #define PE_FORMAT
 
