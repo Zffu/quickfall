@@ -37,6 +37,11 @@ AST_NODE* parseFunctionDeclaration(struct LexerResult result, int index);
  */
 AST_NODE* parseASMFunctionDeclaration(struct LexerResult result, int index); 
 
+/**
+ * Parses an function invocation.
+ * @param result the lexer result.
+ * @param index the starting index of the parsing.
+ */
 AST_NODE* parseFunctionInvoke(struct LexerResult result, int index);
 
 #endif
