@@ -14,6 +14,6 @@
  * @param index the starting index.
  * @param type the AST node type to return.
  */
-AST_NODE* parseNodes(struct LexerResult result, int index, enum ASTNodeType type);
+AST_NODE* parseNodes(LEXER_RESULT result, int index, AST_NODE_TYPE type);
 
 #endif

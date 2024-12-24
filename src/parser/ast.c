@@ -10,7 +10,7 @@
  * Creates a new AST Node.
  * @param type the AST type of the node.
  */
-AST_NODE* createASTNode(enum ASTNodeType type) {
+AST_NODE* createASTNode(AST_NODE_TYPE type) {
 	AST_NODE* node = malloc(sizeof(AST_NODE));
 
 	node->valueSize = 0;

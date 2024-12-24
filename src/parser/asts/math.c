@@ -14,7 +14,7 @@
  * @param result the lexer result.
  * @param index the starting index.
  */
-AST_NODE* parseMathematicalOpNode(struct LexerResult result, int index) {
+AST_NODE* parseMathematicalOpNode(LEXER_RESULT result, int index) {
 	AST_NODE* node = createASTNode(AST_MATH_OPERATION);
 	node->left = createASTNode(AST_MATH_OP_HEADER);
 

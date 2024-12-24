@@ -2,13 +2,13 @@
  * The header file of AST nodes in Quickfall.
  */
 
-#ifndef AST_2_H
-#define AST_2_H
+#ifndef AST_H
+#define AST_H
 
 /**
  * The type of AST Node(s).
  */
-enum ASTNodeType {
+typedef enum {
 
 	AST_ROOT, // A root of an AST tree, can either represent the first node of the tree or a function body.
 
@@ -33,31 +33,29 @@ enum ASTNodeType {
 	AST_MATH_OP_HEADER,
 
 	AST_PARAMETER // A function parameter AST Node, used in function declaration.
-};
+} AST_NODE_TYPE;
 
 /**
  * An AST Node. Has a tree-ish structure.
  */
-struct ASTNode {
+typedef struct AST_NODE {
 
-	struct ASTNode* left;
-	struct ASTNode* right;
-	struct ASTNode* next;
+	struct AST_NODE* left;
+	struct AST_NODE* right;
+	struct AST_NODE* next;
 
-	enum ASTNodeType type;
+	AST_NODE_TYPE type;
 	
 	int valueSize;
 	char* value;
 	int endingIndex; // The index which the parsing ended
 
-};
-
-typedef struct ASTNode AST_NODE;
+} AST_NODE;
 
 /**
  * Creates a new AST Node.
  * @param type the AST type of the node.
  */
-AST_NODE* createASTNode(enum ASTNodeType type);
+AST_NODE* createASTNode(AST_NODE_TYPE type);
 
 #endif

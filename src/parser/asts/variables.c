@@ -9,8 +9,8 @@
 
 #include "../ast.h"
 
-AST_NODE* parseVariableValue(struct LexerResult result, int index) {
-	struct Token t = result.tokens[index];
+AST_NODE* parseVariableValue(LEXER_RESULT result, int index) {
+	TOKEN t = result.tokens[index];
 
 	if(t.type == NUMBER || t.type == STRING || t.type == BOOLEAN_VALUE) {
 		AST_NODE* node = createASTNode(AST_VARIABLE_VALUE);
@@ -50,7 +50,7 @@ AST_NODE* parseVariableValue(struct LexerResult result, int index) {
  * @param result the lexer result.
  * @param index the starting index.
  */
-AST_NODE* parseVariableDeclaration(struct LexerResult result, int index) {
+AST_NODE* parseVariableDeclaration(LEXER_RESULT result, int index) {
 	AST_NODE* node = createASTNode(AST_VARIABLE_DECLARATION);
 
 	if(result.tokens[index].type == VAR) {
