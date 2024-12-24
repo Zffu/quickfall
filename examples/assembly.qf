@@ -1,0 +1,7 @@
+func main() {
+    myAssemblyFunction()
+}
+
+asmf myAssemblyFunction() {
+    0xB8 0x4C 0x00 0x00 0x00 0xC3
+}
