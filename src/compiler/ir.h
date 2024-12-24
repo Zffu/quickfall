@@ -22,7 +22,7 @@ typedef enum {
 /**
  * An IR Node.
  */
-typedef struct {
+typedef struct IR_NODE {
 
 	IR_TYPE nodeType;
 
@@ -36,7 +36,7 @@ typedef struct {
 	int valueSize;
 
 	// Function Properties
-	struct IRNode** variables;
+	struct IR_NODE** variables;
 	int variableIndex;
 
 	struct Hashmap* variableMap;
