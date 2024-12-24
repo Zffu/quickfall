@@ -19,6 +19,9 @@ typedef enum {
 	IR_FUNCTION_BODY_VARIABLE
 } IR_TYPE;
 
+/**
+ * An IR Node.
+ */
 typedef struct {
 
 	IR_TYPE nodeType;
@@ -41,6 +44,9 @@ typedef struct {
 	AST_NODE* tree;
 } IR_NODE;
 
+/**
+ * The overall IR context.
+ */
 typedef struct {
 	IR_NODE** nodes;
 	int nodeIndex;
