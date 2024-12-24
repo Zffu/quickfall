@@ -9,7 +9,7 @@
 #ifndef IR_H
 #define IR_H
 
-enum IRNodeType {
+typedef enum {
 	IR_FUNCTION,
 
 	IR_ASM_FUNCTION,
@@ -17,11 +17,9 @@ enum IRNodeType {
 	IR_VARIABLE,
 	IR_FUNCTION_ARGUMENT,
 	IR_FUNCTION_BODY_VARIABLE
-};
+} IR_TYPE;
 
-typedef enum IRNodeType IR_TYPE;
-
-struct IRNode {
+typedef struct {
 
 	IR_TYPE nodeType;
 
@@ -41,11 +39,9 @@ struct IRNode {
 	struct Hashmap* variableMap;
 
 	AST_NODE* tree;
-};
+} IR_NODE;
 
-typedef struct IRNode IR_NODE;
-
-struct IRContext {
+typedef struct {
 	IR_NODE** nodes;
 	int nodeIndex;
 
@@ -53,9 +49,7 @@ struct IRContext {
 
 	IR_NODE* mainFunc;
 
-};
-
-typedef struct IRContext IR_CTX;
+} IR_CTX;
 
 /**
  * Creates an IR node based on the type and the name given.
