@@ -2,6 +2,7 @@
  * A simple parser AST test.
  */
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,7 +14,7 @@
 void dumpASTTree(AST_NODE* node, int depth);
 
 int runParserTest(char* buff) {
-	struct LexerResult result = runLexer(buff);
+	LEXER_RESULT result = runLexer(buff, strlen(buff));
 
 	AST_NODE* root = parseNodes(result, 0, AST_ROOT);
 
@@ -22,7 +23,7 @@ int runParserTest(char* buff) {
 
 char* debug[12] = {"Root", "Type Node", "Variable Name", "Variable Value", "Variable Declaration", "Variable Reference", "Function Declaration", "Function Header", "Math Operator", "Math Operation", "Math Operation Header", "Parameter"};
 
-void dumpASTTree(struct ASTNode* node, int depth) {
+void dumpASTTree(AST_NODE* node, int depth) {
     for(int i = 0; i < depth; ++i) {
         printf("  ");
     }

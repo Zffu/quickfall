@@ -38,13 +38,13 @@ typedef enum {
 /**
  * An AST Node. Has a tree-ish structure.
  */
-typedef struct {
+typedef struct AST_NODE {
 
-	AST_NODE* left;
-	AST_NODE* right;
-	AST_NODE* next;
+	struct AST_NODE* left;
+	struct AST_NODE* right;
+	struct AST_NODE* next;
 
-	enum ASTNodeType type;
+	AST_NODE_TYPE type;
 	
 	int valueSize;
 	char* value;

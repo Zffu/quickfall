@@ -113,8 +113,8 @@ int main(int argc, char* argv[]) {
 			buff[size] = '\0';
 			fclose(fptr);
 
-			struct LexerResult result = runLexer(buff, size);
-			struct ASTNode* root = parseNodes(result, 0, AST_ROOT);
+			LEXER_RESULT result = runLexer(buff, size);
+			AST_NODE* root = parseNodes(result, 0, AST_ROOT);
 
 			IR_CTX* ctx = makeContext(root);
 

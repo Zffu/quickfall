@@ -2,6 +2,7 @@
  * Test to check if the IR is working correctly.
  */
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -15,7 +16,7 @@
 #include "../src/compiler/ir.h"
 
 int runIRTest(char* buff) {
-	struct LexerResult result = runLexer(buff);
+	LEXER_RESULT result = runLexer(buff, strlen(buff));
 	AST_NODE* node = parseNodes(result, 0, AST_ROOT);
 
 	IR_CTX* ctx = makeContext(node);

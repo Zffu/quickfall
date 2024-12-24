@@ -123,7 +123,7 @@ void main(int argc, char* argv[]) {
         endTimer(i, 0);
         startTimer();
 
-        struct LexerResult result = runLexer(buff, size);
+        LEXER_RESULT result = runLexer(buff, size);
 
 	free(buff);
 
