@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://avatars.githubusercontent.com/u/186870998?s=200&v=4">
+<img src="https://files.horizon.pics/c20a230d-ec2d-4d15-ba21-c6b851925381?a=1199&mime1=image&mime2=jpeg">
 </div>
 
 # Introduction to Quickfall
@@ -8,11 +8,11 @@ Quickfall is a new programming language that facilitates the creation of highly 
 
 ## Contributing
 
-Before contributing, you should take a look at the [contributor conduct](https://github.com/Quickfall/quickfall/blob/master/CODE_OF_CONDUCT.md).
+Before contributing, you should look at the [contributor conduct](https://github.com/Quickfall/quickfall/blob/master/CODE_OF_CONDUCT.md).
 
 When you want to report an issue or request features, [please create an issue](https://github.com/Quickfall/quickfall/issues). 
 
-We warmly welcome contributions by everyone, make sure that your code works and is decently written and documented (take a look at some existing code for that) in order to preserve Quickfall's speed and quality.
+We warmly welcome contributions by everyone, make sure that your code works and is decently written and documented (take a look at some existing code for that) to preserve Quickfall's speed and quality.
 
 ## License
-Most of the project is licensed under the MIT license except when stated otherwise.
+Most projects are licensed under the MIT license except when stated otherwise.
