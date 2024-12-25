@@ -17,4 +17,10 @@
  */
 void appendInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION_CODE code, void* params, int paramsCount);
 
+/**
+ * Parses a AST function into IR.
+ * @param node the AST node representing the function.
+ */
+IR_FUNCTION parseFunction(AST_NODE* node);
+
 #endif
