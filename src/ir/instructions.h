@@ -15,6 +15,7 @@ typedef enum {
     LOGICAL_BLOCK_SWAP,
 
     S_ALLOC,
+    PTR_SET,
 
 } IR_INSTRUCTION_CODES;
 
