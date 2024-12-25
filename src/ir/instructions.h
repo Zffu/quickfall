@@ -19,7 +19,8 @@ typedef enum {
     PTR_LOAD,
 
     IADD,
-    ISUB
+    ISUB,
+    IMUL
 
 } IR_INSTRUCTION_CODES;
 
