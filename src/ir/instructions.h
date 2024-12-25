@@ -109,9 +109,23 @@ typedef enum {
     */
     ICMP_L,
 
-
+    /**
+     * Moves a variable value into the parameter registers.
+     * @param var the variable holding the value.
+     * @param index the index of the parameter to register to.
+     */
     PRM_PUSH,
+
+    /**
+     * Calls a function.
+     * @param funcName the functionName.
+     */
     CALL,
+
+    /**
+     * Returns from a function.
+     * @param value the outputValue.
+     */
     RET
 
 } IR_INSTRUCTION_CODES;
