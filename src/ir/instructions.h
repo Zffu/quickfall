@@ -31,9 +31,25 @@ typedef enum {
      */
     LOGICAL_BLOCK_SWAP,
 
-
+    /**
+     * Allocates a set amount of bits in the stack.
+     * @param ptr the pointer that is going to be allocated.
+     * @param size the size of the pointer.
+     */
     S_ALLOC,
+
+    /**
+     * Sets the value of the pointer's address to the provided element.
+     * @param val the new value (an integer for now).
+     * @param ptr the pointer containing the target address.
+     */
     PTR_SET,
+
+    /**
+     * Loads the values of a specific address into a variable.
+     * @param var the output variable.
+     * @param ptr the pointer containing the target address.
+     */
     PTR_LOAD,
 
     IADD,
