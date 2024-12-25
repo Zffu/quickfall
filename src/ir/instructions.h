@@ -25,6 +25,7 @@ typedef enum {
 
     ICMP,
     ICMP_H,
+    ICMP_L,
 
 } IR_INSTRUCTION_CODES;
 
