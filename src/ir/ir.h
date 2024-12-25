@@ -8,6 +8,8 @@
 #include "./instructions.h"
 #include "./structs.h"
 
+#include "../../parser/ast.h"
+
 /**
  * Appends an IR instruction into the basic block.
  * @parma block the IR basic block.
