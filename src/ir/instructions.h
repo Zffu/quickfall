@@ -21,7 +21,9 @@ typedef enum {
     IADD,
     ISUB,
     IMUL,
-    IDIV
+    IDIV,
+
+    ICOMP
 
 } IR_INSTRUCTION_CODES;
 
