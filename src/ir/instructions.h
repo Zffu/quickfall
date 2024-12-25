@@ -14,6 +14,8 @@ typedef enum {
     COND_BLOCK_SWAP,
     LOGICAL_BLOCK_SWAP,
 
+    S_ALLOC,
+
 } IR_INSTRUCTION_CODES;
 
 #endif
