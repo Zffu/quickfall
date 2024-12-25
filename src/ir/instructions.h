@@ -52,10 +52,39 @@ typedef enum {
      */
     PTR_LOAD,
 
+
+    /**
+     * Adds two 32 bit integers together.
+     * @param output the output variable of the result.
+     * @param i1 the first integer.
+     * @param i2 the second integer.
+     */
     IADD,
+
+    /**
+     * Subtracts two 32 bit integers together.
+     * @param output the output variable of the result.
+     * @param i1 the first integer.
+     * @param i2 the second integer.
+     */
     ISUB,
+
+    /**
+     * Multiplies two 32 bit integers together.
+     * @param output the output variable of the result.
+     * @param i1 the first integer.
+     * @param i2 the second integer.
+     */
     IMUL,
+
+    /**
+     * Divides two 32 bit integers together.
+     * @param output the output variable of the result.
+     * @param i1 the first integer.
+     * @param i2 the second integer.
+     */
     IDIV,
+
 
     ICMP,
     ICMP_H,
