@@ -28,7 +28,8 @@ typedef enum {
     ICMP_L,
 
     PRM_PUSH,
-    CALL
+    CALL,
+    RET
 
 } IR_INSTRUCTION_CODES;
 
