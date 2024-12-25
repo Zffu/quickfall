@@ -27,4 +27,16 @@ typedef struct {
 
 } IR_BASIC_BLOCK;
 
+/**
+ * An IR function.
+ */
+typedef struct {
+
+    char* funcName;
+
+    IR_BASIC_BLOCK* blocks;
+    int blockCount;
+
+} IR_FUNCTION;
+
 #endif
