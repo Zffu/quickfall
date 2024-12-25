@@ -10,7 +10,7 @@
  */
 typedef struct {
 
-    unsigned char* opCode;
+    unsigned char opCode;
 
     void* params;
     int paramCount;
