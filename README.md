@@ -15,4 +15,4 @@ When you want to report an issue or request features, [please create an issue](h
 We warmly welcome contributions by everyone, make sure that your code works and is decently written and documented (take a look at some existing code for that) to preserve Quickfall's speed and quality.
 
 ## License
-Most projects are licensed under the MIT license except when stated otherwise.
+Most repositories are licensed under the MIT license except when stated otherwise.
