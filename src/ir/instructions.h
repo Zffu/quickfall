@@ -117,6 +117,12 @@ typedef enum {
     PRM_PUSH,
 
     /**
+     * Moves a variable value into the return value register.
+     * @param var the variable holding the value.
+     */
+    RET_PUSH,
+
+    /**
      * Calls a function.
      * @param funcName the functionName.
      */
@@ -124,7 +130,6 @@ typedef enum {
 
     /**
      * Returns from a function.
-     * @param value the outputValue.
      */
     RET
 
