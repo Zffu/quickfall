@@ -5,6 +5,7 @@
 #ifndef IR2_H
 #define IR2_H
 
+#include "./instructions.h"
 #include "./structs.h"
 
 /**
@@ -14,6 +15,6 @@
  * @param params the parameters of the operation.
  * @param paramsCount the count of the parameters of the operation.
  */
-void appendInstruction(IR_BASIC_BLOCK block, unsigned char opCode, void* params, int paramsCount);
+void appendInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION_CODE code, void* params, int paramsCount);
 
 #endif

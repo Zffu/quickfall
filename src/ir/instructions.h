@@ -133,6 +133,6 @@ typedef enum {
      */
     RET
 
-} IR_INSTRUCTION_CODES;
+} IR_INSTRUCTION_CODE;
 
 #endif
