@@ -85,10 +85,30 @@ typedef enum {
      */
     IDIV,
 
-
+    /**
+     * Compares two 32 bit integers to check if they are equal.
+     * @param out the output variable containing the result.
+     * @param i1 the first integer.
+     * @param i2 the second integer.
+     */
     ICMP,
+
+    /**
+     * Compares two 32 bit integers to check if the first one is higher than the second one.
+     * @param out the output variable containing the result.
+     * @param i1 the first integer.
+     * @param i2 the second integer.
+     */
     ICMP_H,
+
+    /**
+     * Compares two 32 bit integers to check if the first one is higher or equal to the second one.
+     * @param out the output variable containing the result.
+     * @param i1 the first integer.
+     * @param i2 the second integer.
+    */
     ICMP_L,
+
 
     PRM_PUSH,
     CALL,
