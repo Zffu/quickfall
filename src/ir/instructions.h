@@ -10,7 +10,8 @@
  */
 typedef enum {
 
-    BLOCK_SWAP
+    BLOCK_SWAP,
+    COND_BLOCK_SWAP
 
 } IR_INSTRUCTION_CODES;
 
