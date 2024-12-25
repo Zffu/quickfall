@@ -16,6 +16,7 @@ typedef enum {
 
     S_ALLOC,
     PTR_SET,
+    PTR_LOAD
 
 } IR_INSTRUCTION_CODES;
 
