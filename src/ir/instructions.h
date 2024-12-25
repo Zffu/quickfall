@@ -23,7 +23,8 @@ typedef enum {
     IMUL,
     IDIV,
 
-    ICOMP
+    ICMP,
+    ICMP_H,
 
 } IR_INSTRUCTION_CODES;
 
