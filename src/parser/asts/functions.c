@@ -52,57 +52,9 @@ AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index) {
 
     index += offset;
 
-    int stack = 0;
+    parseFunctionParameters(func, result, index);
 
-    int allocated = 10;
-    func->parameterIndex = 0;
-    func->parameters = malloc(sizeof(AST_PARAMETER) * allocated);
-
-    for(; index < result.size; ++index) {
-        TOKEN t = result.tokens[index];
-
-        switch(t.type) {
-            case TYPE_INT32:
-                if(result.tokens[index + 1].type != KEYWORD) {
-                    printf("Error: Excepted keyword as parameter name!\n");
-                    return NULL;
-                }
-
-                func->parameters[func->parameterIndex].name = result.tokens[index + 1].value;
-                func->parameters[func->parameterIndex].type = 0x01; // i32
-
-                func->parameterIndex++;
-                if(func->parameterIndex > allocated) {
-                    allocated *= 1.25;
-                    func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER), allocated);
-                }
-                break;
-            case KEYWORD:
-                if(result.tokens[index + 1].type != COMMA) {
-                    printf("Error: Excepted comma after parameter!\n");
-                    return NULL;
-                }
-
-                if(result.tokens[index - 1].type == COMMA) {
-                    func->parameters[func->parameterIndex].name = result.tokens[index].value;
-                    func->parameterIndex++;
-                    if(func->parameterIndex > allocated) {
-                        allocated *= 1.25;
-                        func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER), allocated);
-                    }
-                }
-
-                break;
-            
-            case PAREN_CLOSE:
-                func->endingIndex = index;
-                return func;
-
-            default:
-                printf("Error: Disallowed token type %d in parameters!\n", t.type);
-                return NULL;
-        }
-    }
+    return func;
 }
 
 /**
