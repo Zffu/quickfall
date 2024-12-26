@@ -17,6 +17,13 @@
 AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index);
 
 /**
+ * Parses an ASM function declaration into AST.
+ * @param result the Lexer result.
+ * @param index the index of the start of the parsing.
+ */
+AST_ASM_FUNCTION_DEC* parseASMFunctionDeclaration(LEXER_RESULT result, int index);
+
+/**
  * Parses the parameters of a function into AST.
  * @param result the Lexer result.
  * @param index the index of the start of the parsing.
