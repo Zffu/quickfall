@@ -19,4 +19,19 @@ typedef struct {
 
 } AST_FUNCTION_DEC;
 
+
+/**
+ * The ASM function declaration structure.
+ */
+typedef struct {
+    unsigned char type; // The type of the AST node (unused.)
+    void* next; 
+
+    char* funcName;
+
+    unsigned char* buff; // The content buffer of the function.
+    int buffIndex; // The size of buff.
+
+} AST_ASM_FUNCTION_DEC;
+
 #endif
