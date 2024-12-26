@@ -12,7 +12,7 @@ typedef struct {
 
     unsigned char opCode;
 
-    void* params;
+    unsigned char* params;
     int paramCount;
 
 } IR_INSTRUCTION;
@@ -24,6 +24,7 @@ typedef struct {
 
     IR_INSTRUCTION* instructions;
     int instructionCount;
+    int allocatedSize;
 
 } IR_BASIC_BLOCK;
 
