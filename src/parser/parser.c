@@ -43,6 +43,10 @@ void* parseRoot(LEXER_RESULT result, AST_TYPE type) {
                     break;
                 }
             
+            case BRACKETS_CLOSE:
+                if(type == AST_TYPE_FUNC_ROOT) return root;
+                break;
+
             default:
                 printf("Error: Unexcepted token %d!\n", t.type);
                 break;
