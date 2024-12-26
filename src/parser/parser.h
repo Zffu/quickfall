@@ -2,6 +2,7 @@
  * The Quickfall Parser & AST Generator.
  */
 
+#include "./ast.h"
 #include "./structs/tree.h"
 
 #include "../lexer/lexer.h"
@@ -12,7 +13,8 @@
 /**
  * Parses the Lexer result into an AST root.
  * @param result the Lexer result.
+ * @param type the output AST type.
  */
-AST_ROOT_TREE parseRoot(LEXER_RESULT result);
+void* parseRoot(LEXER_RESULT result, AST_TYPE type);
 
 #endif
