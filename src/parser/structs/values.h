@@ -11,6 +11,7 @@
 typedef struct {
     unsigned char astType;
 
+    unsigned char* valueType;
     void* value;
 } AST_VALUE;
 
