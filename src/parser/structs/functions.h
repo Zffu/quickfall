@@ -25,11 +25,11 @@ typedef struct AST_FUNCTION_DEF {
     int endingIndex;
 
     char* funcName;
-    unsigned char* returnType;
 
     AST_PARAMETER* parameters;
     int parameterIndex;
 
+    unsigned char* returnType;
     void* body;
 
 } AST_FUNCTION_DEC;
