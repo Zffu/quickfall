@@ -6,6 +6,8 @@
 #include <stdio.h>
 
 #include "../structs/variables.h"
+#include "../structs/tree.h"
+
 #include "./values.h"
 
 #include "../ast.h"
@@ -49,6 +51,8 @@ AST_VARIABLE_DEC* parseVariableDeclaration(LEXER_RESULT result, int index) {
             return NULL;
         }
 
+        var->endingIndex = ((AST_TREE_BRANCH*)value)->endingIndex;
+
         var->value = value;
     }
 
@@ -75,6 +79,7 @@ AST_VARIABLE_MOD* parseVariableModification(LEXER_RESULT result, int index) {
     }
 
     mod->value = value;
+    mod->endingIndex = ((AST_TREE_BRANCH*)value)->endingIndex;
     
     return mod;
 }

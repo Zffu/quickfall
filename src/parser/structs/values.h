@@ -10,6 +10,8 @@
  */
 typedef struct AST_VALUE {
     unsigned char astType;
+    void* next;
+    int endingIndex;
 
     unsigned char* valueType;
     void* value;

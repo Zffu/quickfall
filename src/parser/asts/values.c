@@ -30,6 +30,7 @@ AST_VALUE* parseValue(LEXER_RESULT result, int index) {
             return value;
     }
 
+    value->endingIndex = index;
     value->value = result.tokens[index].value;
 
     return value;
