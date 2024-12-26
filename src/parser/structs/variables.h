@@ -11,6 +11,7 @@
 typedef struct {
     unsigned char astType;
     void* next;
+    int endingIndex;
 
     unsigned char* type;
     char* name;
@@ -25,6 +26,7 @@ typedef struct {
 typedef struct {
     unsigned char type;
     void* next;
+    int endingIndex;
 
     char* name;
     unsigned char* value;

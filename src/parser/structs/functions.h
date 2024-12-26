@@ -22,6 +22,7 @@ typedef struct {
 typedef struct {
     unsigned char type; // The type of the AST node (unused.)
     void* next;
+    int endingIndex;
 
     char* funcName;
     unsigned char* returnType;
@@ -40,6 +41,7 @@ typedef struct {
 typedef struct {
     unsigned char type; // The type of the AST node (unused.)
     void* next; 
+    int endingIndex;
 
     char* funcName;
 
@@ -58,6 +60,7 @@ typedef struct {
 typedef struct {
     unsigned char type;
     void* next;
+    int endingIndex;
 
     void* arguments;
     int argumentIndex;
