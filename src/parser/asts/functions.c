@@ -104,3 +104,58 @@ AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index) {
         }
     }
 }
+
+/**
+ * Parses the parameters of a function into AST.
+ * @param result the Lexer result.
+ * @param index the index of the start of the parsing.
+ */
+void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result, int index) {
+    int allocated = 10;
+
+    for(; index < result.size; ++index) {
+        TOKEN t = result.tokens[index];
+
+        switch(t.type) {
+            case TYPE_INT32:
+                if(result.tokens[index + 1].type != KEYWORD) {
+                    printf("Error: Excepted keyword as parameter name!\n");
+                    return;
+                }
+
+                func->parameters[func->parameterIndex].name = result.tokens[index + 1].value;
+                func->parameters[func->parameterIndex].type = 0x01; // i32
+
+                func->parameterIndex++;
+                if(func->parameterIndex > allocated) {
+                    allocated *= 1.25;
+                    func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER), allocated);
+                }
+                break;
+            case KEYWORD:
+                if(result.tokens[index + 1].type != COMMA) {
+                    printf("Error: Excepted comma after parameter!\n");
+                    return;
+                }
+
+                if(result.tokens[index - 1].type == COMMA) {
+                    func->parameters[func->parameterIndex].name = result.tokens[index].value;
+                    func->parameterIndex++;
+                    if(func->parameterIndex > allocated) {
+                        allocated *= 1.25;
+                        func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER), allocated);
+                    }
+                }
+
+                break;
+            
+            case PAREN_CLOSE:
+                func->endingIndex = index;
+                return;
+
+            default:
+                printf("Error: Disallowed token type %d in parameters!\n", t.type);
+                return;
+        }
+    }
+}

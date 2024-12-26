@@ -21,6 +21,6 @@ AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index);
  * @param result the Lexer result.
  * @param index the index of the start of the parsing.
  */
-void parseFunctionParameters(void* func, LEXER_RESULT result, int index);
+void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result, int index);
 
 #endif
