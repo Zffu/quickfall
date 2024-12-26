@@ -9,8 +9,10 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-AST_ROOT_TREE parseRoot(LEXER_RESULT result) {
-    AST_ROOT_TREE tree = {0};
-}
+/**
+ * Parses the Lexer result into an AST root.
+ * @param result the Lexer result.
+ */
+AST_ROOT_TREE parseRoot(LEXER_RESULT result);
 
 #endif
