@@ -7,6 +7,8 @@
 
 #include "../structs/values.h"
 
+#include "../ast.h"
+
 #include "../../lexer/lexer.h"
 
 /**
@@ -16,6 +18,8 @@
  */
 AST_VALUE* parseValue(LEXER_RESULT result, int index) {
     AST_VALUE* value = malloc(sizeof(AST_VALUE));
+    value->astType = AST_TYPE_VALUE;
+
 
     switch(result.tokens[index].type) {
         case NUMBER:

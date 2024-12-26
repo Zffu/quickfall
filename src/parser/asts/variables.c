@@ -54,3 +54,27 @@ AST_VARIABLE_DEC* parseVariableDeclaration(LEXER_RESULT result, int index) {
 
     return var;
 }
+
+
+/**
+ * Parses a variable modification.
+ * @param result the Lexer result.
+ * @param index the index where the parsing needs to start.
+ */
+AST_VARIABLE_MOD* parseVariableModification(LEXER_RESULT result, int index) {
+    AST_VARIABLE_MOD* mod = malloc(sizeof(AST_VARIABLE_MOD));
+    mod->type = AST_TYPE_VARIABLE_MODIFICATION;
+
+    mod->name = result.tokens[index].value;
+
+    void* value = parseValueGroup(result, index + 2);
+
+    if(value == NULL) {
+        printf("Error: Couldn't parse variable value group in redefinition!\n");
+        return NULL;
+    }
+
+    mod->value = value;
+    
+    return mod;
+}
