@@ -6,6 +6,17 @@
 #define FUNCTIONS_STRUCT_H
 
 /**
+ * The function parameter structure.
+ */
+typedef struct {
+
+    unsigned char* type; // The datatype in bytes.
+    char* name; // The name of the parameter
+
+} AST_PARAMETER;
+
+
+/**
  * The function declaration structure.
  */
 typedef struct {
@@ -14,6 +25,9 @@ typedef struct {
 
     char* funcName;
     unsigned char* returnType;
+
+    AST_PARAMETER* parameters;
+    int parameterIndex;
 
     void* body;
 
@@ -28,6 +42,9 @@ typedef struct {
     void* next; 
 
     char* funcName;
+
+    AST_PARAMETER* parameters;
+    int parameterIndex;
 
     unsigned char* buff; // The content buffer of the function.
     int buffIndex; // The size of buff.
