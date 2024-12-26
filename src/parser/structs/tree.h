@@ -10,8 +10,8 @@
  */
 typedef struct {
     unsigned char type; // The type of the AST node type (unused).
-
     void* next; // Refers to the next node in the tree.
+    
     void* last; // Refers to the furthest / last node in the tree.
 
 } AST_ROOT_TREE;

@@ -10,6 +10,7 @@
  */
 typedef struct {
     unsigned char type; // The type of the AST node (unused.)
+    void* next;
 
     char* funcName;
     unsigned char* returnType;
