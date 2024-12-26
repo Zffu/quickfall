@@ -18,4 +18,16 @@ typedef struct {
     unsigned char* value;
 } AST_VARIABLE_DEC;
 
+
+/**
+ * The variable modification structure.
+ */
+typedef struct {
+    unsigned char type;
+    void* next;
+
+    char* name;
+    unsigned char* value;
+} AST_VARIABLE_MOD;
+
 #endif
