@@ -110,7 +110,7 @@ AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index) {
  * @param result the Lexer result.
  * @param index the index of the start of the parsing.
  */
-void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result, int index) {
+inline void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result, int index) {
     int allocated = 10;
 
     for(; index < result.size; ++index) {
