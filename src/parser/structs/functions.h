@@ -51,4 +51,16 @@ typedef struct {
 
 } AST_ASM_FUNCTION_DEC;
 
+
+/**
+ * The function invocation structure.
+ */
+typedef struct {
+    unsigned char type;
+    void* next;
+
+    void* arguments;
+    int argumentIndex;
+} AST_FUNCTION_INVOKE;
+
 #endif
