@@ -57,6 +57,39 @@ AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index) {
     return func;
 }
 
+
+/**
+ * Parses an ASM function declaration into AST.
+ * @param result the Lexer result.
+ * @param index the index of the start of the parsing.
+ */
+AST_ASM_FUNCTION_DEC* parseASMFunctionDeclaration(LEXER_RESULT result, int index) {
+    AST_ASM_FUNCTION_DEC* func = malloc(sizeof(AST_ASM_FUNCTION_DEC));
+
+    if(result.tokens[index + 1].type != KEYWORD) {
+        printf("Error: Excepted keyword as ASM function name!\n");
+        return NULL;
+    }
+
+    func->type = AST_TYPE_ASM_FUNCTION_DECLARATION;
+    func->funcName = result.tokens[index + 1].value;
+
+    parseFunctionParameters(func, result, index + 3);
+
+    index = func->endingIndex;
+
+    if(result.tokens[index + 1].type != BRACKETS_OPEN || result.tokens[index + 2].type != STRING || result.tokens[index + 3].type != BRACKETS_CLOSE) {
+        printf("Error: Badly made ASM function body!\n");
+        return NULL;
+    }
+
+    func->buff = result.tokens[index + 2].value;
+    func->buffIndex = strlen(func->buff);
+
+    return func;
+}
+
+
 /**
  * Parses the parameters of a function into AST.
  * @param result the Lexer result.
