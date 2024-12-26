@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "../structs/variables.h"
+#include "./values.h"
 
 #include "../ast.h"
 
@@ -41,7 +42,14 @@ AST_VARIABLE_DEC* parseVariableDeclaration(LEXER_RESULT result, int index) {
     
 
     if(result.tokens[index + 2].type == DECLARE) {
-        //todo: add value parsing if the next token is "="
+        void* value = parseValueGroup(result, index + 3);
+
+        if(value == NULL) {
+            printf("Error: Couldn't parse variable value group!\n");
+            return NULL;
+        }
+
+        var->value = value;
     }
 
     return var;
