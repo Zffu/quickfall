@@ -8,7 +8,7 @@
 /**
  * The function parameter structure.
  */
-typedef struct {
+typedef struct AST_PARAMETER {
 
     unsigned char* type; // The datatype in bytes.
     char* name; // The name of the parameter
@@ -19,7 +19,7 @@ typedef struct {
 /**
  * The function declaration structure.
  */
-typedef struct {
+typedef struct AST_FUNCTION_DEF {
     unsigned char type; // The type of the AST node (unused.)
     void* next;
     int endingIndex;
@@ -38,7 +38,7 @@ typedef struct {
 /**
  * The ASM function declaration structure.
  */
-typedef struct {
+typedef struct AST_ASM_FUNCTION_DEF {
     unsigned char type; // The type of the AST node (unused.)
     void* next; 
     int endingIndex;

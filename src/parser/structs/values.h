@@ -8,7 +8,7 @@
 /**
  * The AST structure of a value.
  */
-typedef struct {
+typedef struct AST_VALUE {
     unsigned char astType;
 
     unsigned char* valueType;

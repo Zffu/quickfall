@@ -8,7 +8,7 @@
 /**
  * The variable declaration structure.
  */
-typedef struct {
+typedef struct AST_VARIABLE_DEC {
     unsigned char astType;
     void* next;
     int endingIndex;
@@ -23,7 +23,7 @@ typedef struct {
 /**
  * The variable modification structure.
  */
-typedef struct {
+typedef struct AST_VARIABLE_MOD {
     unsigned char type;
     void* next;
     int endingIndex;

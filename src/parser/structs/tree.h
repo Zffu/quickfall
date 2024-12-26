@@ -8,7 +8,7 @@
 /**
  * The "base" type of each AST structure. Is used to cast to gather next branch.
  */
-typedef struct {
+typedef struct AST_TREE_BRANCH {
     unsigned char type; // The type of the AST node type (unused.)
     void* next; // The next node in the tree.
     int endingIndex; // The index where the parsing of said branch ended.
