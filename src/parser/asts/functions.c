@@ -7,6 +7,7 @@
 
 #include "../structs/functions.h"
 
+#include "../parser.h"
 #include "../ast.h"
 
 #include "../../lexer/lexer.h"
@@ -53,6 +54,21 @@ AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index) {
     index += offset;
 
     parseFunctionParameters(func, result, index);
+
+    if(result.tokens[func->endingIndex + 1].type != BRACKETS_OPEN) {
+        printf("Error: Excepted function body!\n");
+        return NULL;
+    }
+
+    void* root = parseRoot(result, func->endingIndex + 2, AST_TYPE_FUNC_ROOT);
+
+    if(root == NULL) {
+        printf("Error: couldn't parse function body!\n");
+        return NULL;
+    }
+
+    func->body = root;
+    func->endingIndex = ((AST_TREE_BRANCH*)root)->endingIndex;
 
     return func;
 }
