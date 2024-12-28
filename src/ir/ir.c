@@ -11,6 +11,7 @@
 #include "../../parser/structs/tree.h"
 #include "../../parser/structs/functions.h"
 #include "../../parser/structs/variables.h"
+#include "../../parser/structs/values.h"
 
 #include "../../parser/ast.h"
 
@@ -66,10 +67,10 @@ IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node) {
                 int paramsSize = 4 * strlen(var->name);
                 unsigned char* params = malloc(paramsSize);
 
-                params[0] = (32 >> 24) & 0xFF;
-                params[1] = (32 >> 16) & 0xFF;
-                params[2] = (32 >> 8) & 0xFF;
-                params[3] = 32 & 0xFF;
+                params[0] = (size >> 24) & 0xFF;
+                params[1] = (size >> 16) & 0xFF;
+                params[2] = (size >> 8) & 0xFF;
+                params[3] = size & 0xFF;
 
                 int i = 0;
                 char c;
@@ -82,6 +83,34 @@ IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node) {
                 }
 
                 appendInstruction(func.blocks[0], S_ALLOC, params, paramsSize);
+
+                if(var->value != NULL) {
+                    if(((AST_TREE_BRANCH*)var->value)->type == AST_TYPE_VALUE) {
+                        AST_VALUE* val = (AST_VALUE*)var->value;
+
+                        if(val->valueType != var->type) {
+                            printf("Error: the variable value doesn't match the variable type!\n");
+                            return;
+                        }
+
+                        int size;
+
+                        if(var->type == 0x01) { // i32
+                            size = 4;
+                            params = malloc(4);
+
+                            int num = atoi(val->value);
+
+                            params[0] = (num >> 24) & 0xFF;
+                            params[1] = (num >> 16) & 0xFF;
+                            params[2] = (num >> 8) & 0xFF;
+                            params[3] = num & 0xFF;
+                        }
+
+                        appendInstruction(func.blocks[0], PTR_SET, params, size);
+                    }
+                }
+
                 break;
 
         }
