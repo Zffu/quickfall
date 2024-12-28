@@ -8,6 +8,9 @@
 #include "./instructions.h"
 #include "./structs.h"
 
+#include "../../parser/structs/tree.h"
+#include "../../parser/structs/functions.h"
+
 #include "../../parser/ast.h"
 
 /**
@@ -38,51 +41,15 @@ void appendInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION_CODE code, unsigned 
  * Parses a AST function into IR.
  * @param node the AST node representing the function.
  */
-IR_FUNCTION parseFunction(AST_NODE* node) {
+IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node) {
     IR_FUNCTION func = {0};
     func.blocks = malloc(sizeof(IR_BASIC_BLOCK));
     func.blockCount++;
 
+    func.funcName = node->funcName;
+
     func.blocks[0].instructions = NULL;
     func.blocks[0].instructionCount = 0;
-
-    while(node != NULL) {
-
-        switch(node->type) {
-            case AST_VARIABLE_DECLARATION:
-                // For now let's just say that every variable is 32 bits.
-                //todo: change this when typing gets added.
-
-                int size = strlen(node->left->value) + sizeof(int);
-
-                unsigned char* ptr = malloc(size);
-
-                int i = 0;
-                char c;
-
-                while(c = *node->left->value++) {
-                    ptr[i] = c;
-                    ++i;
-
-                    if(c == '\0') break;
-                }
-
-                ptr[i] = (32 >> 24) & 0xFF;
-                ptr[i + 1] = (32 >> 16) & 0xFF;
-                ptr[i + 2] = (32 >> 8) & 0xFF;
-                ptr[i + 3] = 32 & 0xFF;
-
-                appendInstruction(func.blocks[0], S_ALLOC, ptr, size);
-                
-                ptr = malloc(sizeof(int));
-                ((int*)ptr)[0] = atoi(node->right->value);
-
-                appendInstruction(func.blocks[0], PTR_SET, ptr, sizeof(int));
-                break;
-        }
-
-        node = node->next;
-    }
 
     return func;
 }

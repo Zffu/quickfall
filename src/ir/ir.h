@@ -8,6 +8,8 @@
 #include "./instructions.h"
 #include "./structs.h"
 
+#include "../../parser/structs/functions.h"
+
 #include "../../parser/ast.h"
 
 /**
@@ -23,6 +25,6 @@ void appendInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION_CODE code, unsigned 
  * Parses a AST function into IR.
  * @param node the AST node representing the function.
  */
-IR_FUNCTION parseFunction(AST_NODE* node);
+IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node);
 
 #endif
