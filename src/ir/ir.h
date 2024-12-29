@@ -8,6 +8,7 @@
 #include "./instructions.h"
 #include "./structs.h"
 
+#include "../../parser/structs/variables.h"
 #include "../../parser/structs/functions.h"
 
 #include "../../parser/ast.h"
@@ -20,6 +21,13 @@
  * @param paramsCount the count of the parameters of the operation.
  */
 void appendInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION_CODE code, unsigned char params[], int paramsCount);
+
+/**
+ * Parses a variable declaration.
+ * @param block the IR basic block to append to.
+ * @param node the AST node representing the variable.
+ */
+inline void parseVariableDeclaration(IR_BASIC_BLOCK block, AST_VARIABLE_DEC* node);
 
 /**
  * Parses a AST function into IR.
