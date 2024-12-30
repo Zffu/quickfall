@@ -15,7 +15,7 @@
  * @param startIndex the starting index of the buffer.
  * @param value the value to parse.
  */
-void parseValue(unsigned char* buff, int startIndex, void* value) {
+int parseValue(unsigned char* buff, int startIndex, void* value) {
     if(((AST_TREE_BRANCH*)value)->type == AST_TYPE_VALUE) {
         AST_VALUE* val = (AST_VALUE*) value;
 
@@ -26,6 +26,10 @@ void parseValue(unsigned char* buff, int startIndex, void* value) {
             buff[startIndex + 2] = (num >> 16) & 0xFF;
             buff[startIndex + 3] = (num >> 8) & 0xFF;
             buff[startIndex + 4] = num & 0xFF;
+
+            return startIndex + 4;
         }
     }
+
+    return startIndex;
 }

@@ -11,6 +11,6 @@
  * @param startIndex the starting index of the buffer.
  * @param value the value to parse.
  */
-void parseValue(unsigned char* buff, int startIndex, void* value);
+int parseValue(unsigned char* buff, int startIndex, void* value);
 
 #endif
