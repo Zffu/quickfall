@@ -35,4 +35,8 @@ inline void parseVariableDeclaration(IR_BASIC_BLOCK block, AST_VARIABLE_DEC* nod
     params[i + 4] = allocSize & 0xFF;
 
     appendInstruction(block, S_ALLOC, params, paramsSize);
+
+    if(node->value != NULL) {
+        
+    }
 }
