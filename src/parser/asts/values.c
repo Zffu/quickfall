@@ -36,7 +36,6 @@ AST_VALUE* parseASTValue(LEXER_RESULT result, int index) {
     return value;
 }
 
-
 /**
  * Parses an actual expression as value instead of just one token.
  * @param result the Lexer result.

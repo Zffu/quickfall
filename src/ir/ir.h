@@ -23,13 +23,6 @@
 void appendInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION_CODE code, unsigned char params[], int paramsCount);
 
 /**
- * Parses a variable declaration.
- * @param block the IR basic block to append to.
- * @param node the AST node representing the variable.
- */
-inline void parseVariableDeclaration(IR_BASIC_BLOCK block, AST_VARIABLE_DEC* node);
-
-/**
  * Parses a AST function into IR.
  * @param node the AST node representing the function.
  */
