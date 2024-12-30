@@ -33,3 +33,12 @@ int parseValue(unsigned char* buff, int startIndex, void* value) {
 
     return startIndex;
 }
+
+/**
+ * Gets the value size for a certain type for a  parameter.
+ * @param type the type's byte indentifier.
+ */
+inline int getValueSize(unsigned char type) {
+    if(type == 0x01) return 4; // int32 type -> 4 bytes
+    return 0;
+}
