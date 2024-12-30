@@ -4,6 +4,8 @@
 
 #include "../../parser/structs/variables.h"
 
+#include "./values.h"
+
 #include "../ir.h"
 
 /**
@@ -18,6 +20,8 @@ inline void parseVariableDeclaration(IR_BASIC_BLOCK block, AST_VARIABLE_DEC* nod
     
     int paramsSize = 4 + strlen(node->name);
     unsigned char* params = malloc(paramsSize);
+
+    char* name = node->name;
 
     int i;
     char c;
@@ -37,6 +41,19 @@ inline void parseVariableDeclaration(IR_BASIC_BLOCK block, AST_VARIABLE_DEC* nod
     appendInstruction(block, S_ALLOC, params, paramsSize);
 
     if(node->value != NULL) {
+        paramsSize = strlen(name) + getValueSize(node->type);
+        params = malloc(paramsSize);
         
+        i = 0;
+        while(c = *name++) {
+            params[i] = c;
+
+            if(c == '\0') break;
+            ++i;
+        }
+
+        parseValue(params, i, node->value);
+
+        appendInstruction(block, PTR_SET, params, paramsSize);
     }
 }
