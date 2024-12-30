@@ -7,12 +7,6 @@
 #include <stdlib.h>
 
 #include "./compiler.h"
-#include "./ir.h"
-
-#include "../parser/ast.h"
-
-#include "../utils/hash.h"
-#include "../utils/hashmap.h"
 
 #include "./pe/pe.h"
 
