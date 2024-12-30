@@ -14,7 +14,7 @@
  * @param result the Lexer result.
  * @param index the index of the start of the parsing.
  */
-AST_VALUE* parseValue(LEXER_RESULT result, int index);
+AST_VALUE* parseASTValue(LEXER_RESULT result, int index);
 
 /**
  * Parses an actual expression as value instead of just one token.

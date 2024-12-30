@@ -2,8 +2,11 @@
  * Parsing for function related ASTs.
  */
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "./functions.h"
 
 #include "../structs/functions.h"
 
@@ -32,7 +35,7 @@ AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index) {
             }
 
             func->funcName = result.tokens[index + 1].value;
-            func->returnType = 0x00;
+            func->returnType[0] = 0x00;
             offset = 3;
             break;
         case KEYWORD:
@@ -42,7 +45,7 @@ AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index) {
             }
 
             func->funcName = result.tokens[index + 2].value;
-            func->returnType = 0x01;
+            func->returnType[0] = 0x01;
             offset = 4;
             break;
         
@@ -90,7 +93,7 @@ AST_ASM_FUNCTION_DEC* parseASMFunctionDeclaration(LEXER_RESULT result, int index
     func->type = AST_TYPE_ASM_FUNCTION_DECLARATION;
     func->funcName = result.tokens[index + 1].value;
 
-    parseFunctionParameters(func, result, index + 3);
+    parseFunctionParameters((AST_FUNCTION_DEC*)func, result, index + 3);
 
     index = func->endingIndex;
 
@@ -111,7 +114,7 @@ AST_ASM_FUNCTION_DEC* parseASMFunctionDeclaration(LEXER_RESULT result, int index
  * @param result the Lexer result.
  * @param index the index of the start of the parsing.
  */
-inline void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result, int index) {
+void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result, int index) {
     int allocated = 10;
 
     for(; index < result.size; ++index) {
@@ -125,12 +128,12 @@ inline void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result,
                 }
 
                 func->parameters[func->parameterIndex].name = result.tokens[index + 1].value;
-                func->parameters[func->parameterIndex].type = 0x01; // i32
+                func->parameters[func->parameterIndex].type[0] = 0x01; // i32
 
                 func->parameterIndex++;
                 if(func->parameterIndex > allocated) {
                     allocated *= 1.25;
-                    func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER), allocated);
+                    func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER) * allocated);
                 }
                 break;
             case KEYWORD:
@@ -141,10 +144,11 @@ inline void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result,
 
                 if(result.tokens[index - 1].type == COMMA) {
                     func->parameters[func->parameterIndex].name = result.tokens[index].value;
+                    func->parameters[func->parameterIndex].type[0] = 0x00;
                     func->parameterIndex++;
                     if(func->parameterIndex > allocated) {
                         allocated *= 1.25;
-                        func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER), allocated);
+                        func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER) * allocated);
                     }
                 }
 

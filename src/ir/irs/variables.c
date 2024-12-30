@@ -2,6 +2,9 @@
  * IR for variable related.
  */
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "../../parser/structs/variables.h"
 
 #include "./values.h"
@@ -16,7 +19,7 @@
 inline void parseVariableDeclaration(IR_BASIC_BLOCK block, AST_VARIABLE_DEC* node) {
     int allocSize = 0;
 
-    if(node->type == 0x01) allocSize = 32; // int32
+    if(node->type[0] == 0x01) allocSize = 32; // int32
     
     int paramsSize = 4 + strlen(node->name);
     unsigned char* params = malloc(paramsSize);
@@ -41,7 +44,7 @@ inline void parseVariableDeclaration(IR_BASIC_BLOCK block, AST_VARIABLE_DEC* nod
     appendInstruction(block, S_ALLOC, params, paramsSize);
 
     if(node->value != NULL) {
-        paramsSize = strlen(name) + getValueSize(node->type);
+        paramsSize = strlen(name) + getValueSize(node->type[0]);
         params = malloc(paramsSize);
         
         i = 0;

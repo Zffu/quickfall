@@ -18,7 +18,8 @@
 
 #include "../compiler/compiler.h"
 #include "../compiler/pe/pe.h"
-#include "../compiler/ir.h"
+
+#include "../ir/ir.h"
 
 #include "../utils/logging.c"
 
@@ -114,17 +115,7 @@ int main(int argc, char* argv[]) {
 			fclose(fptr);
 
 			LEXER_RESULT result = runLexer(buff, size);
-			AST_NODE* root = parseNodes(result, 0, AST_ROOT);
-
-			IR_CTX* ctx = makeContext(root);
-
-			if(ctx == NULL) {
-				printf("Error: the IR context is null! Something went wrong during compiling! Please check any logs for errors\n");
-				return -1;
-			}
-
-			fptr = fopen(outputFile, "w");
-			compile(ctx, fptr);
+			void* root = parseRoot(result, 0, AST_TYPE_ROOT);
 			
 			break;
 		case 'v':

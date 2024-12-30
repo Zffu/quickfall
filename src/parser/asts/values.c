@@ -16,14 +16,14 @@
  * @param result the Lexer result.
  * @param index the index of the start of the parsing.
  */
-AST_VALUE* parseValue(LEXER_RESULT result, int index) {
+AST_VALUE* parseASTValue(LEXER_RESULT result, int index) {
     AST_VALUE* value = malloc(sizeof(AST_VALUE));
     value->astType = AST_TYPE_VALUE;
 
 
     switch(result.tokens[index].type) {
         case NUMBER:
-            value->valueType = 0x01; //i32
+            value->valueType[0] = 0x01; //i32
             break;
         default:
             printf("Error: Couldn't parse token %d as a value!\n", result.tokens[index].type);
@@ -49,7 +49,7 @@ void* parseValueGroup(LEXER_RESULT result, int index) {
                 //todo: parse math op.
             }
             
-            return parseValue(result, index);
+            return parseASTValue(result, index);
             break;
         default:
             printf("Error: couldn't parse value token group!\n");

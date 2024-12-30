@@ -8,10 +8,10 @@
 #include "./instructions.h"
 #include "./structs.h"
 
-#include "../../parser/structs/variables.h"
-#include "../../parser/structs/functions.h"
+#include "../parser/structs/variables.h"
+#include "../parser/structs/functions.h"
 
-#include "../../parser/ast.h"
+#include "../parser/ast.h"
 
 /**
  * Appends an IR instruction into the basic block.

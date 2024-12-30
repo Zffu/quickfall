@@ -2,18 +2,19 @@
  * The Intermediate Representation of Quickfall Code.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "./instructions.h"
 #include "./structs.h"
 
-#include "../../parser/structs/tree.h"
-#include "../../parser/structs/functions.h"
-#include "../../parser/structs/variables.h"
-#include "../../parser/structs/values.h"
+#include "../parser/structs/tree.h"
+#include "../parser/structs/functions.h"
+#include "../parser/structs/variables.h"
+#include "../parser/structs/values.h"
 
-#include "../../parser/ast.h"
+#include "../parser/ast.h"
 
 /**
  * Appends an IR instruction into the basic block.
@@ -121,7 +122,7 @@ IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node) {
 
                         if(val->valueType != var->type) {
                             printf("Error: the variable value doesn't match the variable type!\n");
-                            return;
+                            return func;
                         }
 
                         int size;

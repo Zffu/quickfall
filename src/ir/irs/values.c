@@ -2,7 +2,7 @@
  * IR for value related.
  */
 
-#include <string.h>
+#include <stdlib.h>
 
 #include "../../parser/ast.h"
 
