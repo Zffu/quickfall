@@ -8,7 +8,7 @@
 /**
  * The instruction codes of IR.
  */
-typedef enum {
+typedef enum IR_INSTRUCTION_CODE {
 
     /**
      * Swaps the current IR block.
