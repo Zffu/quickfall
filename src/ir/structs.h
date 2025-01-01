@@ -8,7 +8,7 @@
 /**
  * An IR instruction.
  */
-typedef struct {
+typedef struct IR_INSTRUCTION {
 
     unsigned char opCode;
 
@@ -20,7 +20,7 @@ typedef struct {
 /**
  * An IR basic block.
  */
-typedef struct {
+typedef struct IR_BASIC_BLOCK {
 
     IR_INSTRUCTION* instructions;
     int instructionCount;
@@ -31,7 +31,7 @@ typedef struct {
 /**
  * An IR function.
  */
-typedef struct {
+typedef struct IR_FUNCTION {
 
     char* funcName;
 
