@@ -48,7 +48,7 @@ typedef struct AST_ASM_FUNCTION_DEF {
     AST_PARAMETER* parameters;
     int parameterIndex;
 
-    unsigned char* buff; // The content buffer of the function.
+    char* buff; // The content buffer of the function.
     int buffIndex; // The size of buff.
 
 } AST_ASM_FUNCTION_DEC;
