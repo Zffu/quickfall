@@ -15,6 +15,13 @@
 
 /**
  * Appends an IR instruction into the basic block.
+ * @param block the IR basic block.
+ * @param instruction the instruction.
+ */
+inline void pushInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION instruction);
+
+/**
+ * Appends an IR instruction into the basic block.
  * @parma block the IR basic block.
  * @param opCode the operation code of the instruction.
  * @param params the parameters of the operation.

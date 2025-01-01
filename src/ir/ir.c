@@ -21,6 +21,22 @@
 
 /**
  * Appends an IR instruction into the basic block.
+ * @param block the IR basic block.
+ * @param instruction the instruction.
+ */
+inline void pushInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION instruction) {
+    if(block.instructions == NULL) {
+        block.instructions = malloc(sizeof(IR_INSTRUCTION) * 20);
+        block.allocatedSize = 20;
+    }
+
+    block.instructions[block.instructionCount] = instruction;
+    block.instructionCount++;
+}
+
+
+/**
+ * Appends an IR instruction into the basic block.
  * @parma block the IR basic block.
  * @param opCode the operation code of the instruction.
  * @param params the parameters of the operation.
@@ -33,14 +49,7 @@ void appendInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION_CODE code, unsigned 
     instruction.params = params;
     instruction.paramCount = paramsCount;
 
-
-    if(block.instructions == NULL) {
-        block.instructions = malloc(sizeof(IR_INSTRUCTION) * 20);
-        block.allocatedSize = 20;
-    }
-
-    block.instructions[block.instructionCount] = instruction;
-    block.instructionCount++;
+    pushInstruction(block, instruction);
 }
 
 /**
