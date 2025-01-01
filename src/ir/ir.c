@@ -63,58 +63,8 @@ IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node) {
 
         switch(b->type) {
             case AST_TYPE_VARIABLE_DECLARATION:
-                AST_VARIABLE_DEC* var = (AST_VARIABLE_DEC*) b;
+                parseVariableDeclaration(func.blocks[0], node);
                 
-                int size = 0;
-                if(var->type == 0x01) size = 32; // int32
-
-                int paramsSize = 4 * strlen(var->name);
-                unsigned char* params = malloc(paramsSize);
-
-                params[0] = (size >> 24) & 0xFF;
-                params[1] = (size >> 16) & 0xFF;
-                params[2] = (size >> 8) & 0xFF;
-                params[3] = size & 0xFF;
-
-                int i = 0;
-                char c;
-
-                while(c = *var->name++) {
-                    params[4 + i] = c;
-
-                    if(c == '\0') break;
-                    ++i;
-                }
-
-                appendInstruction(func.blocks[0], S_ALLOC, params, paramsSize);
-
-                if(var->value != NULL) {
-                    if(((AST_TREE_BRANCH*)var->value)->type == AST_TYPE_VALUE) {
-                        AST_VALUE* val = (AST_VALUE*)var->value;
-
-                        if(val->valueType != var->type) {
-                            printf("Error: the variable value doesn't match the variable type!\n");
-                            return func;
-                        }
-
-                        int size;
-
-                        if(var->type == 0x01) { // i32
-                            size = 4;
-                            params = malloc(4);
-
-                            int num = atoi(val->value);
-
-                            params[0] = (num >> 24) & 0xFF;
-                            params[1] = (num >> 16) & 0xFF;
-                            params[2] = (num >> 8) & 0xFF;
-                            params[3] = num & 0xFF;
-                        }
-
-                        appendInstruction(func.blocks[0], PTR_SET, params, size);
-                    }
-                }
-
                 break;
 
         }
