@@ -6,13 +6,13 @@
 
 #include "./parser.h"
 
-#include "../parser/structs/functions.h"
+#include "../../parser/structs/functions.h"
 
-#include "../ir/structs.h"
-#include "../ir/ir.h"
-#include "../ir/instructions.h"
+#include "../../ir/structs.h"
+#include "../../ir/ir.h"
+#include "../../ir/instructions.h"
 
-#include "../utils/hash.h"
+#include "../../utils/hash.h"
 
 /**
  * Parses QuickAssembly instructions.
