@@ -2,6 +2,7 @@
  * QuickAssembly Value types parsing.
  */
 
+#include <stdio.h>
 #include <string.h>
 
 /**
@@ -17,4 +18,27 @@ void parseInt32(unsigned char* buff, int startIndex, char* str) {
     buff[startIndex + 1] = (i >> 16) & 0xFF;
     buff[startIndex + 2] = (i >> 8) & 0xFF;
     buff[startIndex + 3] = i & 0xFF;
+}
+
+
+/**
+ * Parses a variable name.
+ * @param buff the buff to append the bytes to.
+ * @param startIndex the starting index of where to append the bytes.
+ * @param str the string containing the variable name.
+ */
+void parseVariableName(unsigned char* buff, int startIndex, char* str) {
+    if(str[0] != '%') {
+        printf("Error: Variable names must start with %%! Got %s\n", str);
+        return;
+    }
+
+    --startIndex;
+
+    int i = 1;
+
+    while(str[i] != '\0') {
+        buff[startIndex + i] = str[i];
+        ++i;
+    }
 }
