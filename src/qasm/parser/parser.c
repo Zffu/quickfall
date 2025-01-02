@@ -112,6 +112,13 @@ inline IR_INSTRUCTION* parseInstruction(char** buff, int size) {
             break;
         case 2887:
             instruction->opCode = PTR_SET;
+            int size = 4 + strlen(buff[2]) - 1;
+            b = malloc(size);
+            parseInt32(b, 0, buff[1]);
+            parseVariableName(b, 5, buff[2]);
+
+            instruction->params = b;
+            instruction->paramCount = size;
             break;
         case 2472:
             instruction->opCode = PTR_LOAD;

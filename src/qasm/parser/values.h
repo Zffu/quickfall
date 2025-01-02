@@ -20,6 +20,6 @@ void parseInt32(unsigned char* buff, int startIndex, char* str);
  * @param startIndex the starting index of where to append the bytes.
  * @param str the string containing the variable name.
  */
-void parseVariableName(unsigned char* buff, int startIndex, char* str);
+int parseVariableName(unsigned char* buff, int startIndex, char* str);
 
 #endif
