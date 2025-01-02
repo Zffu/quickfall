@@ -67,30 +67,38 @@ inline IR_INSTRUCTION* parseInstruction(char** buff, int size) {
 
     int instructionHash = hashstr(buff[0]);
 
-    unsigned char* buff;
+    unsigned char* b;
 
     // Determines the instruction type based on the string hash.
     switch(instructionHash) {
         case 2985:
             instruction->opCode = BLOCK_SWAP;
-            buff = malloc(4);
-            parseInt32(buff, 0, buff[1]);
+            b = malloc(4);
+            parseInt32(b, 0, buff[1]);
 
-            instruction->params = buff;
+            instruction->params = b;
             instruction->paramCount = 4;
             break;
         case 2987:
             instruction->opCode = COND_BLOCK_SWAP;
             int size = 4 + strlen(buff[2]) - 1;
-            buff = malloc(size);
-            parseInt32(buff, 0, buff[1]);
-            parseVariableName(buff, 5, buff[2]);
+            b = malloc(size);
+            parseInt32(b, 0, buff[1]);
+            parseVariableName(b, 5, buff[2]);
 
-            instruction->params = buff;
+            instruction->params = b;
             instruction->paramCount = size;
             break;
         case 3275:
             instruction->opCode = LOGICAL_BLOCK_SWAP;
+            int size = 8 + strlen(buff[3]) - 1;
+            b = malloc(size);
+            parseInt32(b, 0, buff[1]);
+            parseInt32(b, 5, buff[2]);
+            parseVariableName(b, 10, buff[3]);
+
+            instruction->params = b;
+            instruction->paramCount = size;
             break;
         case 1798:
             instruction->opCode = S_ALLOC;
