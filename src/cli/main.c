@@ -6,6 +6,8 @@
  * quickfall help - Shows the help command.
  */
 
+#include "../../debug/debugger.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -41,8 +43,8 @@ void showCommandEntry(char* commandName, char* description, int argumentCount, c
 void showHelpMessage() {
 	printf("\n%sQuickfall%s - The programming language.\n\nCommands:\n", TEXT_CYAN, RESET);
 	
-	char** arguments = malloc(5 * 24);
-	char** argumentDescriptions = malloc(5 * 256);
+	char** arguments = malloc(4);
+	char** argumentDescriptions = malloc(125);
 	
 	arguments[0] = "-p";
 	argumentDescriptions[0] = "Determines the targeted platform. Defaults to the current platform.";

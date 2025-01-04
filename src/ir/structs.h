@@ -2,6 +2,8 @@
  * Quickfall IR Structures.
  */
 
+#include "../utils/hashmap.h"
+
 #ifndef IR_STRUCTS_H
 #define IR_STRUCTS_H
 
@@ -38,6 +40,10 @@ typedef struct IR_FUNCTION {
     IR_BASIC_BLOCK** blocks;
     int blockCount;
 
+    unsigned char* paramTypes;
+    int parameterCount;
+
 } IR_FUNCTION;
+
 
 #endif
