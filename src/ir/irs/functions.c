@@ -20,17 +20,17 @@
  * Parses a AST function into IR.
  * @param node the AST node representing the function.
  */
-IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node) {
-    IR_FUNCTION func = {0};
-    func.blocks = malloc(sizeof(IR_BASIC_BLOCK*));
-    func.blockCount++;
+IR_FUNCTION* parseFunction(AST_FUNCTION_DEC* node) {
+    IR_FUNCTION* func = malloc(sizeof(IR_FUNCTION));
+    func->blocks = malloc(sizeof(IR_BASIC_BLOCK*));
+    func->blockCount++;
 
-    func.funcName = node->funcName;
+    func->funcName = node->funcName;
 
-    func.blocks[0] = malloc(sizeof(IR_BASIC_BLOCK));
+    func->blocks[0] = malloc(sizeof(IR_BASIC_BLOCK));
 
-    func.blocks[0]->instructions = NULL;
-    func.blocks[0]->instructionCount = 0;
+    func->blocks[0]->instructions = NULL;
+    func->blocks[0]->instructionCount = 0;
 
     //todo: move this to another function when finished
     while(node->body != NULL) {
@@ -38,7 +38,7 @@ IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node) {
 
         switch(b->type) {
             case AST_TYPE_VARIABLE_DECLARATION:
-                parseVariableDeclaration(func.blocks[0], (AST_VARIABLE_DEC*)b);
+                parseVariableDeclaration(func->blocks[0], (AST_VARIABLE_DEC*)b);
                 
                 break;
 
@@ -54,13 +54,13 @@ IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node) {
  * Parses a AST Asm function into IR.
  * @param node the AST node representing the Asm function.
  */
-IR_FUNCTION parseASMFunction(AST_ASM_FUNCTION_DEC* node) {
-    IR_FUNCTION func = {0};
-    func.blocks = malloc(sizeof(IR_BASIC_BLOCK*));
+IR_FUNCTION* parseASMFunction(AST_ASM_FUNCTION_DEC* node) {
+    IR_FUNCTION* func = malloc(sizeof(IR_FUNCTION));
+    func->blocks = malloc(sizeof(IR_BASIC_BLOCK*));
 
-    func.blocks[0] = malloc(sizeof(IR_BASIC_BLOCK));
-    func.blocks[0]->instructions = NULL;
-    func.blocks[0]->instructionCount = 0;
+    func->blocks[0] = malloc(sizeof(IR_BASIC_BLOCK));
+    func->blocks[0]->instructions = NULL;
+    func->blocks[0]->instructionCount = 0;
 
     parseQAsmInstructions(func, node->buff, node->buffIndex);
 
