@@ -2,6 +2,8 @@
  * IR for function related.
  */
 
+#include <stdlib.h>
+
 #include "../structs.h"
 
 #include "../../parser/structs/functions.h"
@@ -9,6 +11,8 @@
 #include "../../parser/structs/tree.h"
 
 #include "../../parser/ast.h"
+
+#include "./variables.h"
 
 /**
  * Parses a AST function into IR.
