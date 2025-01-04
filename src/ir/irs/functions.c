@@ -4,6 +4,8 @@
 
 #include <stdlib.h>
 
+#include "../../qasm/parser/parser.h"
+
 #include "../structs.h"
 
 #include "../../parser/structs/functions.h"
@@ -44,6 +46,23 @@ IR_FUNCTION parseFunction(AST_FUNCTION_DEC* node) {
 
         node->body = b->next;
     }
+
+    return func;
+}
+
+/**
+ * Parses a AST Asm function into IR.
+ * @param node the AST node representing the Asm function.
+ */
+IR_FUNCTION parseASMFunction(AST_ASM_FUNCTION_DEC* node) {
+    IR_FUNCTION func = {0};
+    func.blocks = malloc(sizeof(IR_BASIC_BLOCK*));
+
+    func.blocks[0] = malloc(sizeof(IR_BASIC_BLOCK));
+    func.blocks[0]->instructions = NULL;
+    func.blocks[0]->instructionCount = 0;
+
+    parseQAsmInstructions(func, node->buff, node->buffIndex);
 
     return func;
 }
