@@ -18,7 +18,7 @@
  * @param block the IR basic block.
  * @param instruction the instruction.
  */
-inline void pushInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION instruction);
+void pushInstruction(IR_BASIC_BLOCK* block, IR_INSTRUCTION* instruction);
 
 /**
  * Appends an IR instruction into the basic block.
@@ -27,7 +27,7 @@ inline void pushInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION instruction);
  * @param params the parameters of the operation.
  * @param paramsCount the count of the parameters of the operation.
  */
-void appendInstruction(IR_BASIC_BLOCK block, IR_INSTRUCTION_CODE code, unsigned char params[], int paramsCount);
+void appendInstruction(IR_BASIC_BLOCK* block, IR_INSTRUCTION_CODE code, unsigned char params[], int paramsCount);
 
 /**
  * Parses a AST function into IR.

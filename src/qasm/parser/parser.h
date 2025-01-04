@@ -11,11 +11,11 @@
 /**
  * Parses QuickAssembly instructions.
  */
-void parseQAsmInstructions(IR_FUNCTION func, char* buff, int size);
+void parseQAsmInstructions(IR_FUNCTION* func, char* buff, int size);
 
 /**
  * Parses a QuickAssembly instruction.
  */
-inline IR_INSTRUCTION* parseInstruction(char* buff, int size);
+IR_INSTRUCTION* parseInstruction(char** buff, int size);
 
 #endif

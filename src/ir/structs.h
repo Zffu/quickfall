@@ -22,7 +22,7 @@ typedef struct IR_INSTRUCTION {
  */
 typedef struct IR_BASIC_BLOCK {
 
-    IR_INSTRUCTION* instructions;
+    IR_INSTRUCTION** instructions;
     int instructionCount;
     int allocatedSize;
 
@@ -35,7 +35,7 @@ typedef struct IR_FUNCTION {
 
     char* funcName;
 
-    IR_BASIC_BLOCK* blocks;
+    IR_BASIC_BLOCK** blocks;
     int blockCount;
 
 } IR_FUNCTION;

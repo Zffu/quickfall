@@ -2,6 +2,7 @@
  * QuickAssembly Value types parsing.
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -30,7 +31,7 @@ void parseInt32(unsigned char* buff, int startIndex, char* str) {
 int parseVariableName(unsigned char* buff, int startIndex, char* str) {
     if(str[0] != '%') {
         printf("Error: Variable names must start with %%! Got %s\n", str);
-        return;
+        return -1;
     }
 
     --startIndex;
