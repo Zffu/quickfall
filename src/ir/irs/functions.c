@@ -16,51 +16,65 @@
 
 #include "./variables.h"
 
+#include "../../utils/hash.h"
+#include "../../utils/hashmap.h"
+
 /**
  * Parses a AST function into IR.
  * @param node the AST node representing the function.
  */
-IR_FUNCTION* parseFunction(AST_FUNCTION_DEC* node) {
+void parseFunction(IR_OUTPUT* out, AST_FUNCTION_DEC* node) {
+    int hash = strhash(node->funcName);
     IR_FUNCTION* func = malloc(sizeof(IR_FUNCTION));
-    func->blocks = malloc(sizeof(IR_BASIC_BLOCK*));
-    func->blockCount++;
 
-    func->funcName = node->funcName;
+    func->startBlock = out->blockCount;
+    func->typeCount = node->parameterIndex;
 
-    func->blocks[0] = malloc(sizeof(IR_BASIC_BLOCK));
+    func->types = malloc(func->typeCount + 1);
 
-    func->blocks[0]->instructions = NULL;
-    func->blocks[0]->instructionCount = 0;
+    if(node->returnType != NULL) func->types[0] = node->returnType[0];
+    else func->types[0] == 0x00;
 
-    //todo: move this to another function when finished
-    while(node->body != NULL) {
-        AST_TREE_BRANCH* b = (AST_TREE_BRANCH*) node->body;
-
-        switch(b->type) {
-            case AST_TYPE_VARIABLE_DECLARATION:
-                parseVariableDeclaration(func->blocks[0], (AST_VARIABLE_DEC*)b);
-                
-                break;
-
-        }
-
-        node->body = b->next;
+    for(int i = 0; i < func->typeCount; ++i) {
+        func->types[i + 1] = node->parameters[i].type;
     }
 
-    return func;
+    hashPut(out->map, hash, func);
+
+    out->blocks[out->blockCount] = malloc(sizeof(IR_BASIC_BLOCK));
+    out->blocks[out->blockCount]->instructions = NULL;
+    out->blocks[out->blockCount]->instructionCount = 0;
+    out->blocks[out->blockCount]->allocatedSize = 0;
+
+    while(node->body != NULL) {
+        AST_TREE_BRANCH* branch = (AST_TREE_BRANCH*) node->body;
+        switch(branch->type) {
+            case AST_TYPE_VARIABLE_DECLARATION:
+                parseVariableDeclaration(out->blocks[out->blockCount], (AST_VARIABLE_DEC*)branch);
+                break;
+        }
+        node->body = branch->next;
+    }
+
 }
 
 /**
  * Parses a AST Asm function into IR.
  * @param node the AST node representing the Asm function.
  */
-IR_FUNCTION* parseASMFunction(AST_ASM_FUNCTION_DEC* node) {
+void parseASMFunction(IR_OUTPUT* out, AST_ASM_FUNCTION_DEC* node) {
     IR_FUNCTION* func = malloc(sizeof(IR_FUNCTION));
-    func->blocks = malloc(sizeof(IR_BASIC_BLOCK*));
+    func->startBlock = out->blockCount;
 
-    func->blocks[0] = malloc(sizeof(IR_BASIC_BLOCK));
-    func->blocks[0]->instructions = NULL;
-    func->blocks[0]->instructionCount = 0;
+    func->types = malloc(1);
+    func->types[0] = 0x00;
+    func->typeCount = 1;
+    
+    hashPut(out->map, hashstr(node->funcName), func);
+
+    out->blocks[out->blockCount] = malloc(sizeof(IR_BASIC_BLOCK));
+    out->blocks[out->blockCount]->instructions = NULL;
+    out->blocks[out->blockCount]->instructionCount = 0;
 
     parseQAsmInstructions(func, node->buff, node->buffIndex);
 

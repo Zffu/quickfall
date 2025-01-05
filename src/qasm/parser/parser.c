@@ -21,7 +21,7 @@
 /**
  * Parses QuickAssembly instructions.
  */
-void parseQAsmInstructions(IR_FUNCTION* func, char* buffer, int size) {
+void parseQAsmInstructions(IR_BASIC_BLOCK* block, char* buffer, int size) {
     char** buff = malloc(sizeof(char*) * 10);
     int buffIndex = 0;
 
@@ -44,7 +44,7 @@ void parseQAsmInstructions(IR_FUNCTION* func, char* buffer, int size) {
                 printf("Error: Coudln't parse QuickAssembly instruction named %s!\n", buff[0]);
             }
             else {
-                pushInstruction(func->blocks[0], instruction);
+                pushInstruction(block, instruction);
             }
 
             secIndex = 0;

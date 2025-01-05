@@ -13,12 +13,12 @@
  * Parses a AST function into IR.
  * @param node the AST node representing the function.
  */
-IR_FUNCTION* parseFunction(AST_FUNCTION_DEC* node);
+void parseFunction(IR_OUTPUT* out, AST_FUNCTION_DEC* node);
 
 /**
  * Parses a AST Asm function into IR.
  * @param node the AST node representing the Asm function.
  */
-IR_FUNCTION* parseASMFunction(AST_ASM_FUNCTION_DEC* node);
+void parseASMFunction(IR_OUTPUT* out, AST_ASM_FUNCTION_DEC* node);
 
 #endif

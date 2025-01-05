@@ -11,7 +11,7 @@
 /**
  * Parses QuickAssembly instructions.
  */
-void parseQAsmInstructions(IR_FUNCTION* func, char* buff, int size);
+void parseQAsmInstructions(IR_BASIC_BLOCK* block, char* buff, int size);
 
 /**
  * Parses a QuickAssembly instruction.

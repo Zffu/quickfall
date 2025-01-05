@@ -35,15 +35,20 @@ typedef struct IR_BASIC_BLOCK {
  */
 typedef struct IR_FUNCTION {
 
-    char* funcName;
+    int startBlock;
 
-    IR_BASIC_BLOCK** blocks;
-    int blockCount;
-
-    unsigned char* paramTypes;
-    int parameterCount;
+    unsigned char* types;
+    int typeCount;
 
 } IR_FUNCTION;
 
+typedef struct IR_OUTPUT {
+
+    IR_BASIC_BLOCK** blocks;
+    int blockCount;
+    int allocatedBlockCount;
+
+    struct Hashmap* map;
+} IR_OUTPUT;
 
 #endif
