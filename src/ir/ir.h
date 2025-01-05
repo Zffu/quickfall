@@ -10,6 +10,7 @@
 
 #include "../parser/structs/variables.h"
 #include "../parser/structs/functions.h"
+#include "../parser/structs/tree.h"
 
 #include "../parser/ast.h"
 
@@ -28,5 +29,10 @@ void pushInstruction(IR_BASIC_BLOCK* block, IR_INSTRUCTION* instruction);
  * @param paramsCount the count of the parameters of the operation.
  */
 void appendInstruction(IR_BASIC_BLOCK* block, IR_INSTRUCTION_CODE code, unsigned char params[], int paramsCount);
+
+/**
+ * Converts the AST tree into IR.
+ */
+IR_OUTPUT* parseIR(AST_TREE_BRANCH* node);
 
 #endif
