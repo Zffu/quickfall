@@ -6,8 +6,6 @@
  * quickfall help - Shows the help command.
  */
 
-#include "../../debug/debugger.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
