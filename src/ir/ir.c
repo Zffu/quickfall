@@ -76,6 +76,9 @@ IR_OUTPUT* parseIR(AST_TREE_BRANCH* node) {
             case AST_TYPE_VARIABLE_DECLARATION:
                 parseVariableDeclaration(out->blocks[0], (AST_VARIABLE_DEC*)node);
                 break;
+            case AST_TYPE_VARIABLE_MODIFICATION:
+                parseVariableModification(out->blocks[0], (AST_VARIABLE_MOD*)node);
+                break;
         }
         node = node->next;
     }
