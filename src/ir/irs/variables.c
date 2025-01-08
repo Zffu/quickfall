@@ -60,3 +60,24 @@ inline void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* no
         appendInstruction(block, PTR_SET, params, paramsSize);
     }
 }
+
+/**
+ * Parses a variable modification.
+ * @param block the IR basic block to append to.
+ * @param node the AST node representing the variable.
+ */
+inline void parseVariableModification(IR_BASIC_BLOCK* block, AST_VARIABLE_MOD* node) {
+    int paramsSize = strlen(node->name) + getValueSize(0x01); // int32 for now, todo: change to hashmap stored type byte
+    unsigned char* params = malloc(paramsSize);
+
+    int i = 0;
+    char c;
+
+    while(c == *node->name++) {
+        params[i] = c;
+        ++i;
+    }
+
+    parseValue(params, i, node->value);
+    appendInstruction(block, PTR_SET, params, paramsSize);
+}
