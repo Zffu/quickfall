@@ -48,12 +48,12 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
                     break;
                 }
             case FUNCTION:
-                void* node = parseFunctionDeclaration(result, i);
+                node = parseFunctionDeclaration(result, i);
                 append(curr, root, node);
                 break;
             
             case ASM_FUNCTION:
-                void* node = parseASMFunctionDeclaration(result, i);
+                node = parseASMFunctionDeclaration(result, i);
                 append(curr, root, node);
                 break;
  
