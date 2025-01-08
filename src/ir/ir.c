@@ -59,6 +59,11 @@ void appendInstruction(IR_BASIC_BLOCK* block, IR_INSTRUCTION_CODE code, unsigned
  */
 IR_OUTPUT* parseIR(AST_TREE_BRANCH* node) {
     IR_OUTPUT* out = malloc(sizeof(IR_OUTPUT));
+
+    out->allocatedBlockCount = 0;
+    out->blockCount = 0;
+    out->blocks = NULL;
+    out->map = malloc(sizeof(struct Hashmap));
     
     while(node != NULL) {
         switch(node->type) {
