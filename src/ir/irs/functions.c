@@ -52,6 +52,9 @@ void parseFunction(IR_OUTPUT* out, AST_FUNCTION_DEC* node) {
             case AST_TYPE_VARIABLE_DECLARATION:
                 parseVariableDeclaration(out->blocks[out->blockCount], (AST_VARIABLE_DEC*)branch);
                 break;
+            case AST_TYPE_VARIABLE_MODIFICATION:
+                parseVariableModification(out->blocks[out->blockCount], (AST_VARIABLE_MOD*)branch);
+                break;
         }
         node->body = branch->next;
     }
