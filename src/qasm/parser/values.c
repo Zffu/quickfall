@@ -43,5 +43,8 @@ int parseVariableName(unsigned char* buff, int startIndex, char* str) {
         ++i;
     }
 
+    str[i] = '\0';
+    ++i;
+
     return i + startIndex;
 }

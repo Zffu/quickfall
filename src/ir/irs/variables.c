@@ -22,11 +22,17 @@ void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node) {
     if(node->type[0] == 0x01) allocSize = 32; // int32
 
     int paramsSize = 4 + strlen(node->name);
-    unsigned char* params = malloc(paramsSize);
+
+    unsigned char* params = malloc(paramsSize - 1);
 
     char* name = node->name;
 
-    int i = 0;
+    params[0] = (allocSize >> 24) & 0xFF;
+    params[1] = (allocSize >> 16) & 0xFF;
+    params[2] = (allocSize >> 8) & 0xFF;
+    params[3] = allocSize & 0xFF;
+
+    int i = 4;
     char c;
 
     while(c = *node->name++) {
@@ -35,11 +41,6 @@ void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node) {
         if(c == '\0') break;
         ++i;
     }
-
-    params[i + 1] = (allocSize >> 24) & 0xFF;
-    params[i + 2] = (allocSize >> 16) & 0xFF;
-    params[i + 3] = (allocSize >> 8) & 0xFF;
-    params[i + 4] = allocSize & 0xFF;
 
     appendInstruction(block, S_ALLOC, params, paramsSize);
 
