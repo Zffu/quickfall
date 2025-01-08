@@ -24,7 +24,7 @@
  * @param node the AST node representing the function.
  */
 void parseFunction(IR_OUTPUT* out, AST_FUNCTION_DEC* node) {
-    int hash = strhash(node->funcName);
+    int hash = hashstr(node->funcName);
     IR_FUNCTION* func = malloc(sizeof(IR_FUNCTION));
 
     func->startBlock = out->blockCount;
@@ -33,10 +33,10 @@ void parseFunction(IR_OUTPUT* out, AST_FUNCTION_DEC* node) {
     func->types = malloc(func->typeCount + 1);
 
     if(node->returnType != NULL) func->types[0] = node->returnType[0];
-    else func->types[0] == 0x00;
+    else func->types[0] = 0x00;
 
     for(int i = 0; i < func->typeCount; ++i) {
-        func->types[i + 1] = node->parameters[i].type;
+        func->types[i + 1] = node->parameters[i].type[0];
     }
 
     hashPut(out->map, hash, func);
@@ -79,5 +79,5 @@ void parseASMFunction(IR_OUTPUT* out, AST_ASM_FUNCTION_DEC* node) {
     out->blocks[out->blockCount]->instructions = NULL;
     out->blocks[out->blockCount]->instructionCount = 0;
 
-    parseQAsmInstructions(func, node->buff, node->buffIndex);
+    parseQAsmInstructions(out->blocks[out->blockCount], node->buff, node->buffIndex);
 }
