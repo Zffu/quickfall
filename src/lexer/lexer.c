@@ -79,7 +79,7 @@ LEXER_RESULT runLexer(char* string, int size) {
 
 			int keywordLen = 0;
 			
-			while(isalpha(c)) {
+			while(isalpha(c) || isdigit(c)) {
 				buff[keywordLen] = c;
 				buff[keywordLen + 1] = '\0';
 				keywordLen++;

@@ -22,6 +22,7 @@
 AST_VARIABLE_DEC* parseVariableDeclaration(LEXER_RESULT result, int index) {
     AST_VARIABLE_DEC* var = malloc(sizeof(AST_VARIABLE_DEC));
     var->astType  = AST_TYPE_VARIABLE_DECLARATION;
+    var->type = malloc(1);
 
     switch(result.tokens[index].type) {
         case TYPE_INT32:
@@ -41,7 +42,6 @@ AST_VARIABLE_DEC* parseVariableDeclaration(LEXER_RESULT result, int index) {
     }
 
     var->name = result.tokens[index + 1].value;
-    
 
     if(result.tokens[index + 2].type == DECLARE) {
         void* value = parseValueGroup(result, index + 3);

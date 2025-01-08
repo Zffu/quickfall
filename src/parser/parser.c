@@ -25,36 +25,54 @@
  */
 void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
     AST_TREE_BRANCH* root = NULL;
-    AST_TREE_BRANCH* curr = NULL;
+    AST_TREE_BRANCH* curr = root;
 
     for(int i = startingIndex; i < result.size; ++i) {
         TOKEN t = result.tokens[i];
 
         switch(t.type) {
+            case TYPE_INT32:
             case VAR:
                 void* node = parseVariableDeclaration(result, i);
-                append(curr, root, node);
-                break;
-            case KEYWORD:
-                if(result.tokens[i + 1].type == KEYWORD) {
-                    void* node = parseVariableDeclaration(result, i);
-                    append(curr, root, node);
-                    break;
+                if(node != NULL) {
+                    curr = node;
+                    if(root == NULL) root = curr;
+                    curr = curr->next;
                 }
-                
+                i = ((AST_TREE_BRANCH*)node)->endingIndex;
+                break;
+
+            case KEYWORD:
                 if(result.tokens[i + 1].type == DECLARE) {
                     void* node = parseVariableModification(result, i);
-                    append(curr, root, node);
+                    if(node != NULL) {
+                        curr = node;
+                        if(root == NULL) root = curr;
+                        curr = curr->next;
+                    }
+                    i = ((AST_TREE_BRANCH*)node)->endingIndex;
                     break;
                 }
+                break;
+
             case FUNCTION:
                 node = parseFunctionDeclaration(result, i);
-                append(curr, root, node);
+                if(node != NULL) {
+                    curr = node;
+                    if(root == NULL) root = curr;
+                    curr = curr->next;
+                }
+                i = ((AST_TREE_BRANCH*)node)->endingIndex;
                 break;
             
             case ASM_FUNCTION:
                 node = parseASMFunctionDeclaration(result, i);
-                append(curr, root, node);
+                if(node != NULL) {
+                    curr = node;
+                    if(root == NULL) root = curr;
+                    curr = curr->next;
+                }
+                i = ((AST_TREE_BRANCH*)node)->endingIndex; // todo: fix asmf ending index
                 break;
  
             case BRACKETS_CLOSE:
@@ -77,7 +95,13 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
  * @param node the node to add to the tree.
  */
 void append(AST_TREE_BRANCH* curr, AST_TREE_BRANCH* root, void* node) {
-    if(node == NULL) return;
+    if(node == NULL) {
+        printf("oof");
+        return;
+    }
+    else {
+        printf("no oof");
+    }
 
     if(curr == NULL) {
         root = node;

@@ -22,6 +22,7 @@
  */
 AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index) {
     AST_FUNCTION_DEC* func = malloc(sizeof(AST_FUNCTION_DEC));
+    func->returnType = malloc(1);
 
     func->type = AST_TYPE_FUNCTION_DECLARATION;
 
