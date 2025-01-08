@@ -77,6 +77,4 @@ void parseASMFunction(IR_OUTPUT* out, AST_ASM_FUNCTION_DEC* node) {
     out->blocks[out->blockCount]->instructionCount = 0;
 
     parseQAsmInstructions(func, node->buff, node->buffIndex);
-
-    return func;
 }
