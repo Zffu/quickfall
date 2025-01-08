@@ -19,7 +19,7 @@
  * @param result the Lexer result.
  * @param index the index where the parsing needs to start.
  */
-AST_VARIABLE_DEC* parseVariableDeclaration(LEXER_RESULT result, int index) {
+AST_VARIABLE_DEC* parseASTVariableDeclaration(LEXER_RESULT result, int index) {
     AST_VARIABLE_DEC* var = malloc(sizeof(AST_VARIABLE_DEC));
     var->astType  = AST_TYPE_VARIABLE_DECLARATION;
     var->type = malloc(1);

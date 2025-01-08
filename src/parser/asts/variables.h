@@ -14,7 +14,7 @@
  * @param result the Lexer result.
  * @param index the index where the parsing needs to start.
  */
-AST_VARIABLE_DEC* parseVariableDeclaration(LEXER_RESULT result, int index);
+AST_VARIABLE_DEC* parseASTVariableDeclaration(LEXER_RESULT result, int index);
 
 /**
  * Parses a variable modification.

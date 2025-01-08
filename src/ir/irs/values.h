@@ -17,6 +17,6 @@ int parseValue(unsigned char* buff, int startIndex, void* value);
  * Gets the value size for a certain type for a  parameter.
  * @param type the type's byte indentifier.
  */
-inline int getValueSize(unsigned char type);
+int getValueSize(unsigned char type);
 
 #endif

@@ -117,6 +117,7 @@ AST_ASM_FUNCTION_DEC* parseASMFunctionDeclaration(LEXER_RESULT result, int index
  */
 void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result, int index) {
     int allocated = 10;
+    func->parameterIndex = 0;
 
     for(; index < result.size; ++index) {
         TOKEN t = result.tokens[index];

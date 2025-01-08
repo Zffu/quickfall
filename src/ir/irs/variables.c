@@ -3,6 +3,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "../../parser/structs/variables.h"
@@ -16,17 +17,16 @@
  * @param block the IR basic block to append to.
  * @param node the AST node representing the variable.
  */
-inline void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node) {
+void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node) {
     int allocSize = 0;
-
     if(node->type[0] == 0x01) allocSize = 32; // int32
-    
+
     int paramsSize = 4 + strlen(node->name);
     unsigned char* params = malloc(paramsSize);
 
     char* name = node->name;
 
-    int i;
+    int i = 0;
     char c;
 
     while(c = *node->name++) {

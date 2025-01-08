@@ -12,7 +12,7 @@
  * @param output the output of the IR convertor.
  */
 void writeQASM(FILE* fptr, IR_OUTPUT* output) {
-    for(int i = 0; i < output->blockCount; ++i) {
+    for(int i = 0; i < output->blockCount + 1; ++i) {
         fprintf(fptr, "%d:\n", i);
     }
 }

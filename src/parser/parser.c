@@ -3,6 +3,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "./parser.h"
 
@@ -24,8 +25,10 @@
  * @param type the output AST type.
  */
 void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
-    AST_TREE_BRANCH* root = NULL;
+    AST_TREE_BRANCH* root = malloc(sizeof(AST_TREE_BRANCH));
     AST_TREE_BRANCH* curr = root;
+
+    root->type = 0x99;
 
     for(int i = startingIndex; i < result.size; ++i) {
         TOKEN t = result.tokens[i];
@@ -33,11 +36,10 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
         switch(t.type) {
             case TYPE_INT32:
             case VAR:
-                void* node = parseVariableDeclaration(result, i);
+                void* node = parseASTVariableDeclaration(result, i);
                 if(node != NULL) {
+                    curr->next = node;
                     curr = node;
-                    if(root == NULL) root = curr;
-                    curr = curr->next;
                 }
                 i = ((AST_TREE_BRANCH*)node)->endingIndex;
                 break;
@@ -46,9 +48,8 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
                 if(result.tokens[i + 1].type == DECLARE) {
                     void* node = parseVariableModification(result, i);
                     if(node != NULL) {
+                        curr->next = node;
                         curr = node;
-                        if(root == NULL) root = curr;
-                        curr = curr->next;
                     }
                     i = ((AST_TREE_BRANCH*)node)->endingIndex;
                     break;
@@ -58,9 +59,8 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
             case FUNCTION:
                 node = parseFunctionDeclaration(result, i);
                 if(node != NULL) {
+                    curr->next = node;
                     curr = node;
-                    if(root == NULL) root = curr;
-                    curr = curr->next;
                 }
                 i = ((AST_TREE_BRANCH*)node)->endingIndex;
                 break;
@@ -68,23 +68,27 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
             case ASM_FUNCTION:
                 node = parseASMFunctionDeclaration(result, i);
                 if(node != NULL) {
+                    curr->next = node;
                     curr = node;
-                    if(root == NULL) root = curr;
-                    curr = curr->next;
                 }
                 i = ((AST_TREE_BRANCH*)node)->endingIndex; // todo: fix asmf ending index
                 break;
  
             case BRACKETS_CLOSE:
-                if(type == AST_TYPE_FUNC_ROOT) return root;
+                if(type == AST_TYPE_FUNC_ROOT) {
+                    root->endingIndex = i;
+                    return root;
+                }
                 break;
 
             default:
                 printf("Error: Unexcepted token %d!\n", t.type);
                 break;
         }
+        root->endingIndex = i;
     }
 
+    curr->next = NULL;
     return root;
 }
 
@@ -95,13 +99,7 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
  * @param node the node to add to the tree.
  */
 void append(AST_TREE_BRANCH* curr, AST_TREE_BRANCH* root, void* node) {
-    if(node == NULL) {
-        printf("oof");
-        return;
-    }
-    else {
-        printf("no oof");
-    }
+    if(node == NULL) return;
 
     if(curr == NULL) {
         root = node;

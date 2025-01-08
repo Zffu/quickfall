@@ -3,6 +3,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../../qasm/parser/parser.h"
 
@@ -46,19 +47,19 @@ void parseFunction(IR_OUTPUT* out, AST_FUNCTION_DEC* node) {
     out->blocks[out->blockCount]->instructionCount = 0;
     out->blocks[out->blockCount]->allocatedSize = 0;
 
-    while(node->body != NULL) {
-        AST_TREE_BRANCH* branch = (AST_TREE_BRANCH*) node->body;
+    AST_TREE_BRANCH* branch = (AST_TREE_BRANCH*) node->body;
+    while(branch->next != NULL) {
+        branch = ((AST_TREE_BRANCH*)branch->next);
+
         switch(branch->type) {
             case AST_TYPE_VARIABLE_DECLARATION:
-                parseVariableDeclaration(out->blocks[out->blockCount], (AST_VARIABLE_DEC*)branch);
+                parseVariableDeclaration(out->blocks[out->blockCount], (AST_VARIABLE_DEC*) branch);
                 break;
             case AST_TYPE_VARIABLE_MODIFICATION:
                 parseVariableModification(out->blocks[out->blockCount], (AST_VARIABLE_MOD*)branch);
                 break;
         }
-        node->body = branch->next;
     }
-
 }
 
 /**
