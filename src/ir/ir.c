@@ -74,4 +74,6 @@ IR_OUTPUT* parseIR(AST_TREE_BRANCH* node) {
         }
         node = node->next;
     }
+
+    return out;
 }
