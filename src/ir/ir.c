@@ -16,6 +16,7 @@
 
 #include "./irs/variables.h"
 #include "./irs/values.h"
+#include "./irs/functions.h"
 
 #include "../parser/ast.h"
 
@@ -50,4 +51,27 @@ void appendInstruction(IR_BASIC_BLOCK* block, IR_INSTRUCTION_CODE code, unsigned
     instruction->paramCount = paramsCount;
 
     pushInstruction(block, instruction);
+}
+
+
+/**
+ * Converts the AST tree into IR.
+ */
+IR_OUTPUT* parseIR(AST_TREE_BRANCH* node) {
+    IR_OUTPUT* out = malloc(sizeof(IR_OUTPUT));
+    
+    while(node != NULL) {
+        switch(node->type) {
+            case AST_TYPE_FUNCTION_DECLARATION:
+                parseFunction(out, (AST_FUNCTION_DEC*)node);
+                break;
+            case AST_TYPE_ASM_FUNCTION_DECLARATION:
+                parseASMFunction(out, (AST_ASM_FUNCTION_DEC*)node);
+                break;
+            case AST_TYPE_VARIABLE_DECLARATION:
+                parseVariableDeclaration(out->blocks[0], (AST_VARIABLE_DEC*)node);
+                break;
+        }
+        node = node->next;
+    }
 }
