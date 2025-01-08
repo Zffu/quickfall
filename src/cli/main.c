@@ -19,7 +19,10 @@
 #include "../compiler/compiler.h"
 #include "../compiler/pe/pe.h"
 
+#include "../ir/structs.h"
 #include "../ir/ir.h"
+
+#include "../qasm/writer/writer.h"
 
 #include "../utils/logging.c"
 
@@ -115,7 +118,17 @@ int main(int argc, char* argv[]) {
 			fclose(fptr);
 
 			LEXER_RESULT result = runLexer(buff, size);
-			void* root = parseRoot(result, 0, AST_TYPE_ROOT);
+			AST_TREE_BRANCH* root = (AST_TREE_BRANCH*) parseRoot(result, 0, AST_TYPE_ROOT);
+			IR_OUTPUT* irOut = parseIR(root);
+
+			if(irOut == NULL) {
+				printf("Error: IR parsing failed\n");
+				return -1;
+			}
+
+			fptr = fopen(outputFile, "w");
+			
+			writeQASM(fptr, irOut); // experimental: ir -> QASM
 			
 			break;
 		case 'v':
