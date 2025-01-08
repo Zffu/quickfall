@@ -14,6 +14,8 @@
 #include "./structs/variables.h"
 
 #include "./asts/variables.h"
+#include "./asts/functions.h"
+
 
 /**
  * Parses the Lexer result into an AST root.
@@ -45,7 +47,16 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
                     append(curr, root, node);
                     break;
                 }
+            case FUNCTION:
+                void* node = parseFunctionDeclaration(result, i);
+                append(curr, root, node);
+                break;
             
+            case ASM_FUNCTION:
+                void* node = parseASMFunctionDeclaration(result, i);
+                append(curr, root, node);
+                break;
+ 
             case BRACKETS_CLOSE:
                 if(type == AST_TYPE_FUNC_ROOT) return root;
                 break;

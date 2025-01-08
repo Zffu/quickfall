@@ -20,9 +20,9 @@ AST_VALUE* parseASTValue(LEXER_RESULT result, int index) {
     AST_VALUE* value = malloc(sizeof(AST_VALUE));
     value->astType = AST_TYPE_VALUE;
 
-
     switch(result.tokens[index].type) {
         case NUMBER:
+            value->valueType = malloc(1);
             value->valueType[0] = 0x01; //i32
             break;
         default:
