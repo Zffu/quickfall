@@ -16,5 +16,11 @@
  */
 inline void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node);
 
+/**
+ * Parses a variable modification.
+ * @param block the IR basic block to append to.
+ * @param node the AST node representing the variable.
+ */
+inline void parseVariableModification(IR_BASIC_BLOCK* block, AST_VARIABLE_MOD* node);
 
 #endif
