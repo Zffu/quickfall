@@ -60,6 +60,12 @@ void parseQAsmInstructions(IR_BASIC_BLOCK* block, char* buffer, int size) {
             secIndex++;
         }
     }
+
+    for(int i = 0; i < 10; ++i) {
+        free(buff[i]);
+    }
+
+    free(buff);
 }
 
 /**
