@@ -18,7 +18,11 @@
 
 #include "../compiler/compiler.h"
 #include "../compiler/pe/pe.h"
-#include "../compiler/ir.h"
+
+#include "../ir/structs.h"
+#include "../ir/ir.h"
+
+#include "../qasm/writer/writer.h"
 
 #include "../utils/logging.c"
 
@@ -40,8 +44,8 @@ void showCommandEntry(char* commandName, char* description, int argumentCount, c
 void showHelpMessage() {
 	printf("\n%sQuickfall%s - The programming language.\n\nCommands:\n", TEXT_CYAN, RESET);
 	
-	char** arguments = malloc(5 * 24);
-	char** argumentDescriptions = malloc(5 * 256);
+	char** arguments = malloc(4);
+	char** argumentDescriptions = malloc(125);
 	
 	arguments[0] = "-p";
 	argumentDescriptions[0] = "Determines the targeted platform. Defaults to the current platform.";
@@ -114,17 +118,17 @@ int main(int argc, char* argv[]) {
 			fclose(fptr);
 
 			LEXER_RESULT result = runLexer(buff, size);
-			AST_NODE* root = parseNodes(result, 0, AST_ROOT);
+			AST_TREE_BRANCH* root = (AST_TREE_BRANCH*) parseRoot(result, 0, AST_TYPE_ROOT);
+			IR_OUTPUT* irOut = parseIR(root);
 
-			IR_CTX* ctx = makeContext(root);
-
-			if(ctx == NULL) {
-				printf("Error: the IR context is null! Something went wrong during compiling! Please check any logs for errors\n");
+			if(irOut == NULL) {
+				printf("Error: IR parsing failed\n");
 				return -1;
 			}
 
 			fptr = fopen(outputFile, "w");
-			compile(ctx, fptr);
+
+			writeQASM(fptr, irOut); // experimental: ir -> QASM
 			
 			break;
 		case 'v':

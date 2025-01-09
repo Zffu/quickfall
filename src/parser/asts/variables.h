@@ -1,26 +1,26 @@
 /**
- * Variable-related AST parsing.
+ * Parsing for variable related ASTs.
  */
 
-#include "../ast.h"
+#include "../structs/variables.h"
 
 #include "../../lexer/lexer.h"
 
-#ifndef AST_VARIABLES_H
-#define AST_VARIABLES_H
-
-/**
- * Parses a variable value.
- * @param result the lexer result.
- * @param index the starting index.
- */
-AST_NODE* parseVariableValue(LEXER_RESULT result, int index);
+#ifndef VARIABLES_ASTS_H
+#define VARIABLES_ASTS_H
 
 /**
  * Parses a variable declaration.
- * @param result the lexer result.
- * @param index the starting index.
+ * @param result the Lexer result.
+ * @param index the index where the parsing needs to start.
  */
-AST_NODE* parseVariableDeclaration(LEXER_RESULT result, int index);
+AST_VARIABLE_DEC* parseASTVariableDeclaration(LEXER_RESULT result, int index);
+
+/**
+ * Parses a variable modification.
+ * @param result the Lexer result.
+ * @param index the index where the parsing needs to start.
+ */
+AST_VARIABLE_MOD* parseVariableModification(LEXER_RESULT result, int index);
 
 #endif

@@ -1,215 +1,168 @@
 /**
- * Function-related AST parsing.
+ * Parsing for function related ASTs.
  */
 
-#include <stdint.h>
+#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 
-#include "./variables.h"
+#include "./functions.h"
+
+#include "../structs/functions.h"
 
 #include "../parser.h"
 #include "../ast.h"
 
-#include "../../lexer/tokens.h"
 #include "../../lexer/lexer.h"
 
-#include "../../utils/logging.c"
+/**
+ * Parses a function declaration into AST.
+ * @param result the Lexer result.
+ * @param index the index of the start of the parsing.
+ */
+AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index) {
+    AST_FUNCTION_DEC* func = malloc(sizeof(AST_FUNCTION_DEC));
+    func->returnType = malloc(1);
+
+    func->type = AST_TYPE_FUNCTION_DECLARATION;
+
+    int offset;
+
+    switch(result.tokens[index + 2].type) {
+        case PAREN_OPEN:
+            if(result.tokens[index + 1].type != KEYWORD) {
+                printf("Error: Excepted a keyword as function name!\n");
+                return NULL;
+            }
+
+            func->funcName = result.tokens[index + 1].value;
+            func->returnType[0] = 0x00;
+            offset = 3;
+            break;
+        case KEYWORD:
+            if(result.tokens[index + 1].type != TYPE_INT32) {
+                printf("Error: Invalid type as function return type!\n");
+                return NULL;
+            }
+
+            func->funcName = result.tokens[index + 2].value;
+            func->returnType[0] = 0x01;
+            offset = 4;
+            break;
+        
+        default:
+            printf("Error: couldn't parse function declaration!\n");
+            return NULL;
+    }
+
+    index += offset;
+
+    parseFunctionParameters(func, result, index);
+
+    if(result.tokens[func->endingIndex + 1].type != BRACKETS_OPEN) {
+        printf("Error: Excepted function body!\n");
+        return NULL;
+    }
+
+    void* root = parseRoot(result, func->endingIndex + 2, AST_TYPE_FUNC_ROOT);
+
+    if(root == NULL) {
+        printf("Error: couldn't parse function body!\n");
+        return NULL;
+    }
+
+    func->body = root;
+    func->endingIndex = ((AST_TREE_BRANCH*)root)->endingIndex;
+
+    return func;
+}
+
 
 /**
- * Parse the parameters from a function definition (for example).
- * @param result the lexer result.
- * @param index the starting index of the parsing.
+ * Parses an ASM function declaration into AST.
+ * @param result the Lexer result.
+ * @param index the index of the start of the parsing.
  */
-AST_NODE* parseParameters(LEXER_RESULT result, int index) {
+AST_ASM_FUNCTION_DEC* parseASMFunctionDeclaration(LEXER_RESULT result, int index) {
+    AST_ASM_FUNCTION_DEC* func = malloc(sizeof(AST_ASM_FUNCTION_DEC));
 
-	AST_NODE* root = createASTNode(AST_PARAMETER);
-	AST_NODE* current = root;
+    if(result.tokens[index + 1].type != KEYWORD) {
+        printf("Error: Excepted keyword as ASM function name!\n");
+        return NULL;
+    }
 
-	int stack = 0;	
+    func->type = AST_TYPE_ASM_FUNCTION_DECLARATION;
+    func->funcName = result.tokens[index + 1].value;
 
-	for(; index < result.size + 1; ++index) {
-		TOKEN t = result.tokens[index];
+    parseFunctionParameters((AST_FUNCTION_DEC*)func, result, index + 3);
 
-		switch(t.type) {
-			case COMMA:
-				if(stack == 0) {
-					return NULL;
-				}
+    index = func->endingIndex;
 
-				stack = 0;
-				current->next = createASTNode(AST_PARAMETER);
-				current = current->next;
-				break;
-			case NONE:
-			case KEYWORD:
-				if(stack == 2) {
-					return NULL;
-				}
+    if(result.tokens[index + 1].type != BRACKETS_OPEN || result.tokens[index + 2].type != STRING || result.tokens[index + 3].type != BRACKETS_CLOSE) {
+        printf("Error: Badly made ASM function body!\n");
+        return NULL;
+    }
 
-				TOKEN next = result.tokens[index + 1];
+    func->buff = result.tokens[index + 2].value;
+    func->buffIndex = strlen(func->buff);
 
-				if(next.type == NONE || next.type == KEYWORD) {
-					current->left = createASTNode(AST_TYPE);
-					current->left->value = next.value;
-				}
-				else {
-					current->right = createASTNode(AST_VARIABLE_NAME);
-					current->right->value = t.value;
-				}
-
-				stack++;
-				break;
-			case PAREN_CLOSE:
-				root->endingIndex = index;
-				return root;
-			case PAREN_OPEN:
-				continue;
-			default:
-				printf("Type: %d", t.type);
-				return NULL;
-
-		}
-	}
+    return func;
 }
+
 
 /**
- * Parses the arguments passed during a function call (for example).
- * @param result the result of the lexer.
- * @param index the starting index of the parsing.
+ * Parses the parameters of a function into AST.
+ * @param result the Lexer result.
+ * @param index the index of the start of the parsing.
  */
-AST_NODE* parseArguments(LEXER_RESULT result, int index) {
-	AST_NODE* root = NULL;
-	AST_NODE* current = root;
+void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result, int index) {
+    int allocated = 10;
+    func->parameterIndex = 0;
 
-	for(; index < result.size + 1; ++index) {
-		TOKEN t = result.tokens[index];
+    for(; index < result.size; ++index) {
+        TOKEN t = result.tokens[index];
 
-		if(t.type == PAREN_CLOSE) {
-			return root;
-		}
+        switch(t.type) {
+            case TYPE_INT32:
+                if(result.tokens[index + 1].type != KEYWORD) {
+                    printf("Error: Excepted keyword as parameter name!\n");
+                    return;
+                }
 
-		AST_NODE* arg = parseVariableValue(result, index);
-		
-		if(arg == NULL) return NULL;
+                func->parameters[func->parameterIndex].name = result.tokens[index + 1].value;
+                func->parameters[func->parameterIndex].type[0] = 0x01; // i32
 
-		index = arg->endingIndex;
+                func->parameterIndex++;
+                if(func->parameterIndex > allocated) {
+                    allocated *= 1.25;
+                    func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER) * allocated);
+                }
+                break;
+            case KEYWORD:
+                if(result.tokens[index + 1].type != COMMA) {
+                    printf("Error: Excepted comma after parameter!\n");
+                    return;
+                }
 
-		if(root == NULL) {
-			root = arg;
-			current = root;
-		}
-		else {
-			current->next = arg;	
-		}
-	}
+                if(result.tokens[index - 1].type == COMMA) {
+                    func->parameters[func->parameterIndex].name = result.tokens[index].value;
+                    func->parameters[func->parameterIndex].type[0] = 0x00;
+                    func->parameterIndex++;
+                    if(func->parameterIndex > allocated) {
+                        allocated *= 1.25;
+                        func->parameters = realloc(func->parameters, sizeof(AST_PARAMETER) * allocated);
+                    }
+                }
 
-	return NULL;
-}
+                break;
+            
+            case PAREN_CLOSE:
+                func->endingIndex = index;
+                return;
 
-AST_NODE* parseFunctionDeclaration(LEXER_RESULT result, int index) {
-
-	AST_NODE* node = createASTNode(AST_FUNCTION_DECLARATION);
-	node->left = createASTNode(AST_FUNCTION_HEADER);
-
-	if(result.tokens[index].type != KEYWORD) {
-		return NULL;
-	}
-
-	int off = 1;
-
-	switch(result.tokens[index + 1].type) {
-		case KEYWORD:
-			node->left->value = result.tokens[index].value;
-			node->left->right = createASTNode(AST_VARIABLE_NAME);
-			node->left->right->value = result.tokens[index + 1].value;
-			++off;
-			break;
-		case PAREN_OPEN:
-			node->left->value = "void";
-			node->left->right = createASTNode(AST_VARIABLE_NAME);
-			node->left->right->value = result.tokens[index].value;
-			break;
-		default:
-			return NULL;
-	}
-
-	AST_NODE* params = parseParameters(result, index + off);
-
-	if(params == NULL) return NULL;
-
-	node->left->left = params;
-
-	node->right = parseNodes(result, params->endingIndex, AST_FUNCTION_ROOT);
-
-	node->endingIndex = node->right->endingIndex;
-
-	return node;
-}
-
-AST_NODE* parseASMFunctionDeclaration(LEXER_RESULT result, int index) {
-	AST_NODE* node = createASTNode(AST_ASM_FUNCTION_DECLARATION);
-	
-	node->left = createASTNode(AST_FUNCTION_HEADER);
-
-	if(result.tokens[index + 1].type != KEYWORD) {
-		return NULL;
-	}
-
-	node->left->right = createASTNode(AST_VARIABLE_NAME);
-	node->left->right->value = result.tokens[index + 1].value;
-
-	AST_NODE* params = parseParameters(result, index + 2);
-
-	if(params == NULL) {
-		return NULL;
-	}
-
-	node->left->left = params;
-
-	index = params->endingIndex + 2;
-
-	int buffSize = 32;
-	int buffIndex = 0;
-	uint8_t* buff = malloc(sizeof(uint8_t) * buffSize);
-
-	for(; index <= result.size; ++index) {
-		TOKEN t = result.tokens[index];
-
-		if(t.type == BRACKETS_CLOSE) {
-			break;
-		}
-
-		if(t.type != NUMBER) {
-			return NULL;
-		}
-
-		buff[buffIndex] = strtol(t.value, NULL, 16);
-		buffIndex++;
-	}
-
-	node->endingIndex = index;
-
-	buff = realloc(buff, sizeof(uint8_t) * buffIndex);
-	
-	node->valueSize = buffIndex;
-	node->value = buff;
-
-	return node;
-}
-
-AST_NODE* parseFunctionInvoke(LEXER_RESULT result, int index) {
-	AST_NODE* node = createASTNode(AST_FUNCTION_INVOKE);
-
-	node->value = result.tokens[index].value;
-	
-	AST_NODE* args = parseArguments(result, index + 2);
-
-	node->endingIndex = index;
-
-	if(args != NULL) {
-		node->right = args;
-		node->endingIndex = args->endingIndex;
-	}
-
-	return node;
+            default:
+                printf("Error: Disallowed token type %d in parameters!\n", t.type);
+                return;
+        }
+    }
 }

@@ -79,7 +79,7 @@ LEXER_RESULT runLexer(char* string, int size) {
 
 			int keywordLen = 0;
 			
-			while(isalpha(c)) {
+			while(isalpha(c) || isdigit(c)) {
 				buff[keywordLen] = c;
 				buff[keywordLen + 1] = '\0';
 				keywordLen++;
@@ -108,6 +108,9 @@ LEXER_RESULT runLexer(char* string, int size) {
 			}
 			else if(strcmp(buff, "var") == 0) {
 				pushToken(&result, VAR);
+			}
+			else if(strcmp(buff, "int32") == 0) {
+				pushToken(&result, TYPE_INT32);
 			}
 			else {
 				pushToken(&result, KEYWORD);

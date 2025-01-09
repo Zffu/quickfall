@@ -1,72 +1,85 @@
 /**
- * Variable-related AST parsing.
+ * Parsing for variable related ASTs.
  */
 
-#include "../../lexer/lexer.h"
-#include "../../lexer/tokens.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-#include "./math.h"
+#include "../structs/variables.h"
+#include "../structs/tree.h"
+
+#include "./values.h"
 
 #include "../ast.h"
 
-AST_NODE* parseVariableValue(LEXER_RESULT result, int index) {
-	TOKEN t = result.tokens[index];
-
-	if(t.type == NUMBER || t.type == STRING || t.type == BOOLEAN_VALUE) {
-		AST_NODE* node = createASTNode(AST_VARIABLE_VALUE);
-		node->endingIndex = index;
-		node->left = createASTNode(AST_TYPE);
-
-		switch(t.type) {
-			case NUMBER:
-				if(result.size >= index + 1 && result.tokens[index + 1].type == MATH_OP) return parseMathematicalOpNode(result, index);
-
-				node->left->value = "n";
-					
-			case STRING:
-				node->left->value = "s";
-				break;
-			default:
-				node->left->value = "b";
-		
-		}
-
-		node->value = t.value;
-		return node;
-	}
-
-	if(t.type == KEYWORD) {
-		AST_NODE* node = createASTNode(AST_VARIABLE_REFERENCE);
-		node->endingIndex = index + 1;
-		node->value = t.value;
-
-		return node;
-	}
-
-}
+#include "../../lexer/lexer.h"
 
 /**
  * Parses a variable declaration.
- * @param result the lexer result.
- * @param index the starting index.
+ * @param result the Lexer result.
+ * @param index the index where the parsing needs to start.
  */
-AST_NODE* parseVariableDeclaration(LEXER_RESULT result, int index) {
-	AST_NODE* node = createASTNode(AST_VARIABLE_DECLARATION);
+AST_VARIABLE_DEC* parseASTVariableDeclaration(LEXER_RESULT result, int index) {
+    AST_VARIABLE_DEC* var = malloc(sizeof(AST_VARIABLE_DEC));
+    var->astType  = AST_TYPE_VARIABLE_DECLARATION;
+    var->type = malloc(1);
 
-	if(result.tokens[index].type == VAR) {
-		node->value = "none";	
-	}
-	else {
-		node->value = result.tokens[index].value;
-	}
+    switch(result.tokens[index].type) {
+        case TYPE_INT32:
+            var->type[0] = 0x01;
+            break;
+        case VAR:
+            var->type[0] = 0x00;
+            break;
+        default:
+            printf("Error: Disallowed token as variable type!\n");
+            return NULL;
+    }
 
-	node->left = createASTNode(AST_VARIABLE_NAME);
-	node->left->value = result.tokens[index + 1].value;
+    if(result.tokens[index + 1].type != KEYWORD) {
+        printf("Error: Excepted a keyword for variable name!\n");
+        return NULL;
+    }
 
-	node->right = parseVariableValue(result, index + 3);
+    var->name = result.tokens[index + 1].value;
 
-	if(node->right != NULL) node->endingIndex = node->right->endingIndex;
-	else node->endingIndex = index + 2;
+    if(result.tokens[index + 2].type == DECLARE) {
+        void* value = parseValueGroup(result, index + 3);
 
-	return node;
+        if(value == NULL) {
+            printf("Error: Couldn't parse variable value group!\n");
+            return NULL;
+        }
+
+        var->endingIndex = ((AST_TREE_BRANCH*)value)->endingIndex;
+
+        var->value = value;
+    }
+
+    return var;
+}
+
+
+/**
+ * Parses a variable modification.
+ * @param result the Lexer result.
+ * @param index the index where the parsing needs to start.
+ */
+AST_VARIABLE_MOD* parseVariableModification(LEXER_RESULT result, int index) {
+    AST_VARIABLE_MOD* mod = malloc(sizeof(AST_VARIABLE_MOD));
+    mod->type = AST_TYPE_VARIABLE_MODIFICATION;
+
+    mod->name = result.tokens[index].value;
+
+    void* value = parseValueGroup(result, index + 2);
+
+    if(value == NULL) {
+        printf("Error: Couldn't parse variable value group in redefinition!\n");
+        return NULL;
+    }
+
+    mod->value = value;
+    mod->endingIndex = ((AST_TREE_BRANCH*)value)->endingIndex;
+    
+    return mod;
 }

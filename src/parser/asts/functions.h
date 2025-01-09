@@ -1,47 +1,33 @@
 /**
- * Function-related AST parsing.
+ * Parsing for function related ASTs.
  */
+
+#include "../structs/functions.h"
 
 #include "../../lexer/lexer.h"
 
-#include "../ast.h"
-
-#ifndef AST_FUNC_H
-#define AST_FUNC_H
+#ifndef FUNCTIONS_AST_H
+#define FUNCTIONS_AST_H
 
 /**
- * Parse the parameters from a function defintition (for example).
- * @param result the lexer result.
- * @param index the starting index of the parsing.
+ * Parses a function declaration into AST.
+ * @param result the Lexer result.
+ * @param index the index of the start of the parsing.
  */
-AST_NODE* parseParameters(LEXER_RESULT result, int index);
+AST_FUNCTION_DEC* parseFunctionDeclaration(LEXER_RESULT result, int index);
 
 /**
- * Parses the arguments from a function call (for example).
- * @param result the lexer result.
- * @param index the starting index of the parsing.
+ * Parses an ASM function declaration into AST.
+ * @param result the Lexer result.
+ * @param index the index of the start of the parsing.
  */
-AST_NODE* parseArguments(LEXER_RESULT result, int index);
+AST_ASM_FUNCTION_DEC* parseASMFunctionDeclaration(LEXER_RESULT result, int index);
 
 /**
- * Parses a function declaration.
- * @param result the lexer result.
- * @param index the starting index of the parsing.
+ * Parses the parameters of a function into AST.
+ * @param result the Lexer result.
+ * @param index the index of the start of the parsing.
  */
-AST_NODE* parseFunctionDeclaration(LEXER_RESULT result, int index);
-
-/**
- * Parses an ASM function declaration.
- * @param result the lexer result.
- * @param index the starting index of the parsing.
- */
-AST_NODE* parseASMFunctionDeclaration(LEXER_RESULT result, int index); 
-
-/**
- * Parses an function invocation.
- * @param result the lexer result.
- * @param index the starting index of the parsing.
- */
-AST_NODE* parseFunctionInvoke(LEXER_RESULT result, int index);
+void parseFunctionParameters(AST_FUNCTION_DEC* func, LEXER_RESULT result, int index);
 
 #endif
