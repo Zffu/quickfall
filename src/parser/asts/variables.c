@@ -26,11 +26,16 @@ AST_VARIABLE_DEC* parseASTVariableDeclaration(LEXER_RESULT result, int index) {
 
     switch(result.tokens[index].type) {
         case TYPE_INT32:
-            var->type[0] = 0x01;
+        case TYPE_INT24:
+        case TYPE_INT16:
+        case TYPE_INT8:
+            var->type[0] = (result.tokens[index].type - TYPE_INT32) + 0x01;
             break;
+
         case VAR:
             var->type[0] = 0x00;
             break;
+
         default:
             printf("Error: Disallowed token as variable type!\n");
             return NULL;
@@ -44,7 +49,7 @@ AST_VARIABLE_DEC* parseASTVariableDeclaration(LEXER_RESULT result, int index) {
     var->name = result.tokens[index + 1].value;
 
     if(result.tokens[index + 2].type == DECLARE) {
-        void* value = parseValueGroup(result, index + 3);
+        void* value = parseValueGroup(result, index + 3, var->type[0]);
 
         if(value == NULL) {
             printf("Error: Couldn't parse variable value group!\n");
@@ -71,7 +76,7 @@ AST_VARIABLE_MOD* parseVariableModification(LEXER_RESULT result, int index) {
 
     mod->name = result.tokens[index].value;
 
-    void* value = parseValueGroup(result, index + 2);
+    void* value = parseValueGroup(result, index + 2, 0x01); // todo: change later
 
     if(value == NULL) {
         printf("Error: Couldn't parse variable value group in redefinition!\n");

@@ -12,6 +12,8 @@
 
 #include "../ir.h"
 
+#include "../../lib/types.h"
+
 /**
  * Parses a variable declaration.
  * @param block the IR basic block to append to.
@@ -19,7 +21,24 @@
  */
 void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node) {
     int allocSize = 0;
-    if(node->type[0] == 0x01) allocSize = 32; // int32
+    
+    switch(node->type[0]) {
+        case INT32:
+            allocSize = 32;
+            break;
+        case INT24:
+            allocSize = 24;
+            break;
+        case INT16:
+            allocSize = 16;
+            break;
+        case INT8:
+            allocSize = 8;
+            break;
+        default:
+            allocSize = 0;
+            break;
+    }
 
     void** params = malloc(sizeof(void*) * 2);
 

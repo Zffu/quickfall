@@ -48,15 +48,16 @@ AST_VALUE* parseASTValue(LEXER_RESULT result, int index, LIB_TYPES exceptedType)
  * Parses an actual expression as value instead of just one token.
  * @param result the Lexer result.
  * @param index the index of the start of the parsing.
+ * @param exceptedType The excepted type of token.
  */
-void* parseValueGroup(LEXER_RESULT result, int index) {
+void* parseValueGroup(LEXER_RESULT result, int index, LIB_TYPES exceptedType) {
     switch(result.tokens[index].type) {
         case NUMBER:
             if(result.tokens[index + 1].type == MATH_OP) {
                 //todo: parse math op.
             }
             
-            return parseASTValue(result, index);
+            return parseASTValue(result, index, exceptedType);
             break;
         default:
             printf("Error: couldn't parse value token group!\n");
