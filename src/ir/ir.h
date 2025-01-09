@@ -28,7 +28,7 @@ void pushInstruction(IR_BASIC_BLOCK* block, IR_INSTRUCTION* instruction);
  * @param params the parameters of the operation.
  * @param paramsCount the count of the parameters of the operation.
  */
-void appendInstruction(IR_BASIC_BLOCK* block, IR_INSTRUCTION_CODE code, unsigned char params[], int paramsCount);
+void appendInstruction(IR_BASIC_BLOCK* block, IR_INSTRUCTION_CODE code, void** params, int paramsCount);
 
 /**
  * Converts the AST tree into IR.

@@ -21,44 +21,22 @@ void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node) {
     int allocSize = 0;
     if(node->type[0] == 0x01) allocSize = 32; // int32
 
-    int paramsSize = 4 + strlen(node->name);
-
-    unsigned char* params = malloc(paramsSize - 1);
+    void** params = malloc(sizeof(void*) * 2);
 
     char* name = node->name;
 
-    params[0] = (allocSize >> 24) & 0xFF;
-    params[1] = (allocSize >> 16) & 0xFF;
-    params[2] = (allocSize >> 8) & 0xFF;
-    params[3] = allocSize & 0xFF;
+    params[0] = allocSize;
+    params[1] = node->name;
 
-    int i = 4;
-    char c;
-
-    while(c = *node->name++) {
-        params[i] = c;
-
-        if(c == '\0') break;
-        ++i;
-    }
-
-    appendInstruction(block, S_ALLOC, params, paramsSize);
+    appendInstruction(block, S_ALLOC, params, 2);
 
     if(node->value != NULL) {
-        paramsSize = strlen(name) + getValueSize(node->type[0]);
-        params = malloc(paramsSize);
-        
-        i = 0;
-        while(c = *name++) {
-            params[i] = c;
+        params = malloc(sizeof(void*) * 2);
+        params[0] = node->name;
+    
+        parseValue(params, 1, node->value);
 
-            if(c == '\0') break;
-            ++i;
-        }
-
-        parseValue(params, i, node->value);
-
-        appendInstruction(block, PTR_SET, params, paramsSize);
+        appendInstruction(block, PTR_SET, params, 2);
     }
 }
 
@@ -68,17 +46,10 @@ void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node) {
  * @param node the AST node representing the variable.
  */
 inline void parseVariableModification(IR_BASIC_BLOCK* block, AST_VARIABLE_MOD* node) {
-    int paramsSize = strlen(node->name) + getValueSize(0x01); // int32 for now, todo: change to hashmap stored type byte
-    unsigned char* params = malloc(paramsSize);
+    void** params = malloc(sizeof(void*) * 2);
 
-    int i = 0;
-    char c;
+    params[0] = node->name;
 
-    while(c == *node->name++) {
-        params[i] = c;
-        ++i;
-    }
-
-    parseValue(params, i, node->value);
-    appendInstruction(block, PTR_SET, params, paramsSize);
+    parseValue(params, 1, node->value);
+    appendInstruction(block, PTR_SET, params, 2);
 }

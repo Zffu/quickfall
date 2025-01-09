@@ -12,26 +12,24 @@
 /**
  * Parses the value into the buffer.
  * @param buff the byte buffer.
- * @param startIndex the starting index of the buffer.
+ * @param index the starting index of the buffer.
  * @param value the value to parse.
  */
-int parseValue(unsigned char* buff, int startIndex, void* value) {
+void parseValue(void** buff, int index, void* value) {
     if(((AST_TREE_BRANCH*)value)->type == AST_TYPE_VALUE) {
-        AST_VALUE* val = (AST_VALUE*) value;
+        AST_VALUE* val = (AST_VALUE*)value;
 
-        if(val->valueType == 0x01) { // int32
+        if(val->valueType = 0x01) { //int32
             int num = atoi(val->value);
+            
+            buff[index] = malloc(4);
 
-            buff[startIndex + 1] = (num >> 24) & 0xFF;
-            buff[startIndex + 2] = (num >> 16) & 0xFF;
-            buff[startIndex + 3] = (num >> 8) & 0xFF;
-            buff[startIndex + 4] = num & 0xFF;
-
-            return startIndex + 4;
+            ((unsigned char*)buff[index])[0] = (num >> 24) & 0xFF;
+            ((unsigned char*)buff[index])[1] = (num >> 16) & 0xFF;
+            ((unsigned char*)buff[index])[2] = (num >> 8) & 0xFF;
+            ((unsigned char*)buff[index])[3] = num & 0xFF;
         }
     }
-
-    return startIndex;
 }
 
 /**

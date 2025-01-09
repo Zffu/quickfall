@@ -14,7 +14,7 @@ typedef struct IR_INSTRUCTION {
 
     unsigned char opCode;
 
-    unsigned char* params;
+    void** params;
     int paramCount;
 
 } IR_INSTRUCTION;
