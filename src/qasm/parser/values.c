@@ -9,42 +9,32 @@
 /**
  * Parses a 32-bit integer into bytes.
  * @param buff the buff to append the bytes to.
- * @param startIndex the starting index of where to append the bytes.
+ * @param index the index of where to append the bytes.
  * @param str the string containing the integer.
  */
-void parseInt32(unsigned char* buff, int startIndex, char* str) {
+void parseInt32(void** buff, int index, char* str) {
     int i = atoi(str);
 
-    buff[startIndex] = (i >> 24) & 0xFF;
-    buff[startIndex + 1] = (i >> 16) & 0xFF;
-    buff[startIndex + 2] = (i >> 8) & 0xFF;
-    buff[startIndex + 3] = i & 0xFF;
+    buff[index] = malloc(4);
+
+    ((unsigned char*)buff[index])[0] = (i >> 24) & 0xFF;
+    ((unsigned char*)buff[index])[1] = (i >> 16) & 0xFF;
+    ((unsigned char*)buff[index])[2] = (i >> 8) & 0xFF;
+    ((unsigned char*)buff[index])[3] = i & 0xFF;
 }
 
 
 /**
  * Parses a variable name.
  * @param buff the buff to append the bytes to.
- * @param startIndex the starting index of where to append the bytes.
+ * @param index the index of where to append the bytes.
  * @param str the string containing the variable name.
  */
-int parseVariableName(unsigned char* buff, int startIndex, char* str) {
+void parseVariableName(void** buff, int index, char* str) {
     if(str[0] != '%') {
         printf("Error: Variable names must start with %%! Got %s\n", str);
         return -1;
     }
 
-    --startIndex;
-
-    int i = 1;
-
-    while(str[i] != '\0') {
-        buff[startIndex + i] = str[i];
-        ++i;
-    }
-
-    str[i] = '\0';
-    ++i;
-
-    return i + startIndex;
+    buff[index] = (str + 1);
 }
