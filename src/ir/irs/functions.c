@@ -51,6 +51,8 @@ void parseFunction(IR_OUTPUT* out, AST_FUNCTION_DEC* node) {
     while(branch->next != NULL) {
         branch = ((AST_TREE_BRANCH*)branch->next);
 
+        printf("0x%x\n", branch->type);
+
         switch(branch->type) {
             case AST_TYPE_VARIABLE_DECLARATION:
                 parseVariableDeclaration(out->blocks[out->blockCount], (AST_VARIABLE_DEC*) branch);

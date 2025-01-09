@@ -33,6 +33,8 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
     for(int i = startingIndex; i < result.size; ++i) {
         TOKEN t = result.tokens[i];
 
+        printf("i: %d, t: %d\n", i, t.type);
+
         switch(t.type) {
             case TYPE_INT32:
             case TYPE_INT24:
@@ -79,6 +81,7 @@ void* parseRoot(LEXER_RESULT result, int startingIndex, AST_TYPE type) {
  
             case BRACKETS_CLOSE:
                 if(type == AST_TYPE_FUNC_ROOT) {
+                    curr->next = NULL;
                     root->endingIndex = i;
                     return root;
                 }

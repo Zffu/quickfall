@@ -56,7 +56,7 @@ AST_VARIABLE_DEC* parseASTVariableDeclaration(LEXER_RESULT result, int index) {
             return NULL;
         }
 
-        var->endingIndex = ((AST_TREE_BRANCH*)value)->endingIndex;
+        var->endingIndex = ((AST_TREE_BRANCH*)value)->endingIndex - 1;
 
         var->value = value;
     }
@@ -84,7 +84,7 @@ AST_VARIABLE_MOD* parseVariableModification(LEXER_RESULT result, int index) {
     }
 
     mod->value = value;
-    mod->endingIndex = ((AST_TREE_BRANCH*)value)->endingIndex;
+    mod->endingIndex = ((AST_TREE_BRANCH*)value)->endingIndex - 1;
     
     return mod;
 }

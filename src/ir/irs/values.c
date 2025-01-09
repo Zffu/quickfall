@@ -34,26 +34,27 @@ void parseValue(void** buff, int index, void* value) {
                 break;
             
             case INT24:
-                int num = atoi(val->value);
+                num = atoi(val->value);
                 buff[index] = malloc(3);
 
-                ((unsigned char*)buff[index])[0] = (num >> 16) & 0xFF;
-                ((unsigned char*)buff[index])[1] = (num >> 8) & 0xFF;
-                ((unsigned char*)buff[index])[2] = num & 0xFF;
+                ((unsigned char*)buff[index])[0] = (num >> 24) & 0xFF;
+                ((unsigned char*)buff[index])[1] = (num >> 16) & 0xFF;
+                ((unsigned char*)buff[index])[2] = (num >> 8) & 0xFF;
                 break;
             
             case INT16:
-                int num = atoi(val->value);
+                num = atoi(val->value);
                 buff[index] = malloc(2);
 
-                ((unsigned char*)buff[index])[0] = (num >> 8) & 0xFF;
-                ((unsigned char*)buff[index])[1] = num & 0xFF;
+                ((unsigned char*)buff[index])[0] = (num >> 24) & 0xFF;
+                ((unsigned char*)buff[index])[1] = (num >> 16) & 0xFF;
                 break;
             
             case INT8:
-                int num = atoi(val->value);
+                num = atoi(val->value);
                 buff[index] = malloc(1);
-                ((unsigned char*)buff[index])[0] = num & 0xFF;
+                
+                ((unsigned char*)buff[index])[0] = (num >> 24) & 0xFF;
                 break;
 
         }
