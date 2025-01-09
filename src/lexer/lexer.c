@@ -112,6 +112,15 @@ LEXER_RESULT runLexer(char* string, int size) {
 			else if(strcmp(buff, "int32") == 0) {
 				pushToken(&result, TYPE_INT32);
 			}
+			else if(strcmp(buff, "int24") == 0) {
+				pushToken(&result, TYPE_INT24);
+			}
+			else if(strcmp(buff, "int16") == 0) {
+				pushToken(&result, TYPE_INT16);
+			}
+			else if(strcmp(buff, "int8") == 0) {
+				pushToken(&result, TYPE_INT8);
+			}
 			else {
 				pushToken(&result, KEYWORD);
 				result.tokens[result.size - 1].value = buff;
