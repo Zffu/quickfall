@@ -24,7 +24,10 @@ typedef enum {
     NONE,
     MATH_OP,
 
-    TYPE_INT32
+    TYPE_INT32,
+    TYPE_INT24,
+    TYPE_INT16,
+    TYPE_INT8
 } TOKEN_TYPE;
 
 /**

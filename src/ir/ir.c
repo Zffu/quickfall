@@ -64,7 +64,12 @@ IR_OUTPUT* parseIR(AST_TREE_BRANCH* node) {
     out->blockCount = 0;
     out->blocks = malloc(sizeof(IR_BASIC_BLOCK*) * out->allocatedBlockCount);
     out->map = createHashmap(512,200);
-    
+
+    out->blocks[out->blockCount] = malloc(sizeof(IR_BASIC_BLOCK));
+    out->blocks[out->blockCount]->instructions = NULL;
+    out->blocks[out->blockCount]->instructionCount = 0;
+    out->blocks[out->blockCount]->allocatedSize = 0;
+
     while(node != NULL) {
         switch(node->type) {
             case AST_TYPE_FUNCTION_DECLARATION:

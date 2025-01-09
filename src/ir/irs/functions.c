@@ -42,10 +42,12 @@ void parseFunction(IR_OUTPUT* out, AST_FUNCTION_DEC* node) {
 
     hashPut(out->map, hash, func);
 
-    out->blocks[out->blockCount] = malloc(sizeof(IR_BASIC_BLOCK));
-    out->blocks[out->blockCount]->instructions = NULL;
-    out->blocks[out->blockCount]->instructionCount = 0;
-    out->blocks[out->blockCount]->allocatedSize = 0;
+    if(out->blockCount != 0) {
+        out->blocks[out->blockCount] = malloc(sizeof(IR_BASIC_BLOCK));
+        out->blocks[out->blockCount]->instructions = NULL;
+        out->blocks[out->blockCount]->instructionCount = 0;
+        out->blocks[out->blockCount]->allocatedSize = 0;
+    }
 
     AST_TREE_BRANCH* branch = (AST_TREE_BRANCH*) node->body;
     while(branch->next != NULL) {

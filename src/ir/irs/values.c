@@ -9,6 +9,8 @@
 #include "../../parser/structs/values.h"
 #include "../../parser/structs/tree.h"
 
+#include "../../lib/types.h"
+
 /**
  * Parses the value into the buffer.
  * @param buff the byte buffer.
@@ -19,15 +21,42 @@ void parseValue(void** buff, int index, void* value) {
     if(((AST_TREE_BRANCH*)value)->type == AST_TYPE_VALUE) {
         AST_VALUE* val = (AST_VALUE*)value;
 
-        if(val->valueType[0] == 0x01) { //int32
-            int num = atoi(val->value);
-            
-            buff[index] = malloc(4);
+        switch(*val->valueType) {
+            case INT32:
+                int num = atoi(val->value);
+                buff[index] = malloc(4);
 
-            ((unsigned char*)buff[index])[0] = (num >> 24) & 0xFF;
-            ((unsigned char*)buff[index])[1] = (num >> 16) & 0xFF;
-            ((unsigned char*)buff[index])[2] = (num >> 8) & 0xFF;
-            ((unsigned char*)buff[index])[3] = num & 0xFF;
+                ((unsigned char*)buff[index])[0] = (num >> 24) & 0xFF;
+                ((unsigned char*)buff[index])[1] = (num >> 16) & 0xFF;
+                ((unsigned char*)buff[index])[2] = (num >> 8) & 0xFF;
+                ((unsigned char*)buff[index])[3] = num & 0xFF;
+
+                break;
+            
+            case INT24:
+                num = atoi(val->value);
+                buff[index] = malloc(3);
+
+                ((unsigned char*)buff[index])[0] = (num >> 24) & 0xFF;
+                ((unsigned char*)buff[index])[1] = (num >> 16) & 0xFF;
+                ((unsigned char*)buff[index])[2] = (num >> 8) & 0xFF;
+                break;
+            
+            case INT16:
+                num = atoi(val->value);
+                buff[index] = malloc(2);
+
+                ((unsigned char*)buff[index])[0] = (num >> 24) & 0xFF;
+                ((unsigned char*)buff[index])[1] = (num >> 16) & 0xFF;
+                break;
+            
+            case INT8:
+                num = atoi(val->value);
+                buff[index] = malloc(1);
+                
+                ((unsigned char*)buff[index])[0] = (num >> 24) & 0xFF;
+                break;
+
         }
     }
 }
@@ -37,6 +66,16 @@ void parseValue(void** buff, int index, void* value) {
  * @param type the type's byte indentifier.
  */
 int getValueSize(unsigned char type) {
-    if(type == 0x01) return 4; // int32 type -> 4 bytes
+    switch(type) {
+        case INT32:
+            return 32;
+        case INT24:
+            return 24;
+        case INT16:
+            return 16;
+        case INT8:
+            return 8;
+
+    }
     return 0;
 }
