@@ -8,18 +8,18 @@
 /**
  * Parses a 32-bit integer into bytes.
  * @param buff the buff to append the bytes to.
- * @param startIndex the starting index of where to append the bytes.
+ * @param index the index of where to append the bytes.
  * @param str the string containing the integer.
  */
-void parseInt32(unsigned char* buff, int startIndex, char* str);
+void parseInt32(void** buff, int index, char* str);
 
 
 /**
  * Parses a variable name.
  * @param buff the buff to append the bytes to.
- * @param startIndex the starting index of where to append the bytes.
+ * @param index the index of where to append the bytes.
  * @param str the string containing the variable name.
  */
-int parseVariableName(unsigned char* buff, int startIndex, char* str);
+int parseVariableName(void** buff, int index, char* str);
 
 #endif
