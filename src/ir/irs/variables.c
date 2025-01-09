@@ -25,7 +25,13 @@ void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node) {
 
     char* name = node->name;
 
-    params[0] = &allocSize;
+    params[0] = malloc(4);
+
+    ((unsigned char*)params[0])[0] = (allocSize >> 24) & 0xFF;
+    ((unsigned char*)params[0])[1] = (allocSize >> 16) & 0xFF;
+    ((unsigned char*)params[0])[2] = (allocSize >> 8) & 0xFF;
+    ((unsigned char*)params[0])[3] = allocSize & 0xFF;
+
     params[1] = node->name;
 
     appendInstruction(block, S_ALLOC, params, 2);

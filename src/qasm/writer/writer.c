@@ -24,6 +24,8 @@ void writeQASM(FILE* fptr, IR_OUTPUT* output) {
             
             fprintf(fptr, "\n  %s", formatedInstructions[instruction->opCode]);
 
+            printf("Code: 0x%x\n", instruction->opCode);
+
             switch(instruction->opCode) {
                 case BLOCK_SWAP:
                 case COND_BLOCK_SWAP:
@@ -39,7 +41,12 @@ void writeQASM(FILE* fptr, IR_OUTPUT* output) {
                 case PTR_LOAD:
                 case S_ALLOC:
                     writeInt32(fptr, instruction->params, 0);
+
+                    printf("post int");
+
                     writeVarName(fptr, instruction->params, 1);
+
+                    printf("post str");
                     break;
 
                 case IADD:

@@ -11,6 +11,6 @@ void writeInt32(FILE* fptr, void** buff, int index) {
 /**
  * Writes a variable name.
  */
-int writeVarName(FILE* fptr, unsigned char* buff, int index) {
+int writeVarName(FILE* fptr, void** buff, int index) {
     fprintf(fptr, " %%%s", buff[index]);
 }
