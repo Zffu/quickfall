@@ -32,15 +32,14 @@ void writeQASM(FILE* fptr, IR_OUTPUT* output) {
                     break;
 
                 case PTR_SET:
-                    i = writeVarName(fptr, instruction->params, 0);
-                    writeInt32(fptr, instruction->params, i + 1);
+                    writeVarName(fptr, instruction->params, 0);
+                    writeInt32(fptr, instruction->params, 1);
                     break;
 
                 case PTR_LOAD:
                 case S_ALLOC:
-                    instruction->params[instruction->paramCount] = '\0';
                     writeInt32(fptr, instruction->params, 0);
-                    writeVarName(fptr, instruction->params, 4);
+                    writeVarName(fptr, instruction->params, 1);
                     break;
 
                 case IADD:
@@ -50,14 +49,14 @@ void writeQASM(FILE* fptr, IR_OUTPUT* output) {
                 case ICMP:
                 case ICMP_H:
                 case ICMP_L:
-                    int i = writeVarName(fptr, instruction->params, 0) + 1;
-                    i = writeVarName(fptr, instruction->params, i) + 1;
-                    writeVarName(fptr, instruction->params, i);
+                    writeVarName(fptr, instruction->params, 0);
+                    writeVarName(fptr, instruction->params, 1);
+                    writeVarName(fptr, instruction->params, 2);
                     break;
 
                 case PRM_PUSH:
-                    i = writeVarName(fptr, instruction->params, 0);
-                    writeInt32(fptr, instruction->params, i + 1);
+                    writeVarName(fptr, instruction->params, 0);
+                    writeInt32(fptr, instruction->params, 1);
                     break;
 
                 case RET_PUSH:

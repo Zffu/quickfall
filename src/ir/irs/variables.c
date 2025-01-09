@@ -25,7 +25,7 @@ void parseVariableDeclaration(IR_BASIC_BLOCK* block, AST_VARIABLE_DEC* node) {
 
     char* name = node->name;
 
-    params[0] = allocSize;
+    params[0] = &allocSize;
     params[1] = node->name;
 
     appendInstruction(block, S_ALLOC, params, 2);

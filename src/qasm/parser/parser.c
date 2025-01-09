@@ -76,173 +76,173 @@ IR_INSTRUCTION* parseInstruction(char** buff, int bufferSize) {
 
     int instructionHash = hashstr(buff[0]);
 
-    unsigned char* b;
+    void** b;
 
     // Determines the instruction type based on the string hash.
     switch(instructionHash) {
         case 2985:
             instruction->opCode = BLOCK_SWAP;
-            b = malloc(4);
+            b = malloc(sizeof(void*));
             parseInt32(b, 0, buff[1]);
 
             instruction->params = b;
-            instruction->paramCount = 4;
+            instruction->paramCount = 1;
             break;
         case 2987:
             instruction->opCode = COND_BLOCK_SWAP;
-            int size = 4 + strlen(buff[2]) - 1;
-            b = malloc(size);
+            b = malloc(sizeof(void*) * 2);
+
             parseInt32(b, 0, buff[1]);
-            parseVariableName(b, 5, buff[2]);
+            parseVariableName(b, 1, buff[2]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 2;
             break;
         case 3275:
             instruction->opCode = LOGICAL_BLOCK_SWAP;
-            size = 8 + strlen(buff[3]) - 1;
-            b = malloc(size);
+            b = malloc(sizeof(int*) * 3);
+
             parseInt32(b, 0, buff[1]);
-            parseInt32(b, 5, buff[2]);
-            parseVariableName(b, 10, buff[3]);
+            parseInt32(b, 1, buff[2]);
+            parseVariableName(b, 2, buff[3]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 3;
             break;
         case 1798:
             instruction->opCode = S_ALLOC;
-            size = 4 + strlen(buff[2]) - 1;
-            b = malloc(size);
+            b = malloc(sizeof(void*) * 2);
+
             parseInt32(b, 0, buff[1]);
-            parseVariableName(b, 5, buff[2]);
+            parseVariableName(b, 1, buff[2]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 2;
             break;
         case 2887:
             instruction->opCode = PTR_SET;
-            size = 4 + strlen(buff[2]) - 1;
-            b = malloc(size);
+            b = malloc(sizeof(void*) * 2);
+
             parseInt32(b, 0, buff[1]);
-            parseVariableName(b, 5, buff[2]);
+            parseVariableName(b, 1, buff[2]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 2;
             break;
         case 2472:
             instruction->opCode = PTR_LOAD;
-            size = strlen(buff[1]) + strlen(buff[2]) - 2;
-            b = malloc(size);
-            int i = parseVariableName(b, 0, buff[1]);
-            parseVariableName(b, i + 1, buff[2]);
+            b = malloc(sizeof(void*) * 2);
+
+            parseVariableName(b, 0, buff[1]);
+            parseVariableName(b, 1, buff[2]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 2;
             break;
         case 452:
             instruction->opCode = IADD;
-            size = strlen(buff[1]) + 7;
-            b = malloc(size);
-            i = parseVariableName(b, 0, buff[1]);
-            parseInt32(b, i + 1, buff[2]);
-            parseInt32(b, i + 6, buff[3]);
+            b = malloc(sizeof(void*) * 3);
+
+            parseVariableName(b, 0, buff[1]);
+            parseInt32(b, 1, buff[2]);
+            parseInt32(b, 2, buff[3]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 3;
             break;
         case 1508:
             instruction->opCode = ISUB;
-            size = strlen(buff[1]) + 7;
-            b = malloc(size);
-            i = parseVariableName(b, 0, buff[1]);
-            parseInt32(b, i + 1, buff[2]);
-            parseInt32(b, i + 6, buff[3]);
+            b = malloc(sizeof(void*) * 3);
+
+            parseVariableName(b, 0, buff[1]);
+            parseInt32(b, 1, buff[2]);
+            parseInt32(b, 2, buff[3]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 3;
             break;
         case 1636:
             instruction->opCode = IMUL;
-            size = strlen(buff[1]) + 7;
-            b = malloc(size);
-            i = parseVariableName(b, 0, buff[1]);
-            parseInt32(b, i + 1, buff[2]);
-            parseInt32(b, i + 6, buff[3]);
+            b = malloc(sizeof(void*) * 3);
+
+            parseVariableName(b, 0, buff[1]);
+            parseInt32(b, 1, buff[2]);
+            parseInt32(b, 2, buff[3]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 3;
             break;
         case 1284:
             instruction->opCode = IDIV;
-            size = strlen(buff[1]) + 7;
-            b = malloc(size);
-            i = parseVariableName(b, 0, buff[1]);
-            parseInt32(b, i + 1, buff[2]);
-            parseInt32(b, i + 6, buff[3]);
+            b = malloc(sizeof(void*) * 3);
+
+            parseVariableName(b, 0, buff[1]);
+            parseInt32(b, 1, buff[2]);
+            parseInt32(b, 2, buff[3]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 3;
             break;
         case 1188:
             instruction->opCode = ICMP;
-            size = strlen(buff[1]) + 7;
-            b = malloc(size);
-            i = parseVariableName(b, 0, buff[1]);
-            parseInt32(b, i + 1, buff[2]);
-            parseInt32(b, i + 6, buff[3]);
+            b = malloc(sizeof(void*) * 3);
+
+            parseVariableName(b, 0, buff[1]);
+            parseInt32(b, 1, buff[2]);
+            parseInt32(b, 2, buff[3]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 3;
             break;
         case 1350:
             instruction->opCode = ICMP_H;
-            size = strlen(buff[1]) + 7;
-            b = malloc(size);
-            i = parseVariableName(b, 0, buff[1]);
-            parseInt32(b, i + 1, buff[2]);
-            parseInt32(b, i + 6, buff[3]);
+            b = malloc(sizeof(void*) * 3);
+
+            parseVariableName(b, 0, buff[1]);
+            parseInt32(b, 1, buff[2]);
+            parseInt32(b, 2, buff[3]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 3;
             break;
         case 1478:
             instruction->opCode = ICMP_L;
-            size = strlen(buff[1]) + 7;
-            b = malloc(size);
-            i = parseVariableName(b, 0, buff[1]);
-            parseInt32(b, i + 1, buff[2]);
-            parseInt32(b, i + 6, buff[3]);
+            b = malloc(sizeof(void*) * 3);
+
+            parseVariableName(b, 0, buff[1]);
+            parseInt32(b, 1, buff[2]);
+            parseInt32(b, 2, buff[3]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 3;
             break;
         case 3272:
             instruction->opCode = PRM_PUSH;
-            size = strlen(buff[1]) + 3;
-            b = malloc(size);
-            i = parseVariableName(b, 0, buff[1]);
-            parseInt32(b, i + 1, buff[2]);
+            b = malloc(sizeof(void*) * 2);
+
+            parseVariableName(b, 0, buff[1]);
+            parseInt32(b, 1, buff[2]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 2;
             break;
         case 3144:
             instruction->opCode = RET_PUSH;
-            size = strlen(buff[1]) - 1;
-            b = malloc(size);
+            b = malloc(sizeof(void*));
+
             parseVariableName(b, 0, buff[1]);
 
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 1;
             break;
         case 772:
             instruction->opCode = CALL;
-            size = strlen(buff[1]);
-            b = malloc(size);
+            b = malloc(sizeof(void*));
+
             parseVariableName(b, 0, buff[1]);
             
             instruction->params = b;
-            instruction->paramCount = size;
+            instruction->paramCount = 1;
             break;
         case 1283:
             instruction->opCode = RET;

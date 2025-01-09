@@ -33,7 +33,7 @@ void parseInt32(void** buff, int index, char* str) {
 void parseVariableName(void** buff, int index, char* str) {
     if(str[0] != '%') {
         printf("Error: Variable names must start with %%! Got %s\n", str);
-        return -1;
+        return;
     }
 
     buff[index] = (str + 1);

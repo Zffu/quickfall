@@ -19,7 +19,7 @@ void parseValue(void** buff, int index, void* value) {
     if(((AST_TREE_BRANCH*)value)->type == AST_TYPE_VALUE) {
         AST_VALUE* val = (AST_VALUE*)value;
 
-        if(val->valueType = 0x01) { //int32
+        if(val->valueType[0] == 0x01) { //int32
             int num = atoi(val->value);
             
             buff[index] = malloc(4);
