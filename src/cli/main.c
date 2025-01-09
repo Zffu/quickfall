@@ -127,8 +127,6 @@ int main(int argc, char* argv[]) {
 			}
 
 			fptr = fopen(outputFile, "w");
-			
-			printf("writer");
 
 			writeQASM(fptr, irOut); // experimental: ir -> QASM
 			
