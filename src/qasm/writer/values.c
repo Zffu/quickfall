@@ -4,25 +4,13 @@
 /**
  * Writes a 32 bit integer into the file.
  */
-void writeInt32(FILE* fptr, unsigned char* buff, int startingIndex) {
-    fprintf(fptr, " %d", (buff[startingIndex] << 24) | (buff[startingIndex + 1] << 16) | (buff[startingIndex + 2] << 8) | buff[startingIndex + 3]);
+void writeInt32(FILE* fptr, void** buff, int index) {
+    fprintf(fptr, " %d", (((unsigned char*)buff[index])[0] << 24) | (((unsigned char*)buff[index])[1] << 16) | (((unsigned char*)buff[index])[2] << 8) | ((unsigned char*)buff[index])[3]);
 }
 
 /**
  * Writes a variable name.
  */
-int writeVarName(FILE* fptr, unsigned char* buff, int startIndex) {
-    fprintf(fptr, " %%");
-    buff += startIndex;
-
-    int i = startIndex;
-    char c;
-    while(c = *buff++) {
-        if(c == '\0' || !isalpha(c)) break;
-        printf("%c", c);
-        fputc(c, fptr);
-        ++i;
-    }
-
-    return i;
+int writeVarName(FILE* fptr, unsigned char* buff, int index) {
+    fprintf(fptr, " %%%s", buff[index]);
 }

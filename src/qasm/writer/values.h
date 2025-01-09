@@ -6,11 +6,11 @@
 /**
  * Writes a 32 bit integer into the file.
  */
-void writeInt32(FILE* fptr, unsigned char* buff, int startingIndex);
+void writeInt32(FILE* fptr, void** buff, int index);
 
 /**
  * Writes a variable name.
  */
-int writeVarName(FILE* fptr, unsigned char* buff, int startIndex);
+void writeVarName(FILE* fptr, void** buff, int index);
 
 #endif
